@@ -43,3 +43,11 @@ ENV/
 *.swp
 *.swo
 *~
+# Postman 
+.postman
+*.postman_collection.json
+*.postman_collection.json
+*.postman_environment.json
+Postman/
+.postman/
+postman/
