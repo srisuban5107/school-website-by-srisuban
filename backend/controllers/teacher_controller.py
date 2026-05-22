@@ -1,4 +1,4 @@
-from backend.models.teacher_model import get_teacher
+from models.teacher_model import get_teacher
 
 
 def fetch_teacher(teacher_id):

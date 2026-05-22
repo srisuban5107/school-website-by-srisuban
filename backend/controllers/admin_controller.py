@@ -1,7 +1,7 @@
-from backend.models.user_model import find_user
-from backend.models.student_model import get_all_students
-from backend.models.teacher_model import get_teacher
-from backend.models.attendance_model import get_attendance
+from models.user_model import find_user
+from models.student_model import get_all_students
+from models.teacher_model import get_teacher
+from models.attendance_model import get_attendance
 
 
 # 📊 Admin dashboard data

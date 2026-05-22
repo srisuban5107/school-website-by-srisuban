@@ -1,4 +1,4 @@
-from backend.models.attendance_model import mark_attendance, get_attendance
+from models.attendance_model import mark_attendance, get_attendance
 
 
 def mark(student_id, status, date):

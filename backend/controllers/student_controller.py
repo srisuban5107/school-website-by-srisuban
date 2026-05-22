@@ -1,4 +1,4 @@
-from backend.models.student_model import get_student, get_all_students
+from models.student_model import get_student, get_all_students
 
 
 def fetch_student(student_id):

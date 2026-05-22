@@ -1,5 +1,5 @@
 import mysql.connector
-from backend.config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
+from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
 
 
 def get_connection():

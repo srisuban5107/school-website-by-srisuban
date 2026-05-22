@@ -1,64 +1,43 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from flask import Flask, jsonify, request
 from flask_bcrypt import Bcrypt
-import jwt
-import datetime
-import os
+from flask_cors import CORS   
+
+# routes
 from routes.admin_routes import admin_bp
 from routes.attendance_routes import attendance_bp
-from flask_mysqldb import MySQL
-from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
-from backend.models.user_model import find_user
 from routes.auth_routes import auth_bp
 from routes.gallery_routes import gallery_bp
 from routes.parent_routes import parent_bp
 from routes.student_routes import student_bp
 from routes.teacher_routes import teacher_bp
 
+# DB + models
+from models.user_model import find_user
+
+# JWT helper
+from utils.jwt_helper import create_token, verify_token
+
+
+# ---------------- APP INIT ----------------
 app = Flask(__name__)
+CORS(app)   
 bcrypt = Bcrypt(app)
 
-# Register blueprints
-app.register_blueprint(admin_bp, url_prefix="/admin")
-app.register_blueprint(auth_bp, url_prefix="/auth")
-app.register_blueprint(gallery_bp, url_prefix="/gallery")
-app.register_blueprint(attendance_bp, url_prefix="/attendance")
-app.register_blueprint(parent_bp, url_prefix="/parent")
-app.register_blueprint(student_bp, url_prefix="/student")
-app.register_blueprint(teacher_bp, url_prefix="/teacher")
-# SECRET KEY from env
-SECRET_KEY = os.getenv("SECRET_KEY", "school_secret_key")
-
-# MySQL config
-app.config['MYSQL_HOST'] = DB_HOST
-app.config['MYSQL_USER'] = DB_USER
-app.config['MYSQL_PASSWORD'] = DB_PASSWORD
-app.config['MYSQL_DB'] = DB_NAME
-
-mysql = MySQL(app)
+SECRET_KEY = os.getenv("SECRET_KEY", "your_secret_key")
 
 
+# ---------------- HOME ----------------
 @app.route("/")
 def home():
     return jsonify({"message": "Backend is running!"})
 
 
-# JWT token
-def create_token(user):
-    payload = {
-        "id": user["id"],
-        "role": user["role"],
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=2)
-    }
-
-    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-
-    if isinstance(token, bytes):
-        token = token.decode("utf-8")
-
-    return token
-
-
-# LOGIN
+# ---------------- LOGIN ----------------
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -74,18 +53,54 @@ def login():
     if not user:
         return jsonify({"status": "error", "message": "User not found"}), 404
 
+    # bcrypt password check
     if not bcrypt.check_password_hash(user["password"], password):
         return jsonify({"status": "error", "message": "Wrong password"}), 401
 
-    token = create_token(user)
+    # JWT token creation
+    token = create_token({
+        "id": user["id"],
+        "role": user["role"]
+    })
 
     return jsonify({
         "status": "success",
+        "message": "Login successful",
         "role": user["role"],
-        "token": token,
-        "message": "Login successful"
+        "name": user["name"],
+        "token": token
     })
 
 
+# ---------------- PROTECTED ROUTE TEST ----------------
+@app.route("/me", methods=["GET"])
+def me():
+    token = request.headers.get("Authorization")
+
+    if not token:
+        return jsonify({"error": "Token missing"}), 401
+
+    decoded = verify_token(token)
+
+    if not decoded:
+        return jsonify({"error": "Invalid token"}), 401
+
+    return jsonify({
+        "message": "Valid user",
+        "user": decoded
+    })
+
+
+# ---------------- BLUEPRINTS ----------------
+app.register_blueprint(admin_bp, url_prefix="/admin")
+app.register_blueprint(auth_bp, url_prefix="/auth")
+app.register_blueprint(gallery_bp, url_prefix="/gallery")
+app.register_blueprint(attendance_bp, url_prefix="/attendance")
+app.register_blueprint(parent_bp, url_prefix="/parent")
+app.register_blueprint(student_bp, url_prefix="/student")
+app.register_blueprint(teacher_bp, url_prefix="/teacher")
+
+
+# ---------------- RUN SERVER ----------------
 if __name__ == "__main__":
     app.run(debug=True)

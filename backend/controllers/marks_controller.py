@@ -1,4 +1,4 @@
-from backend.models.marks_model import add_marks, get_marks
+from models.marks_model import add_marks, get_marks
 
 
 def add(student_id, subject, marks):

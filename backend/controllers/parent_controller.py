@@ -1,4 +1,4 @@
-from backend.models.parent_model import get_parent, get_children
+from models.parent_model import get_parent, get_children
 
 
 def fetch_parent(parent_id):
