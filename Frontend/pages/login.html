@@ -1,11 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – S.S. Hr. Sec. School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+ 
+   <!-- External CSS File -->
+   <link rel="stylesheet" href="/frontend/css/login.css" />
 </head>
 <body>
-    <p>hello</p>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<div class="login-wrap">
+
+  <!-- School Badge -->
+  <div class="school-badge">
+    <div class="badge-emblem">SS</div>
+    <div class="badge-name">S.S. Higher Secondary School</div>
+    <div class="badge-sub">Arani, Tiruvannamalai · Est. 1914</div>
+  </div>
+
+  <!-- Login Card -->
+  <div class="login-card">
+    <div class="card-title">School Portal</div>
+    <div class="card-sub">Sign in to access your dashboard</div>
+
+    <!-- Step Indicator -->
+    <div class="steps" id="stepBar">
+      <div class="step-item active" id="step1">
+        <div class="step-dot">1</div>
+        <div class="step-label">Credentials</div>
+      </div>
+      <div class="step-item" id="step2">
+        <div class="step-dot">2</div>
+        <div class="step-label">Role Code</div>
+      </div>
+      <div class="step-item" id="step3">
+        <div class="step-dot">3</div>
+        <div class="step-label">Access</div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 1: CREDENTIALS ══ -->
+    <div class="form-panel active" id="panel1">
+
+      <!-- Role selector -->
+      <div class="role-picker" id="rolePicker">
+        <div class="role-btn active" data-role="student" onclick="selectRole(this)">
+          <span class="ri">🎒</span><span class="rl">Student</span>
+        </div>
+        <div class="role-btn" data-role="teacher" onclick="selectRole(this)">
+          <span class="ri">👨‍🏫</span><span class="rl">Teacher</span>
+        </div>
+        <div class="role-btn" data-role="admin" onclick="selectRole(this)">
+          <span class="ri">🔑</span><span class="rl">Admin</span>
+        </div>
+      </div>
+
+      <div class="inp-group">
+        <label>User ID</label>
+        <div class="inp-wrap">
+          <input type="text" id="userId" placeholder="Enter your User ID" autocomplete="username">
+          <span class="inp-icon">🪪</span>
+        </div>
+        <div class="err-msg" id="errId">⚠️ Please enter your User ID</div>
+      </div>
+
+      <div class="inp-group">
+        <label>Password</label>
+        <div class="inp-wrap">
+          <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+          <button class="eye-btn" onclick="togglePass('password',this)" tabindex="-1">👁️</button>
+        </div>
+        <div class="err-msg" id="errPass">⚠️ Please enter your password</div>
+      </div>
+
+      <button class="btn-submit" id="btnStep1" onclick="submitStep1()">
+        <span class="btn-text">Continue →</span>
+        <div class="spinner"></div>
+      </button>
+
+      <hr class="divider">
+      <div class="footer-links">
+        <a href="index.html">← Back to Home</a>
+        <a href="#">Forgot Password?</a>
+        <a href="contact.html">Need Help?</a>
+      </div>
+    </div>
+
+    <!-- ══ STEP 2: ROLE CODE ══ -->
+    <div class="form-panel" id="panel2">
+      <button class="back-link" onclick="goBack()">← Back</button>
+
+      <div class="code-hint" id="codeHint">
+        🔐 Enter your <strong>Role Security Code</strong> to verify your access level.<br>
+        <span id="codeHintSub" style="color:var(--muted);font-size:12px;">Contact your class teacher or admin if you don't have a code.</span>
+      </div>
+
+      <div class="inp-group">
+        <label>Role Security Code</label>
+        <div class="inp-wrap">
+          <input type="text" id="roleCode" placeholder="e.g. STU-2026" autocomplete="off" style="letter-spacing:2px;font-weight:700;text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+          <span class="inp-icon">🛡️</span>
+        </div>
+        <div class="err-msg" id="errCode">⚠️ Invalid Role Code. Please try again.</div>
+      </div>
+
+      <button class="btn-submit" id="btnStep2" onclick="submitStep2()">
+        <span class="btn-text">Verify & Login</span>
+        <div class="spinner"></div>
+      </button>
+    </div>
+
+  </div><!-- end login-card -->
+</div><!-- end login-wrap -->
+
+<!-- ══ SUCCESS POPUP ══ -->
+<div class="popup-bd" id="popupBd">
+  <div class="popup-card">
+    <div class="popup-top">
+      <div class="popup-check">✓</div>
+      <div class="popup-title">Login Successful!</div>
+      <div class="popup-sub">Welcome back to S.S. School Portal</div>
+    </div>
+    <div class="popup-body">
+      <div class="info-row">
+        <div class="info-icon" style="background:rgba(232,133,10,.1)">👤</div>
+        <div><div class="info-key">Name</div><div class="info-val" id="popName">—</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon" style="background:rgba(29,78,216,.1)">🎭</div>
+        <div><div class="info-key">Role</div><div class="info-val" id="popRole">—</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon" style="background:rgba(22,163,74,.1)">📋</div>
+        <div><div class="info-key">User ID</div><div class="info-val" id="popId">—</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon" style="background:rgba(124,58,237,.1)">✅</div>
+        <div><div class="info-key">Status</div><div class="info-val" style="color:var(--green)">Active</div></div>
+      </div>
+    </div>
+    <div class="popup-actions">
+      <button class="btn-dashboard" onclick="goDashboard()">🚀 Dashboard</button>
+      <button class="btn-home" onclick="goHome()">🏠 Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- External JavaScript File -->
+   <script src="/frontend/js/login.js"></script>
 </body>
 </html>

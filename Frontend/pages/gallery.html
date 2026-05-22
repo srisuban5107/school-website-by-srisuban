@@ -1,11 +1,392 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gallery – S.S. Hr. Sec. School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  
+  <!-- External CSS File -->
+   <link rel="stylesheet" href="/frontend/css/gallery.css" />
 </head>
 <body>
-    <p>hello</p>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-emblem">SS</div>
+    <div class="nav-title">S.S. Hr. Sec. School<br><span>Arani, Tiruvannamalai</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="academics.html">Academics</a></li>
+    <li><a href="facilities.html">Facilities</a></li>
+    <li><a href="staff.html">Staff</a></li>
+    <li><a href="gallery.html" class="active">Gallery</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-profile">🏫</div>
+    <a href="login.html" class="btn-login desktop-only">Login</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-profile-bar">
+    <div class="mobile-profile-pic">🏫</div>
+    <div><div class="mobile-profile-name">S.S. Hr. Sec. School</div><div class="mobile-profile-sub">Arani, Tiruvannamalai</div></div>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html"><span class="link-icon">🏠</span>Home</a></li>
+    <li><a href="index.html#about"><span class="link-icon">ℹ️</span>About</a></li>
+    <li><a href="academics.html"><span class="link-icon">📖</span>Academics</a></li>
+    <li><a href="facilities.html"><span class="link-icon">🏛️</span>Facilities</a></li>
+    <li><a href="staff.html"><span class="link-icon">👨‍🏫</span>Staff</a></li>
+    <li><a href="gallery.html" class="active"><span class="link-icon">🖼️</span>Gallery</a></li>
+    <li><a href="contact.html"><span class="link-icon">📞</span>Contact</a></li>
+  </ul>
+  <div class="mobile-login-wrap"><a href="login.html" class="btn-login">🔐 Login</a></div>
+</div>
+
+<!-- ══════════════════════════════════
+     1. HERO
+══════════════════════════════════ -->
+<section class="gallery-hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Our Visual Journey</div>
+    <h1 class="hero-title">School <span>Gallery</span></h1>
+    <p class="hero-sub"><b>Events</b> &nbsp;•&nbsp; <b>Achievements</b> &nbsp;•&nbsp; <b>Memories</b></p>
+    <div class="hero-actions">
+      <button class="btn-upload" onclick="openUpload()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        Upload Photos
+      </button>
+    </div>
+    <div class="hero-stats-row">
+      <div class="h-stat"><div class="num" id="totalCount">0</div><div class="lbl">Total Photos</div></div>
+      <div class="h-stat"><div class="num">9</div><div class="lbl">Categories</div></div>
+      <div class="h-stat"><div class="num">2026</div><div class="lbl">Latest Year</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     2. FILTER BAR
+══════════════════════════════════ -->
+<div class="filter-wrap">
+  <div class="filter-scroll">
+    <button class="filter-btn active" data-filter="all">🗂️ All</button>
+    <button class="filter-btn" data-filter="annual">🎭 Annual Day</button>
+    <button class="filter-btn" data-filter="sports">🏅 Sports Day</button>
+    <button class="filter-btn" data-filter="labs">🔬 Labs</button>
+    <button class="filter-btn" data-filter="cultural">🎨 Cultural</button>
+    <button class="filter-btn" data-filter="nss">🤝 NSS / Scouts</button>
+    <button class="filter-btn" data-filter="class">🏫 Classroom</button>
+    <button class="filter-btn" data-filter="tours">🚌 Tours</button>
+    <button class="filter-btn" data-filter="achieve">🏆 Achievements</button>
+  </div>
+</div>
+
+<!-- Search + count bar -->
+<div class="search-wrap">
+  <div class="search-box">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Search events, year, category…">
+  </div>
+  <div class="gallery-count">Showing <span id="visibleCount">0</span> photos</div>
+</div>
+
+<!-- ══════════════════════════════════
+     3. GALLERY GRID
+══════════════════════════════════ -->
+<section class="gallery-section">
+  <div class="gallery-grid" id="galleryGrid">
+
+    <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║  GALLERY CARD TEMPLATE — EASY COPY-PASTE               ║
+    ║                                                          ║
+    ║  data-cat    → filter category (all/annual/sports/      ║
+    ║                labs/cultural/nss/class/tours/achieve)   ║
+    ║  data-title  → event name                               ║
+    ║  data-date   → date string                              ║
+    ║  data-year   → year number (for search)                 ║
+    ║  data-caption→ short description                        ║
+    ║  data-by     → uploaded by (optional)                   ║
+    ║                                                          ║
+    ║  Photo: replace emoji with <img loading="lazy" src="…"> ║
+    ╚══════════════════════════════════════════════════════════╝
+    -->
+
+    <!-- Annual Day -->
+    <div class="g-card" data-cat="annual" data-title="Annual Day 2026" data-date="Jan 12, 2026" data-year="2026" data-caption="Grand annual celebration with dance, drama and prize distribution." data-by="School Admin">
+      <div class="g-photo">
+        <div class="g-emoji">🎭</div>
+        <!-- Replace emoji with: <img loading="lazy" src="photos/annual-2026.jpg" alt="Annual Day 2026"> -->
+        <span class="g-cat-badge cat-annual">Annual Day</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">Annual Day 2026</div>
+        <div class="g-meta"><span>Jan 12, 2026</span><div class="g-meta-dot"></div><span>Annual Day</span></div>
+        <div class="g-caption">Grand celebration with dance, drama and prize distribution.</div>
+      </div>
+    </div>
+
+    <div class="g-card" data-cat="annual" data-title="Cultural Parade — Annual Day" data-date="Jan 12, 2026" data-year="2026" data-caption="Students perform traditional folk dance on stage." data-by="School Admin">
+      <div class="g-photo">
+        <div class="g-emoji">💃</div>
+        <span class="g-cat-badge cat-annual">Annual Day</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">Cultural Parade</div>
+        <div class="g-meta"><span>Jan 12, 2026</span><div class="g-meta-dot"></div><span>Annual Day</span></div>
+        <div class="g-caption">Students perform traditional folk dance on stage.</div>
+      </div>
+    </div>
+
+    <!-- Sports Day -->
+    <div class="g-card" data-cat="sports" data-title="Sports Day 2025" data-date="Nov 5, 2025" data-year="2025" data-caption="Annual sports meet with relay race, long jump, and more." data-by="PE Teacher">
+      <div class="g-photo">
+        <div class="g-emoji">🏅</div>
+        <span class="g-cat-badge cat-sports">Sports Day</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">Sports Day 2025</div>
+        <div class="g-meta"><span>Nov 5, 2025</span><div class="g-meta-dot"></div><span>Sports Day</span></div>
+        <div class="g-caption">Annual sports meet with relay race, long jump, and more.</div>
+      </div>
+    </div>
+
+    <div class="g-card" data-cat="sports" data-title="Prize Distribution — Sports" data-date="Nov 5, 2025" data-year="2025" data-caption="Winners receiving medals and trophies from the Headmaster." data-by="PE Teacher">
+      <div class="g-photo">
+        <div class="g-emoji">🏆</div>
+        <span class="g-cat-badge cat-sports">Sports Day</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">Prize Distribution</div>
+        <div class="g-meta"><span>Nov 5, 2025</span><div class="g-meta-dot"></div><span>Sports Day</span></div>
+        <div class="g-caption">Winners receiving medals and trophies from the Headmaster.</div>
+      </div>
+    </div>
+
+    <!-- Labs -->
+    <div class="g-card" data-cat="labs" data-title="Science Lab Session" data-date="Oct 10, 2025" data-year="2025" data-caption="Class 10 students conducting chemistry experiments in the lab." data-by="Science Teacher">
+      <div class="g-photo">
+        <div class="g-emoji">🔬</div>
+        <span class="g-cat-badge cat-labs">Labs</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">Science Lab Session</div>
+        <div class="g-meta"><span>Oct 10, 2025</span><div class="g-meta-dot"></div><span>Labs</span></div>
+        <div class="g-caption">Class 10 students conducting chemistry experiments.</div>
+      </div>
+    </div>
+
+    <div class="g-card" data-cat="labs" data-title="Computer Lab — Class 11" data-date="Sep 8, 2025" data-year="2025" data-caption="CS students learning programming in the computer lab." data-by="CS Teacher">
+      <div class="g-photo">
+        <div class="g-emoji">💻</div>
+        <span class="g-cat-badge cat-labs">Labs</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">Computer Lab — Class 11</div>
+        <div class="g-meta"><span>Sep 8, 2025</span><div class="g-meta-dot"></div><span>Labs</span></div>
+        <div class="g-caption">CS students learning programming in the computer lab.</div>
+      </div>
+    </div>
+
+    <!-- Cultural -->
+    <div class="g-card" data-cat="cultural" data-title="Pongal Celebration 2026" data-date="Jan 14, 2026" data-year="2026" data-caption="Students celebrate Pongal with traditional kolam and pots." data-by="School Admin">
+      <div class="g-photo">
+        <div class="g-emoji">🏺</div>
+        <span class="g-cat-badge cat-cultural">Cultural</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">Pongal Celebration 2026</div>
+        <div class="g-meta"><span>Jan 14, 2026</span><div class="g-meta-dot"></div><span>Cultural</span></div>
+        <div class="g-caption">Students celebrate Pongal with traditional kolam and pots.</div>
+      </div>
+    </div>
+
+    <div class="g-card" data-cat="cultural" data-title="Independence Day 2025" data-date="Aug 15, 2025" data-year="2025" data-caption="Flag hoisting and cultural programs by students." data-by="School Admin">
+      <div class="g-photo">
+        <div class="g-emoji">🇮🇳</div>
+        <span class="g-cat-badge cat-cultural">Cultural</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">Independence Day 2025</div>
+        <div class="g-meta"><span>Aug 15, 2025</span><div class="g-meta-dot"></div><span>Cultural</span></div>
+        <div class="g-caption">Flag hoisting and cultural programs by students.</div>
+      </div>
+    </div>
+
+    <!-- NSS -->
+    <div class="g-card" data-cat="nss" data-title="NSS Camp 2025" data-date="Dec 1, 2025" data-year="2025" data-caption="7-day NSS residential camp focused on community service." data-by="NSS Officer">
+      <div class="g-photo">
+        <div class="g-emoji">🤝</div>
+        <span class="g-cat-badge cat-nss">NSS / Scouts</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">NSS Camp 2025</div>
+        <div class="g-meta"><span>Dec 1, 2025</span><div class="g-meta-dot"></div><span>NSS / Scouts</span></div>
+        <div class="g-caption">7-day NSS residential camp focused on community service.</div>
+      </div>
+    </div>
+
+    <!-- Classroom -->
+    <div class="g-card" data-cat="class" data-title="Classroom — Class 9A" data-date="Aug 22, 2025" data-year="2025" data-caption="Students engaged in active learning during a Maths class." data-by="Maths Teacher">
+      <div class="g-photo">
+        <div class="g-emoji">🏫</div>
+        <span class="g-cat-badge cat-class">Classroom</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">Classroom — Class 9A</div>
+        <div class="g-meta"><span>Aug 22, 2025</span><div class="g-meta-dot"></div><span>Classroom</span></div>
+        <div class="g-caption">Students engaged in active learning during a Maths class.</div>
+      </div>
+    </div>
+
+    <!-- Tours -->
+    <div class="g-card" data-cat="tours" data-title="Educational Tour — Chennai" data-date="Feb 10, 2025" data-year="2025" data-caption="Class 11 science students visit ISRO Space Exhibition, Chennai." data-by="Trip Coordinator">
+      <div class="g-photo">
+        <div class="g-emoji">🚌</div>
+        <span class="g-cat-badge cat-tours">Tours</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">Educational Tour — Chennai</div>
+        <div class="g-meta"><span>Feb 10, 2025</span><div class="g-meta-dot"></div><span>Tours</span></div>
+        <div class="g-caption">Class 11 science students visit ISRO Space Exhibition.</div>
+      </div>
+    </div>
+
+    <!-- Achievements -->
+    <div class="g-card" data-cat="achieve" data-title="District Science Fair — 1st Prize" data-date="Mar 5, 2025" data-year="2025" data-caption="Our student wins 1st place in District Science Fair 2025." data-by="Science Teacher">
+      <div class="g-photo">
+        <div class="g-emoji">🥇</div>
+        <span class="g-cat-badge cat-achieve">Achievements</span>
+        <div class="g-overlay"><span class="g-overlay-btn">View Full Photo</span></div>
+      </div>
+      <div class="g-info">
+        <div class="g-title">District Science Fair — 1st Prize</div>
+        <div class="g-meta"><span>Mar 5, 2025</span><div class="g-meta-dot"></div><span>Achievements</span></div>
+        <div class="g-caption">Our student wins 1st place in District Science Fair 2025.</div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState" style="display:none">
+      <div class="es-icon">🔍</div>
+      <h3>No photos found</h3>
+      <p>Try a different search or filter category.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     4. LIGHTBOX (fullscreen modal)
+══════════════════════════════════ -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)">&#8249;</button>
+  <button class="lb-nav lb-next" onclick="lbNav(1)">&#8250;</button>
+  <div class="lb-img-wrap" id="lbImgWrap"></div>
+  <div class="lb-info">
+    <div class="lb-info-title" id="lbTitle"></div>
+    <div class="lb-info-meta" id="lbMeta"></div>
+  </div>
+  <div class="lb-counter" id="lbCounter"></div>
+</div>
+
+<!-- ══════════════════════════════════
+     UPLOAD MODAL
+══════════════════════════════════ -->
+<div class="modal-bd" id="uploadModal" onclick="closeUploadOutside(event)">
+  <div class="upload-panel">
+    <div class="upload-header">
+      <button class="uclose" onclick="closeUpload()">✕</button>
+      <h2>📸 Upload Photos</h2>
+      <p>Share memories with the school community</p>
+    </div>
+    <div class="upload-body">
+
+      <!-- Drop zone -->
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" multiple onchange="handleFiles(this.files)">
+        <div class="drop-icon">⬆️</div>
+        <h3>Drag & Drop photos here</h3>
+        <p>or click to browse · PNG, JPG, WEBP · Max 5MB each</p>
+      </div>
+
+      <!-- Image preview thumbnails -->
+      <div class="preview-grid" id="previewGrid" style="display:none"></div>
+
+      <!-- Form fields -->
+      <div class="form-field">
+        <label>Category</label>
+        <select id="upCat">
+          <option value="">Select category…</option>
+          <option value="annual">Annual Day</option>
+          <option value="sports">Sports Day</option>
+          <option value="labs">Labs</option>
+          <option value="cultural">Cultural</option>
+          <option value="nss">NSS / Scouts</option>
+          <option value="class">Classroom</option>
+          <option value="tours">Tours</option>
+          <option value="achieve">Achievements</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Event Title</label>
+        <input type="text" id="upTitle" placeholder="e.g. Annual Day 2026">
+      </div>
+      <div class="form-field">
+        <label>Date</label>
+        <input type="text" id="upDate" placeholder="e.g. Jan 12, 2026">
+      </div>
+      <div class="form-field">
+        <label>Short Description (optional)</label>
+        <textarea id="upDesc" placeholder="Describe the event…"></textarea>
+      </div>
+      <div class="form-field">
+        <label>Uploaded By (optional)</label>
+        <input type="text" id="upBy" placeholder="Your name or role">
+      </div>
+
+      <button class="upload-submit" onclick="submitUpload()">📤 Submit for Approval</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer style="background:#060f1e;padding:36px 5% 20px;text-align:center;">
+  <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--gold);margin-bottom:8px;">S.S. Hr. Sec. School</div>
+  <p style="color:#4a5568;font-size:13px;margin-bottom:14px;">Subramaniya Sasthri Higher Secondary School · Arani, Tiruvannamalai</p>
+  <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;">
+    <a href="index.html" style="color:#6b7280;font-size:13px;text-decoration:none;">Home</a>
+    <a href="gallery.html" style="color:var(--gold);font-size:13px;text-decoration:none;">Gallery</a>
+    <a href="staff.html" style="color:#6b7280;font-size:13px;text-decoration:none;">Staff</a>
+    <a href="contact.html" style="color:#6b7280;font-size:13px;text-decoration:none;">Contact</a>
+  </div>
+  <hr style="border:none;border-top:1px solid #1a2535;margin:0 0 16px;">
+  <p style="color:#374151;font-size:13px;">© 2025 Subramaniya Sasthri Higher Secondary School. All Rights Reserved.</p>
+</footer>
+
+<!-- External JavaScript File -->
+   <script src="/frontend/js/gallery.js"></script>
 </body>
 </html>
