@@ -1,72 +1,62 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from flask import Blueprint, request, jsonify, send_from_directory
 import os
 import uuid
 
-from fastapi.responses import FileResponse
+gallery_bp = Blueprint("gallery", __name__)
 
-router = APIRouter()
-
-# Folder to store uploaded images
 UPLOAD_DIR = "uploads/gallery"
-
-# Create folder if not exists
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-@router.post("/upload")
-async def upload_image(file: UploadFile = File(...)):
-    try:
-        # generate unique filename
-        file_ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
-        filename = f"{uuid.uuid4()}.{file_ext}"
 
-        file_path = os.path.join(UPLOAD_DIR, filename)
+# UPLOAD IMAGE
+@gallery_bp.route("/upload", methods=["POST"])
+def upload_image():
+    file = request.files.get("file")
 
-        # save file
-        with open(file_path, "wb") as buffer:
-            buffer.write(await file.read())
+    if not file:
+        return jsonify({"error": "No file uploaded"}), 400
 
-        return {
-            "message": "Image uploaded successfully",
-            "filename": filename,
-            "path": file_path
-        }
+    file_ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
+    filename = f"{uuid.uuid4()}.{file_ext}"
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-@router.get("/")
+    file_path = os.path.join(UPLOAD_DIR, filename)
+    file.save(file_path)
+
+    return jsonify({
+        "message": "Image uploaded successfully",
+        "filename": filename
+    })
+
+
+# GET ALL IMAGES
+@gallery_bp.route("/", methods=["GET"])
 def get_images():
-    try:
-        files = os.listdir(UPLOAD_DIR)
+    files = os.listdir(UPLOAD_DIR)
 
-        images = []
-        for f in files:
-            images.append({
-                "filename": f,
-                "url": f"/gallery/files/{f}"
-            })
+    images = []
+    for f in files:
+        images.append({
+            "filename": f,
+            "url": f"/gallery/files/{f}"
+        })
 
-        return {"images": images}
+    return jsonify({"images": images})
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-@router.get("/files/{filename}")
-def get_file(filename: str):
+
+# SERVE IMAGE FILE
+@gallery_bp.route("/files/<filename>", methods=["GET"])
+def get_file(filename):
+    return send_from_directory(UPLOAD_DIR, filename)
+
+
+# DELETE IMAGE
+@gallery_bp.route("/delete/<filename>", methods=["DELETE"])
+def delete_image(filename):
     file_path = os.path.join(UPLOAD_DIR, filename)
 
     if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="File not found")
-
-    return FileResponse(file_path)
-
-@router.delete("/delete/{filename}")
-def delete_image(filename: str):
-    file_path = os.path.join(UPLOAD_DIR, filename)
-
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="File not found")
+        return jsonify({"error": "File not found"}), 404
 
     os.remove(file_path)
 
-    return {"message": "Image deleted successfully"}
+    return jsonify({"message": "Image deleted successfully"})

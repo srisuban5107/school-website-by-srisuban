@@ -1,15 +1,31 @@
-from fastapi import APIRouter
+from flask import Blueprint, request, jsonify
 
-router = APIRouter()
+teacher_bp = Blueprint("teacher", __name__)
 
-@router.get("/dashboard")
+
+# Teacher dashboard
+@teacher_bp.route("/dashboard", methods=["GET"])
 def teacher_dashboard():
-    return {"message": "Teacher Dashboard"}
+    return jsonify({"message": "Teacher Dashboard"})
 
-@router.post("/add-marks")
+
+# Add marks
+@teacher_bp.route("/add-marks", methods=["POST"])
 def add_marks():
-    return {"message": "Marks Added"}
+    data = request.get_json()
 
-@router.post("/upload-notes")
+    return jsonify({
+        "message": "Marks Added",
+        "data": data
+    })
+
+
+# Upload notes
+@teacher_bp.route("/upload-notes", methods=["POST"])
 def upload_notes():
-    return {"message": "Notes Uploaded"}
+    data = request.get_json()
+
+    return jsonify({
+        "message": "Notes Uploaded",
+        "data": data
+    })

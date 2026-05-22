@@ -1,15 +1,24 @@
-from fastapi import APIRouter
+from flask import Blueprint, jsonify
 
-router = APIRouter()
+student_bp = Blueprint("student", __name__)
 
-@router.get("/profile/{student_id}")
-def student_profile(student_id: int):
-    return {"student_id": student_id, "name": "Student Name"}
 
-@router.get("/marks/{student_id}")
-def student_marks(student_id: int):
-    return {"student_id": student_id, "marks": [80, 90, 85]}
+@student_bp.route("/profile/<int:student_id>", methods=["GET"])
+def student_profile(student_id):
+    return jsonify({
+        "student_id": student_id,
+        "name": "Student Name"
+    })
 
-@router.get("/dashboard")
+
+@student_bp.route("/marks/<int:student_id>", methods=["GET"])
+def student_marks(student_id):
+    return jsonify({
+        "student_id": student_id,
+        "marks": [80, 90, 85]
+    })
+
+
+@student_bp.route("/dashboard", methods=["GET"])
 def dashboard():
-    return {"message": "Student Dashboard"}
+    return jsonify({"message": "Student Dashboard"})

@@ -1,15 +1,25 @@
-from fastapi import APIRouter
+from flask import Blueprint, jsonify, request
 
-router = APIRouter()
+admin_bp = Blueprint("admin", __name__)
 
-@router.get("/dashboard")
+
+@admin_bp.route("/dashboard", methods=["GET"])
 def admin_dashboard():
-    return {"message": "Admin Dashboard"}
+    return jsonify({"message": "Admin Dashboard"})
 
-@router.post("/add-user")
+
+@admin_bp.route("/add-user", methods=["POST"])
 def add_user():
-    return {"message": "User Added"}
+    data = request.get_json()
 
-@router.delete("/delete-user/{user_id}")
-def delete_user(user_id: int):
-    return {"message": f"User {user_id} deleted"}
+    return jsonify({
+        "message": "User Added",
+        "data": data
+    })
+
+
+@admin_bp.route("/delete-user/<int:user_id>", methods=["DELETE"])
+def delete_user(user_id):
+    return jsonify({
+        "message": f"User {user_id} deleted"
+    })

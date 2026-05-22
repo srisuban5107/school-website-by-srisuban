@@ -1,15 +1,29 @@
-from fastapi import APIRouter
+from flask import Blueprint, jsonify, request
 
-router = APIRouter()
+attendance_bp = Blueprint("attendance", __name__)
 
-@router.post("/mark")
+
+@attendance_bp.route("/mark", methods=["POST"])
 def mark_attendance():
-    return {"message": "Attendance Marked"}
+    data = request.get_json()
 
-@router.get("/student/{student_id}")
-def get_attendance(student_id: int):
-    return {"student_id": student_id, "attendance": "92%"}
+    return jsonify({
+        "message": "Attendance Marked",
+        "data": data
+    })
 
-@router.get("/percentage/{student_id}")
-def attendance_percentage(student_id: int):
-    return {"student_id": student_id, "percentage": "90%"}
+
+@attendance_bp.route("/student/<int:student_id>", methods=["GET"])
+def get_attendance(student_id):
+    return jsonify({
+        "student_id": student_id,
+        "attendance": "92%"
+    })
+
+
+@attendance_bp.route("/percentage/<int:student_id>", methods=["GET"])
+def attendance_percentage(student_id):
+    return jsonify({
+        "student_id": student_id,
+        "percentage": "90%"
+    })

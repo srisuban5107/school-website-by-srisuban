@@ -1,15 +1,30 @@
-from fastapi import APIRouter
+from flask import Blueprint, request, jsonify
 
-router = APIRouter()
+auth_bp = Blueprint("auth", __name__)
 
-@router.post("/register")
+
+@auth_bp.route("/register", methods=["POST"])
 def register():
-    return {"message": "User Registered"}
+    data = request.get_json()
 
-@router.post("/login")
+    return jsonify({
+        "message": "User Registered",
+        "data": data
+    })
+
+
+@auth_bp.route("/login", methods=["POST"])
 def login():
-    return {"message": "User Logged In"}
+    data = request.get_json()
 
-@router.get("/me")
+    return jsonify({
+        "message": "User Logged In",
+        "data": data
+    })
+
+
+@auth_bp.route("/me", methods=["GET"])
 def get_user():
-    return {"user": "current user data"}
+    return jsonify({
+        "user": "current user data"
+    })
