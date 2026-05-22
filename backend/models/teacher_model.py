@@ -1,18 +1,18 @@
 from backend.db.connection import get_connection
 
 
-def find_user(email):
+def get_teacher(teacher_id):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute(
-        "SELECT * FROM users WHERE email=%s",
-        (email,)
+        "SELECT * FROM teachers WHERE id=%s",
+        (teacher_id,)
     )
 
-    user = cursor.fetchone()
+    teacher = cursor.fetchone()
 
     cursor.close()
     conn.close()
 
-    return user
+    return teacher
