@@ -1,18 +1,28 @@
 from db.connection import get_connection
 
-
 def find_user(email):
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
-    cursor.execute(
-        "SELECT * FROM users WHERE email=%s",
-        (email,)
-    )
+    cursor.execute("""
+        SELECT user_id, name, email, password, role, role_code
+        FROM users
+        WHERE email = %s
+    """, (email,))
 
-    user = cursor.fetchone()
+    row = cursor.fetchone()
 
     cursor.close()
     conn.close()
 
-    return user
+    if not row:
+        return None
+
+    return {
+        "user_id": row[0],
+        "name": row[1],
+        "email": row[2],
+        "password": row[3],
+        "role": row[4],
+        "role_code": row[5]
+    }

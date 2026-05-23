@@ -23,10 +23,10 @@ def register_user(data):
         conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.execute(
-            "INSERT INTO users (name,email,password,role) VALUES (%s,%s,%s,%s)",
-            (name, email, hashed_pw, role)
-        )
+        cursor.execute("""
+            INSERT INTO users (name, email, password, role)
+            VALUES (%s, %s, %s, %s)
+        """, (name, email, hashed_pw, role))
 
         conn.commit()
         cursor.close()
@@ -54,8 +54,9 @@ def login_user(data):
     if not verify_password(password, user["password"]):
         return {"message": "Wrong password"}, 401
 
+    
     token = create_token({
-        "id": user["id"],
+        "id": user["user_id"],
         "role": user["role"]
     })
 
@@ -63,5 +64,6 @@ def login_user(data):
         "message": "Login success",
         "token": token,
         "role": user["role"],
-        "name": user["name"]
+        "name": user["name"],
+        "user_id": user["user_id"]
     }, 200
