@@ -161,20 +161,16 @@ function goToStep2(){
 }
 
 function goToStep3(){
-  // Swap the inline panels instantly without modal layout shifts
   document.getElementById("panel2").classList.remove("active");
   document.getElementById("panel3").classList.add("active");
 
-  // Advance step markers to completion status
   document.getElementById("step2").classList.remove("active");
   document.getElementById("step2").classList.add("done");
   document.getElementById("step3").classList.add("done");
 
-  // Clean title spaces to save container real estate gracefully
   document.getElementById("cardTitle").style.display = "none";
   document.getElementById("cardSub").style.display = "none";
 
-  // Feed profile parameters into internal fields safely
   document.getElementById("popName").textContent = tempUser.name;
   document.getElementById("popRole").textContent = tempUser.role.toUpperCase();
   document.getElementById("popId").textContent = sessionStorage.getItem("email");
@@ -199,9 +195,9 @@ function goDashboard(){
   const role = tempUser.role;
   switch(role){
     case "student": window.location.href = "../student/dashboard.html"; break;
+    case "parent":  window.location.href = "../parent/dashboard.html"; break; /* Added Parent Route */
     case "teacher": window.location.href = "../teacher/dashboard.html"; break;
     case "admin":   window.location.href = "../admin/dashboard.html"; break;
-    case "parent":  window.location.href = "../parent/dashboard.html"; break;
     default:        window.location.href = "../index.html";
   }
 }

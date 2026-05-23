@@ -21,14 +21,13 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: var(--deep); /* Prevents white margins from showing when scrolling */
+  background-color: var(--deep);
   height: 100%;
 }
 
 body {
   font-family: 'DM Sans', sans-serif;
   min-height: 100%;
-  /* Fixed background styling: spans seamlessly over deep scrolling pages without clipping */
   background: 
     radial-gradient(ellipse at 15% 50%, rgba(232, 133, 10, 0.15) 0%, transparent 60%),
     radial-gradient(ellipse at 85% 15%, rgba(245, 185, 78, 0.1) 0%, transparent 60%),
@@ -43,10 +42,9 @@ body {
   overflow-y: auto;
 }
 
-/* Grid pattern layer */
 body::before {
   content: '';
-  position: fixed; /* Fixed layer ensures grid pattern stays put during scrolls */
+  position: fixed;
   inset: 0;
   background-image:
     repeating-linear-gradient(0deg, transparent, transparent 55px, rgba(255, 255, 255, 0.013) 55px, rgba(255, 255, 255, 0.013) 56px),
@@ -55,7 +53,6 @@ body::before {
   z-index: 0;
 }
 
-/* Static, high-performance background gradient ambient spots (No laggy animations) */
 .orb {
   position: absolute;
   border-radius: 50%;
@@ -70,7 +67,7 @@ body::before {
   background: var(--saffron);
   top: -100px;
   right: -80px;
-  filter: blur(40px); /* Hardware accelerated blending */
+  filter: blur(40px);
 }
 .orb2 {
   width: 300px;
@@ -81,13 +78,11 @@ body::before {
   filter: blur(30px);
 }
 
-/* ── LOGIN CARD ── */
 .login-wrap {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 440px;
-  /* GPU accelerated sliding animations */
+  max-width: 460px; 
   transform: translateY(0);
   animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -103,7 +98,6 @@ body::before {
   }
 }
 
-/* School badge at top */
 .school-badge {
   display: flex;
   flex-direction: column;
@@ -142,11 +136,10 @@ body::before {
   letter-spacing: 0.5px;
 }
 
-/* Card layout wrapper */
 .login-card {
   background: var(--white);
   border-radius: 20px;
-  padding: 36px 36px 32px;
+  padding: 36px 30px 32px; 
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
   position: relative;
   overflow: hidden;
@@ -176,7 +169,6 @@ body::before {
   margin-bottom: 28px;
 }
 
-/* Step tracker layout */
 .steps {
   display: flex;
   align-items: center;
@@ -254,7 +246,6 @@ body::before {
   color: var(--green);
 }
 
-/* Performance-friendly transitions for inline panels */
 .form-panel {
   display: none;
   opacity: 0;
@@ -276,16 +267,16 @@ body::before {
   }
 }
 
-/* Role Selector Buttons */
+
 .role-picker {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   margin-bottom: 22px;
 }
 
 .role-btn {
   flex: 1;
-  padding: 11px 8px;
+  padding: 10px 4px;
   border: 2px solid var(--border);
   border-radius: 10px;
   background: var(--white);
@@ -304,13 +295,13 @@ body::before {
 }
 
 .role-btn .ri {
-  font-size: 22px;
+  font-size: 20px;
   display: block;
   margin-bottom: 4px;
 }
 
 .role-btn .rl {
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--text);
 }
@@ -319,7 +310,6 @@ body::before {
   color: var(--saffron);
 }
 
-/* Fields & Forms Layout */
 .inp-group {
   margin-bottom: 16px;
   position: relative;
@@ -350,10 +340,6 @@ body::before {
   background: var(--cream);
   outline: none;
   transition: all 0.2s ease;
-}
-
-.inp-wrap.no-icon input {
-  padding: 12px 14px;
 }
 
 .inp-wrap input:focus {
@@ -390,7 +376,6 @@ body::before {
   padding: 2px;
 }
 
-/* Security code informational box */
 .code-hint {
   background: rgba(232, 133, 10, 0.08);
   border: 1px solid rgba(232, 133, 10, 0.2);
@@ -420,7 +405,6 @@ body::before {
   display: flex;
 }
 
-/* Primary Form buttons */
 .btn-submit {
   width: 100%;
   padding: 13px;
@@ -520,7 +504,6 @@ body::before {
   color: var(--saffron);
 }
 
-/* ── STEP 3: INTEGRATED IN-BOX SUCCESS PANEL ── */
 .inline-success-top {
   text-align: center;
   margin-bottom: 20px;
@@ -632,7 +615,6 @@ body::before {
   color: var(--saffron);
 }
 
-/* ── TOAST MESSAGES ── */
 .toast {
   position: fixed;
   top: 24px;
@@ -664,8 +646,9 @@ body::before {
 
 /* ── RESPONSIVE ── */
 @media (max-width: 480px) {
-  .login-card { padding: 28px 22px 24px; }
-  .role-picker { gap: 7px; }
-  .role-btn { padding: 9px 5px; }
-  .role-btn .ri { font-size: 18px; }
+  .login-card { padding: 24px 16px 24px; }
+  .role-picker { gap: 4px; }
+  .role-btn { padding: 8px 2px; border-radius: 6px; }
+  .role-btn .ri { font-size: 16px; }
+  .role-btn .rl { font-size: 9.5px; letter-spacing: -0.2px; }
 }
