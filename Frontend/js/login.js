@@ -10,196 +10,447 @@ let tempUser = null;
    ROLE SELECT
 ========================= */
 function selectRole(btn){
-  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+
+  document.querySelectorAll(".role-btn")
+    .forEach(b => {
+      b.classList.remove("active");
+    });
+
+  btn.classList.add("active");
+
   selectedRole = btn.dataset.role;
 }
+
 
 /* =========================
    PASSWORD TOGGLE
 ========================= */
 function togglePass(inputId, btn){
+
   const inp = document.getElementById(inputId);
 
   if(inp.type === "password"){
+
     inp.type = "text";
     btn.textContent = "🙈";
+
   } else {
+
     inp.type = "password";
     btn.textContent = "👁️";
   }
 }
 
+
 /* =========================
    TOAST
 ========================= */
-function showToast(msg, type="error"){
+function showToast(msg, type = "error"){
+
   const t = document.getElementById("toast");
+
   if(!t) return;
 
-  t.textContent = (type === "success" ? "✅ " : "❌ ") + msg;
-  t.className = "toast show " + (type === "success" ? "success" : "");
+  t.textContent =
+    (type === "success" ? "✅ " : "❌ ") + msg;
 
-  setTimeout(() => t.classList.remove("show"), 3000);
+  t.className =
+    "toast show " +
+    (type === "success" ? "success" : "");
+
+  setTimeout(() => {
+    t.classList.remove("show");
+  }, 3000);
 }
+
 
 /* =========================
    STEP 1 LOGIN
 ========================= */
 async function submitStep1(){
 
-  const uid = document.getElementById("userId").value.trim();
-  const pass = document.getElementById("password").value;
+  const uid =
+    document.getElementById("userId")
+    .value
+    .trim();
+
+  const pass =
+    document.getElementById("password")
+    .value;
 
   if(!uid || !pass){
-    showToast("Enter User ID and Password");
+
+    showToast(
+      "Enter User ID and Password"
+    );
+
     return;
   }
 
-  const btn = document.getElementById("btnStep1");
+  const btn =
+    document.getElementById("btnStep1");
+
   btn.classList.add("loading");
+
   btn.disabled = true;
 
-  try {
+  try{
 
-    const res = await fetch(`${API_BASE}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: uid,
-        password: pass
-      })
-    });
+    const res = await fetch(
+      `${API_BASE}/auth/login`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          email: uid,
+          password: pass
+        })
+      }
+    );
 
     const data = await res.json();
 
-    if(data.status !== "success"){
-      showToast(data.message || "Login failed");
+    /* LOGIN FAILED */
+    if(!res.ok){
+
+      showToast(
+        data.message ||
+        "Invalid credentials"
+      );
+
       return;
     }
 
-    /* SAVE TEMP USER */
+    /* ROLE MISMATCH */
+    if(data.role !== selectedRole){
+
+      showToast(
+        `This account belongs to ${data.role}`
+      );
+
+      return;
+    }
+
+    /* STORE USER */
     tempUser = data;
 
-    sessionStorage.setItem("token", data.token);
-    sessionStorage.setItem("role", data.role);
+    sessionStorage.setItem(
+      "token",
+      data.token
+    );
 
-    showToast("Step 1 success! Enter role code", "success");
+    sessionStorage.setItem(
+      "role",
+      data.role
+    );
+
+    sessionStorage.setItem(
+      "name",
+      data.name
+    );
+
+    sessionStorage.setItem(
+      "email",
+      uid
+    );
+
+    showToast(
+      "Step 1 success! Enter role code",
+      "success"
+    );
 
     goToStep2();
 
-  } catch(err){
+  }
+  catch(err){
+
     console.error(err);
-    showToast("Server not responding");
-  } finally {
+
+    showToast(
+      "Server not responding"
+    );
+  }
+  finally{
+
     btn.classList.remove("loading");
+
     btn.disabled = false;
   }
 }
 
+
 /* =========================
-   STEP 2 ROLE CHECK
+   STEP 2 VERIFY ROLE
 ========================= */
-function submitStep2(){
+async function submitStep2(){
 
   if(!tempUser){
-    showToast("Please login first");
+
+    showToast(
+      "Please login first"
+    );
+
     goBack();
+
     return;
   }
 
-  const code = document.getElementById("roleCode").value.trim().toUpperCase();
+  const roleCode =
+    document.getElementById("roleCode")
+    .value
+    .trim()
+    .toUpperCase();
 
-  if(!code){
-    showToast("Enter Role Code");
+  if(!roleCode){
+
+    showToast(
+      "Enter Role Code"
+    );
+
     return;
   }
 
-  const btn = document.getElementById("btnStep2");
+  const btn =
+    document.getElementById("btnStep2");
+
   btn.classList.add("loading");
+
   btn.disabled = true;
 
-  setTimeout(() => {
+  try{
 
-    const expected = {
-      student: "STU-2026",
-      teacher: "TCH-2026",
-      admin: "ADM-2026",
-      parent: "PAR-2026"
-    };
+    const token =
+      sessionStorage.getItem("token");
 
-    const role = tempUser.role;
+    const res = await fetch(
+      `${API_BASE}/auth/verify-role`,
+      {
+        method: "POST",
 
-    if(code !== expected[role]){
-      showToast("Invalid Role Code");
+        headers: {
+          "Content-Type": "application/json"
+        },
 
-      btn.classList.remove("loading");
-      btn.disabled = false;
+        body: JSON.stringify({
+          token: token,
+          roleCode: roleCode
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if(!res.ok){
+
+      showToast(
+        data.message ||
+        "Wrong role code"
+      );
+
       return;
     }
 
-    showToast("Login Complete!", "success");
+    showToast(
+      "Login Complete!",
+      "success"
+    );
 
-    /* FINAL REDIRECT */
-    if(role === "student"){
-      window.location.href = "../student/dashboard.html";
-    }
-    else if(role === "teacher"){
-      window.location.href = "../teacher/dashboard.html";
-    }
-    else if(role === "admin"){
-      window.location.href = "../admin/dashboard.html";
-    }
-    else if(role === "parent"){
-      window.location.href = "../parent/dashboard.html";
-    }
-    else {
-      window.location.href = "../index.html";
-    }
+    showSuccessPopup();
 
-  }, 500);
+  }
+  catch(err){
+
+    console.error(err);
+
+    showToast(
+      "Role verification failed"
+    );
+  }
+  finally{
+
+    btn.classList.remove("loading");
+
+    btn.disabled = false;
+  }
 }
 
+
 /* =========================
-   STEP SWITCH
+   SUCCESS POPUP
+========================= */
+function showSuccessPopup(){
+
+  document.getElementById(
+    "popName"
+  ).textContent =
+    tempUser.name;
+
+  document.getElementById(
+    "popRole"
+  ).textContent =
+    tempUser.role.toUpperCase();
+
+  document.getElementById(
+    "popId"
+  ).textContent =
+    sessionStorage.getItem("email");
+
+  document.getElementById(
+    "popupBd"
+  ).classList.add("show");
+}
+
+
+/* =========================
+   GO DASHBOARD
+========================= */
+function goDashboard(){
+
+  const role = tempUser.role;
+
+  switch(role){
+
+    case "student":
+
+      window.location.href =
+        "../student/dashboard.html";
+
+      break;
+
+
+    case "teacher":
+
+      window.location.href =
+        "../teacher/dashboard.html";
+
+      break;
+
+
+    case "admin":
+
+      window.location.href =
+        "../admin/dashboard.html";
+
+      break;
+
+
+    case "parent":
+
+      window.location.href =
+        "../parent/dashboard.html";
+
+      break;
+
+
+    default:
+
+      window.location.href =
+        "../index.html";
+  }
+}
+
+
+/* =========================
+   GO HOME
+========================= */
+function goHome(){
+
+  window.location.href =
+    "../index.html";
+}
+
+
+/* =========================
+   STEP UI
 ========================= */
 function goToStep2(){
 
-  document.getElementById("panel1").classList.remove("active");
-  document.getElementById("panel2").classList.add("active");
+  document
+    .getElementById("panel1")
+    .classList.remove("active");
 
-  document.getElementById("step1").classList.add("done");
-  document.getElementById("step2").classList.add("active");
+  document
+    .getElementById("panel2")
+    .classList.add("active");
+
+  document
+    .getElementById("step1")
+    .classList.add("done");
+
+  document
+    .getElementById("step2")
+    .classList.add("active");
 }
 
+
 /* =========================
-   BACK BUTTON (FIXED)
+   BACK BUTTON
 ========================= */
 function goBack(){
 
-  document.getElementById("panel2").classList.remove("active");
-  document.getElementById("panel1").classList.add("active");
+  document
+    .getElementById("panel2")
+    .classList.remove("active");
 
-  document.getElementById("step2").classList.remove("active");
-  document.getElementById("step1").classList.remove("done");
-  document.getElementById("step1").classList.add("active");
+  document
+    .getElementById("panel1")
+    .classList.add("active");
 
-  document.getElementById("roleCode").value = "";
+  document
+    .getElementById("step2")
+    .classList.remove("active");
+
+  document
+    .getElementById("step1")
+    .classList.remove("done");
+
+  document
+    .getElementById("step1")
+    .classList.add("active");
+
+  document
+    .getElementById("roleCode")
+    .value = "";
 
   tempUser = null;
 
-  showToast("Back to login", "success");
+  showToast(
+    "Back to login",
+    "success"
+  );
 }
+
 
 /* =========================
    ENTER KEY SUPPORT
 ========================= */
-document.addEventListener("keydown", (e) => {
-  if(e.key === "Enter"){
-    if(document.getElementById("panel1").classList.contains("active")){
-      submitStep1();
-    } else {
-      submitStep2();
+document.addEventListener(
+  "keydown",
+  (e) => {
+
+    if(e.key === "Enter"){
+
+      if(
+        document
+        .getElementById("panel1")
+        .classList.contains("active")
+      ){
+
+        submitStep1();
+
+      }
+      else if(
+        document
+        .getElementById("panel2")
+        .classList.contains("active")
+      ){
+
+        submitStep2();
+      }
     }
   }
-});
+);

@@ -199,7 +199,10 @@
       display:flex;align-items:center;justify-content:center;padding:20px;
       opacity:0;pointer-events:none;transition:opacity .3s;
     }
-    .popup-bd.open{opacity:1;pointer-events:all}
+    .popup-bd.show{
+         opacity:1;
+         pointer-events:all;
+    }
 
     .popup-card{
       background:var(--white);border-radius:22px;
@@ -208,7 +211,7 @@
       box-shadow:0 32px 90px rgba(0,0,0,.4);
       transform:scale(.88) translateY(20px);transition:transform .35s;
     }
-    .popup-bd.open .popup-card{transform:scale(1) translateY(0)}
+    .popup-bd.show .popup-card{transform:scale(1) translateY(0)}
 
     .popup-top{
       background:var(--deep);padding:28px 28px 22px;

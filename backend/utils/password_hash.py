@@ -1,19 +1,22 @@
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto"
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
 )
 
-def hash_password(password: str):
-    return pwd_context.hash(password)
 
-"""
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(
-        plain_password,
-        hashed_password
+# HASH PASSWORD
+def hash_password(password):
+
+    return generate_password_hash(password)
+
+
+# VERIFY PASSWORD
+def verify_password(
+    plain_password,
+    hashed_password
+):
+
+    return check_password_hash(
+        hashed_password,
+        plain_password
     )
-    """
-def verify_password(plain_password, hashed_password):
-    return plain_password == hashed_password
