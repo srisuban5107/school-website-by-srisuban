@@ -20,7 +20,7 @@ body {
   overflow-x: hidden;
 }
 
-/* 🟢 BUG FIX 1: This physically locks the main page from scrolling when the hamburger is open */
+
 body.no-scroll {
   overflow: hidden !important;
   touch-action: none;
@@ -147,7 +147,7 @@ nav {
   pointer-events: none;
   transition: opacity .3s, transform .3s;
   
-  /* 🟢 BUG FIX 2: Allows scrolling INSIDE the hamburger menu without scrolling the page */
+  
   max-height: calc(100vh - 66px);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -426,7 +426,7 @@ footer p { color: #4a5568; font-size: 13px; margin-bottom: 5px; }
   .hamburger { display: flex; }
   .mobile-menu { display: block; }
   
-  /* 🟢 BUG FIX 3: Ensures all desktop items (like desktop PC profile, login/logout buttons) hide strictly on mobile */
+  
   .desktop-only { display: none !important; }
 }
 

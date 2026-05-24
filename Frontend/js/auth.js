@@ -66,7 +66,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (roleEl) roleEl.textContent = user.role || "Member";
 
         // Toggle Buttons: Hide Login, Show Logout
-        if (loginBtn) loginBtn.style.display = "inline-flex"; // Adjusted for layout consistency
+        if (loginBtn) loginBtn.style.display = "inline-flex"; 
         if (logoutBtn) {
             logoutBtn.style.display = "inline-flex";
             logoutBtn.onclick = performLogout;

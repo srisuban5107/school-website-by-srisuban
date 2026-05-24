@@ -101,7 +101,7 @@ app.register_blueprint(teacher_bp, url_prefix="/teacher")
 
 
 # =========================
-# RUN SERVER  python backend/app.py
+# RUN SERVER cmd: python backend/app.py and should be run from the root directory of the project
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
