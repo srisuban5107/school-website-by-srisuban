@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About – S.S. Higher Secondary School, Arani</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <style>
+    /* Page-specific styles */
+    .page-hero {
+      min-height: 38vh;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(232,133,10,.18) 0%, transparent 60%),
+        var(--deep);
+      display: flex; align-items: flex-end;
+      padding: 100px 5% 48px;
+      position: relative; overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,.015) 60px, rgba(255,255,255,.015) 61px),
+        repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,.015) 60px, rgba(255,255,255,.015) 61px);
+      pointer-events: none;
+    }
+    .page-hero-content { position: relative; z-index: 2; }
+    .breadcrumb {
+      font-size: 12px; color: var(--muted); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .breadcrumb a { color: var(--gold); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb span { color: #4a5568; }
+    .page-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 900; color: var(--white);
+      line-height: 1.1;
+    }
+    .page-hero h1 span { color: var(--gold); }
+
+    /* About content */
+    .about-section {
+      background: var(--white);
+      padding: 80px 5%;
+    }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .about-visual { position: relative; }
+    .about-card-main {
+      background: var(--deep);
+      border-radius: 16px; padding: 40px;
+      color: var(--white);
+      position: relative; overflow: hidden;
+    }
+    .about-card-main::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(232,133,10,.28), transparent 70%);
+      border-radius: 50%; pointer-events: none;
+    }
+    .about-card-main h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; margin-bottom: 14px; color: var(--gold);
+    }
+    .about-card-main p { font-size: 14px; color: #94a3b8; line-height: 1.85; }
+    .about-badge-row {
+      display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;
+    }
+    .about-badge {
+      background: rgba(232,133,10,.15);
+      border: 1px solid rgba(232,133,10,.3);
+      color: var(--gold);
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 20px;
+    }
+    .about-accent {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--saffron), var(--gold));
+      border-radius: 12px; padding: 18px 24px;
+      color: var(--deep);
+      margin-top: 16px;
+    }
+    .about-accent strong {
+      font-family: 'Playfair Display', serif; font-size: 30px; display: block;
+    }
+    .about-accent span { font-size: 11px; font-weight: 700; letter-spacing: .5px; }
+
+    .section-tag {
+      font-size: 12px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--saffron);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 900; color: var(--deep);
+      margin-bottom: 16px; line-height: 1.15;
+    }
+    .section-desc {
+      font-size: 15.5px; color: var(--muted);
+      max-width: 560px; line-height: 1.78;
+    }
+    .info-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px;
+    }
+    .info-item {
+      background: var(--cream);
+      border-radius: 10px; padding: 14px 16px;
+      border-left: 3px solid var(--saffron);
+    }
+    .info-label {
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      letter-spacing: .8px; text-transform: uppercase;
+    }
+    .info-value { font-size: 14px; font-weight: 600; color: var(--deep); margin-top: 3px; }
+
+    /* Vision/Mission */
+    .vm-section {
+      background: var(--cream);
+      padding: 70px 5%;
+    }
+    .vm-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .vm-card {
+      background: var(--white);
+      border-radius: 14px; padding: 36px;
+      border-top: 4px solid var(--saffron);
+      box-shadow: 0 4px 24px rgba(0,0,0,.06);
+    }
+    .vm-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; color: var(--deep); margin-bottom: 12px;
+    }
+    .vm-card p { font-size: 14.5px; color: var(--muted); line-height: 1.8; }
+
+    @media (max-width: 768px) {
+      .about-grid, .vm-grid, .info-grid { grid-template-columns: 1fr; gap: 24px; }
+      .about-section, .vm-section { padding: 50px 4%; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a class="nav-logo" href="../index.html">
+    <div class="nav-emblem">SS</div>
+    <div class="nav-title">
+      S.S. Hr. Sec. School<br>
+      <span>Arani, Tiruvannamalai</span>
+    </div>
+  </a>
+
+  <ul class="nav-links" id="desktopNav">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="academics.html">Academics</a></li>
+    <li><a href="facilities.html">Facilities</a></li>
+    <li><a href="staff.html">Staff</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li class="dropdown-parent">
+      <a href="#" class="dropdown-trigger" id="othersToggle">
+        Others <span class="dropdown-arrow">▾</span>
+      </a>
+      <ul class="dropdown-menu" id="othersMenu">
+        <li><a href="events.html"><span class="dd-icon">🎉</span>Events</a></li>
+        <li><a href="achievements.html"><span class="dd-icon">🏆</span>Achievements</a></li>
+        <li><a href="alumni.html"><span class="dd-icon">🎓</span>Alumni</a></li>
+        <li><a href="pta.html"><span class="dd-icon">🤝</span>PTA</a></li>
+        <li><a href="downloads.html"><span class="dd-icon">📥</span>Downloads</a></li>
+        <li><a href="news.html"><span class="dd-icon">📰</span>News & Notices</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="nav-right">
+    <div class="nav-profile desktop-only" title="School Profile">🏫</div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-profile-bar">
+    <div class="mobile-profile-pic">👤</div>
+    <div class="mobile-profile-info">
+      <div class="mobile-profile-name">S.S. Hr. Sec. School</div>
+      <div class="mobile-profile-sub">Arani, Tiruvannamalai</div>
+    </div>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="../index.html"><span class="link-icon">🏠</span>Home</a></li>
+    <li><a href="about.html" class="active"><span class="link-icon">ℹ️</span>About</a></li>
+    <li><a href="academics.html"><span class="link-icon">📖</span>Academics</a></li>
+    <li><a href="facilities.html"><span class="link-icon">🏛️</span>Facilities</a></li>
+    <li><a href="staff.html"><span class="link-icon">👨‍🏫</span>Staff</a></li>
+    <li><a href="gallery.html"><span class="link-icon">🖼️</span>Gallery</a></li>
+    <li><a href="contact.html"><span class="link-icon">📞</span>Contact</a></li>
+    <li class="mobile-dropdown-parent">
+      <a href="#" class="mobile-dropdown-trigger" id="mobileOthersToggle">
+        <span class="link-icon">📌</span>Others
+        <span class="mobile-dropdown-arrow">▾</span>
+      </a>
+      <ul class="mobile-dropdown-sub" id="mobileOthersSub">
+        <li><a href="events.html"><span class="link-icon">🎉</span>Events</a></li>
+        <li><a href="achievements.html"><span class="link-icon">🏆</span>Achievements</a></li>
+        <li><a href="alumni.html"><span class="link-icon">🎓</span>Alumni</a></li>
+        <li><a href="pta.html"><span class="link-icon">🤝</span>PTA</a></li>
+        <li><a href="downloads.html"><span class="link-icon">📥</span>Downloads</a></li>
+        <li><a href="news.html"><span class="link-icon">📰</span>News & Notices</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="../index.html">Home</a>
+      <span>›</span>
+      <span>About</span>
+    </div>
+    <h1>About <span>Our School</span></h1>
+  </div>
+</div>
+
+<!-- About Content -->
+<section class="about-section">
+  <div class="about-grid">
+    <div class="about-visual reveal">
+      <div class="about-card-main">
+        <h3>Our Heritage</h3>
+        <p>Subramaniya Sasthri Higher Secondary School has stood as a pillar of quality education in Arani for over a century. Founded with a vision to educate every child regardless of background, the school continues its mission with dedication and pride.</p>
+        <div class="about-badge-row">
+          <span class="about-badge">Government Aided</span>
+          <span class="about-badge">State Board</span>
+          <span class="about-badge">Co-Educational</span>
+        </div>
+      </div>
+      <div class="about-accent"><strong>115+</strong><span>Years of Service</span></div>
+    </div>
+
+    <div>
+      <div class="section-tag reveal">About Us</div>
+      <h2 class="section-title reveal">A Legacy of Learning<br>& Values</h2>
+      <p class="section-desc reveal">Established around 1911, S.S. Higher Secondary School is one of the oldest institutions in Tiruvannamalai district. We provide Tamil &amp; English medium education from Class 6 to Class 12, nurturing young minds with academic rigor, cultural values, and character.</p>
+
+      <div class="info-grid reveal">
+        <div class="info-item"><div class="info-label">Full Name</div><div class="info-value">Subramaniya Sasthri Hr. Sec. School</div></div>
+        <div class="info-item"><div class="info-label">Location</div><div class="info-value">Arani, Tiruvannamalai</div></div>
+        <div class="info-item"><div class="info-label">Management</div><div class="info-value">Government Aided</div></div>
+        <div class="info-item"><div class="info-label">Board</div><div class="info-value">Tamil Nadu State Board</div></div>
+        <div class="info-item"><div class="info-label">Medium</div><div class="info-value">Tamil &amp; English</div></div>
+        <div class="info-item"><div class="info-label">Phone</div><div class="info-value">04173 226033</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Vision & Mission -->
+<section class="vm-section">
+  <div style="text-align:center;max-width:1200px;margin:0 auto 40px;">
+    <div class="section-tag reveal">Our Purpose</div>
+    <h2 class="section-title reveal" style="text-align:center;">Vision &amp; Mission</h2>
+  </div>
+  <div class="vm-grid">
+    <div class="vm-card reveal">
+      <h3>🌟 Our Vision</h3>
+      <p>To be a beacon of holistic education that empowers every student with knowledge, values, and the confidence to contribute meaningfully to society and the nation.</p>
+    </div>
+    <div class="vm-card reveal">
+      <h3>🎯 Our Mission</h3>
+      <p>To provide quality, inclusive education in a nurturing environment — fostering academic excellence, cultural pride, and strong character in every learner from Class 6 through Class 12.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">S.S. Hr. Sec. School</div>
+  <p>Subramaniya Sasthri Higher Secondary School · Arani, Tiruvannamalai, Tamil Nadu</p>
+  <div class="footer-links">
+    <a href="../index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="academics.html">Academics</a>
+    <a href="facilities.html">Facilities</a>
+    <a href="staff.html">Staff</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <hr class="footer-divider"/>
+  <p style="color:#374151;">© 2026 Subramaniya Sasthri Higher Secondary School. All Rights Reserved.</p>
+  <p style="color:#2d3748;font-size:12px;margin-top:4px;">Proudly serving Arani since 1911.</p>
+</footer>
+
+<script src="../js/script.js"></script>
+</body>
+</html>
