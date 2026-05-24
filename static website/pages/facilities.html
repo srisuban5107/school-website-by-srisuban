@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Facilities – S.S. Hr. Sec. School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  
+  <!-- External CSS File -->
+   <link rel="stylesheet" href="../css/facilities.css" />
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <div class="nav-emblem">SS</div>
+    <div class="nav-title">S.S. Hr. Sec. School<br><span>Arani, Tiruvannamalai</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="academics.html">Academics</a></li>
+    <li><a href="facilities.html" class="active">Facilities</a></li>
+    <li><a href="staff.html">Staff</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-profile">🏫</div>
+    <a href="login.html" class="btn-login desktop-only">Login</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-profile-bar">
+    <div class="mobile-profile-pic">🏫</div>
+    <div><div class="mobile-profile-name">S.S. Hr. Sec. School</div><div class="mobile-profile-sub">Arani, Tiruvannamalai</div></div>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="../index.html"><span class="link-icon">🏠</span>Home</a></li>
+    <li><a href="../index.html#about"><span class="link-icon">ℹ️</span>About</a></li>
+    <li><a href="academics.html"><span class="link-icon">📖</span>Academics</a></li>
+    <li><a href="facilities.html" class="active"><span class="link-icon">🏛️</span>Facilities</a></li>
+    <li><a href="staff.html"><span class="link-icon">👨‍🏫</span>Staff</a></li>
+    <li><a href="gallery.html"><span class="link-icon">🖼️</span>Gallery</a></li>
+    <li><a href="contact.html"><span class="link-icon">📞</span>Contact</a></li>
+  </ul>
+  <div class="mobile-login-wrap"><a href="login.html" class="btn-login">🔐 Login</a></div>
+</div>
+
+<div class="page-hero">
+  <div class="ph-inner">
+    <div class="ph-tag">Campus Infrastructure</div>
+    <h1 class="ph-title">Our <span>Facilities</span></h1>
+    <p class="ph-sub">World-class labs, library, sports grounds, and more — built to inspire every learner.</p>
+    <div class="ph-stats">
+      <div class="ph-stat"><div class="num">10+</div><div class="lbl">Facilities</div></div>
+      <div class="ph-stat"><div class="num">3</div><div class="lbl">Science Labs</div></div>
+      <div class="ph-stat"><div class="num">1</div><div class="lbl">Computer Lab</div></div>
+      <div class="ph-stat"><div class="num">5000+</div><div class="lbl">Library Books</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="cat-filter">
+  <button class="cat-btn active" data-cat="all">🏛️ All</button>
+  <button class="cat-btn" data-cat="lab">🔬 Labs</button>
+  <button class="cat-btn" data-cat="sports">⚽ Sports</button>
+  <button class="cat-btn" data-cat="library">📚 Library</button>
+  <button class="cat-btn" data-cat="hall">🎭 Halls</button>
+  <button class="cat-btn" data-cat="other">🏫 Other</button>
+</div>
+
+<section class="fac-section">
+  <div class="fac-grid" id="facGrid">
+
+    <div class="fac-card ac-green" data-cat="lab" data-id="1" onclick="openFacility(1)">
+      <div class="fac-photo bg-green">
+        <div class="fac-emoji">🔬</div>
+        <span class="fac-badge bc-lab">Lab</span>
+        <div class="fac-overlay"><span class="fac-overlay-btn">View Details</span></div>
+      </div>
+      <div class="fac-info">
+        <div class="fac-name">Science Lab</div>
+        <div class="fac-tagline">Hands-on experiments for Biology, Chemistry & Physics students.</div>
+        <div class="fac-meta-row">
+          <div class="fac-meta-item"><span class="fac-meta-icon">👩‍🔬</span>2 Incharges</div>
+          <div class="fac-meta-item"><span class="fac-meta-icon">🧪</span>60+ Equipment</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fac-card ac-blue" data-cat="lab" data-id="2" onclick="openFacility(2)">
+      <div class="fac-photo bg-blue">
+        <div class="fac-emoji">💻</div>
+        <span class="fac-badge bc-lab">Lab</span>
+        <div class="fac-overlay"><span class="fac-overlay-btn">View Details</span></div>
+      </div>
+      <div class="fac-info">
+        <div class="fac-name">Computer Lab</div>
+        <div class="fac-tagline">40 systems with internet, used for CS classes and practicals.</div>
+        <div class="fac-meta-row">
+          <div class="fac-meta-item"><span class="fac-meta-icon">👨‍💻</span>1 Incharge</div>
+          <div class="fac-meta-item"><span class="fac-meta-icon">🖥️</span>40 Systems</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fac-card ac-teal" data-cat="lab" data-id="3" onclick="openFacility(3)">
+      <div class="fac-photo bg-teal">
+        <div class="fac-emoji">⚗️</div>
+        <span class="fac-badge bc-lab">Lab</span>
+        <div class="fac-overlay"><span class="fac-overlay-btn">View Details</span></div>
+      </div>
+      <div class="fac-info">
+        <div class="fac-name">Chemistry Lab</div>
+        <div class="fac-tagline">Fully equipped chemistry lab with safety gear and fume hoods.</div>
+        <div class="fac-meta-row">
+          <div class="fac-meta-item"><span class="fac-meta-icon">👩‍🔬</span>1 Incharge</div>
+          <div class="fac-meta-item"><span class="fac-meta-icon">🧫</span>80+ Chemicals</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fac-card ac-purple" data-cat="library" data-id="4" onclick="openFacility(4)">
+      <div class="fac-photo bg-purple">
+        <div class="fac-emoji">📚</div>
+        <span class="fac-badge bc-library">Library</span>
+        <div class="fac-overlay"><span class="fac-overlay-btn">View Details</span></div>
+      </div>
+      <div class="fac-info">
+        <div class="fac-name">Library</div>
+        <div class="fac-tagline">5000+ books across all subjects, magazines, and newspapers.</div>
+        <div class="fac-meta-row">
+          <div class="fac-meta-item"><span class="fac-meta-icon">👩‍💼</span>1 Librarian</div>
+          <div class="fac-meta-item"><span class="fac-meta-icon">📖</span>5000+ Books</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fac-card ac-saffron" data-cat="hall" data-id="5" onclick="openFacility(5)">
+      <div class="fac-photo bg-saffron">
+        <div class="fac-emoji">🏛️</div>
+        <span class="fac-badge bc-hall">Hall</span>
+        <div class="fac-overlay"><span class="fac-overlay-btn">View Details</span></div>
+      </div>
+      <div class="fac-info">
+        <div class="fac-name">Auditorium</div>
+        <div class="fac-tagline">500-seat auditorium for Annual Day, seminars, and cultural events.</div>
+        <div class="fac-meta-row">
+          <div class="fac-meta-item"><span class="fac-meta-icon">🪑</span>500 Seats</div>
+          <div class="fac-meta-item"><span class="fac-meta-icon">🎤</span>Stage & PA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fac-card ac-rose" data-cat="sports" data-id="6" onclick="openFacility(6)">
+      <div class="fac-photo bg-rose">
+        <div class="fac-emoji">⚽</div>
+        <span class="fac-badge bc-sports">Sports</span>
+        <div class="fac-overlay"><span class="fac-overlay-btn">View Details</span></div>
+      </div>
+      <div class="fac-info">
+        <div class="fac-name">Playground</div>
+        <div class="fac-tagline">Large ground for cricket, football, kabaddi, and athletics.</div>
+        <div class="fac-meta-row">
+          <div class="fac-meta-item"><span class="fac-meta-icon">👨‍🏫</span>PE Teachers</div>
+          <div class="fac-meta-item"><span class="fac-meta-icon">🏅</span>6 Sports</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fac-card ac-navy" data-cat="sports" data-id="7" onclick="openFacility(7)">
+      <div class="fac-photo bg-navy">
+        <div class="fac-emoji">🏸</div>
+        <span class="fac-badge bc-sports">Sports</span>
+        <div class="fac-overlay"><span class="fac-overlay-btn">View Details</span></div>
+      </div>
+      <div class="fac-info">
+        <div class="fac-name">Sports Room</div>
+        <div class="fac-tagline">Equipment storage and indoor games room for students.</div>
+        <div class="fac-meta-row">
+          <div class="fac-meta-item"><span class="fac-meta-icon">🏓</span>Indoor Games</div>
+          <div class="fac-meta-item"><span class="fac-meta-icon">🎽</span>Equipment</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fac-card ac-gold" data-cat="other" data-id="8" onclick="openFacility(8)">
+      <div class="fac-photo bg-gold">
+        <div class="fac-emoji">🏫</div>
+        <span class="fac-badge bc-other">Other</span>
+        <div class="fac-overlay"><span class="fac-overlay-btn">View Details</span></div>
+      </div>
+      <div class="fac-info">
+        <div class="fac-name">Smart Classrooms</div>
+        <div class="fac-tagline">Projector-equipped classrooms for interactive digital learning.</div>
+        <div class="fac-meta-row">
+          <div class="fac-meta-item"><span class="fac-meta-icon">📽️</span>Projectors</div>
+          <div class="fac-meta-item"><span class="fac-meta-icon">🖥️</span>Smart Boards</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="modal-bd" id="modalBd" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <div class="modal-banner" id="mBanner">
+      <div class="modal-banner-overlay"></div>
+      <div class="modal-banner-text">
+        <div class="modal-banner-name" id="mName"></div>
+        <div class="modal-banner-badges" id="mBadges"></div>
+      </div>
+    </div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <div class="modal-tabs" id="mTabs">
+      <button class="m-tab active" data-tab="overview">📋 Overview</button>
+      <button class="m-tab" data-tab="teachers">👨‍🏫 Incharge</button>
+      <button class="m-tab" data-tab="gallery">📸 Gallery</button>
+      <button class="m-tab" data-tab="info">📘 Info & Rules</button>
+      <button class="m-tab" data-tab="equip">🛠️ Equipment</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="m-panel active" id="tab-overview">
+        <p class="ov-desc" id="mDesc"></p>
+        <div class="overview-grid" id="mOverviewGrid"></div>
+        <ul class="highlight-list" id="mHighlights"></ul>
+      </div>
+
+      <div class="m-panel" id="tab-teachers">
+        <div class="teacher-list" id="mTeachers"></div>
+      </div>
+
+      <div class="m-panel" id="tab-gallery">
+        <div class="gallery-grid-m" id="mGallery"></div>
+        <p class="gallery-note">Click any image to view full size. Photos update as events happen.</p>
+      </div>
+
+      <div class="m-panel" id="tab-info">
+        <div id="mInfo"></div>
+      </div>
+
+      <div class="m-panel" id="tab-equip">
+        <div class="equip-grid" id="mEquip"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer style="background:#060f1e;padding:36px 5% 20px;text-align:center;">
+  <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--gold);margin-bottom:8px;">S.S. Hr. Sec. School</div>
+  <p style="color:#4a5568;font-size:13px;margin-bottom:14px;">Subramaniya Sasthri Higher Secondary School · Arani, Tiruvannamalai</p>
+  <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;">
+    <a href="../index.html" style="color:#6b7280;font-size:13px;text-decoration:none;">Home</a>
+    <a href="facilities.html" style="color:var(--gold);font-size:13px;text-decoration:none;">Facilities</a>
+    <a href="staff.html" style="color:#6b7280;font-size:13px;text-decoration:none;">Staff</a>
+    <a href="contact.html" style="color:#6b7280;font-size:13px;text-decoration:none;">Contact</a>
+  </div>
+  <hr style="border:none;border-top:1px solid #1a2535;margin:0 0 16px;">
+  <p style="color:#374151;font-size:13px;">© 2025 Subramaniya Sasthri Higher Secondary School. All Rights Reserved.</p>
+</footer>
+
+<!-- External JavaScript File -->
+   <script src="../js/facilities.js"></script>
+</body>
+</html>

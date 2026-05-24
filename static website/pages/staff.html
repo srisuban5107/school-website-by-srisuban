@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Staff – S.S. Hr. Sec. School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  
+  <!-- External CSS Stylesheet -->
+  <link rel="stylesheet" href="../css/staff.css"/>
+</head>
+<body>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <div class="nav-emblem">SS</div>
+    <div class="nav-title">S.S. Hr. Sec. School<br><span>Arani, Tiruvannamalai</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../pages/academics.html">Academics</a></li>
+    <li><a href="../pages/facilities.html">Facilities</a></li>
+    <li><a href="../pages/staff.html" class="active">Staff</a></li>
+    <li><a href="../pages/gallery.html">Gallery</a></li>
+    <li><a href="../pages/contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-profile">🏫</div>
+    <a href="../pages/login.html" class="btn-login desktop-only">Login</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-profile-bar">
+    <div class="mobile-profile-pic">🏫</div>
+    <div>
+      <div class="mobile-profile-name">S.S. Hr. Sec. School</div>
+      <div class="mobile-profile-sub">Arani, Tiruvannamalai</div>
+    </div>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="../index.html"><span class="link-icon">🏠</span>Home</a></li>
+    <li><a href="../index.html#about"><span class="link-icon">ℹ️</span>About</a></li>
+    <li><a href="../pages/academics.html"><span class="link-icon">📖</span>Academics</a></li>
+    <li><a href="../pages/facilities.html"><span class="link-icon">🏛️</span>Facilities</a></li>
+    <li><a href="../pages/staff.html" class="active"><span class="link-icon">👨‍🏫</span>Staff</a></li>
+    <li><a href="../pages/gallery.html"><span class="link-icon">🖼️</span>Gallery</a></li>
+    <li><a href="../pages/contact.html"><span class="link-icon">📞</span>Contact</a></li>
+  </ul>
+  <div class="mobile-login-wrap">
+    <a href="../pages/login.html" class="btn-login">🔐 Login</a>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGE HERO ══════════════════ -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-tag">Our People</div>
+    <h1>Meet Our <span>Staff</span></h1>
+    <p>Dedicated educators and support staff who make S.S. Higher Secondary School a place of excellence, values, and growth.</p>
+  </div>
+</div>
+
+<!-- ══════════════════ FILTER TABS ══════════════════ -->
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">All Staff</button>
+  <button class="filter-btn" data-filter="hm">Headmaster</button>
+  <button class="filter-btn" data-filter="teacher">Teachers</button>
+  <button class="filter-btn" data-filter="other">Others</button>
+</div>
+
+<!-- ══════════════════ STAFF CONTENT ══════════════════ -->
+<div class="staff-section">
+
+  <!-- ─── HEADMASTER ─── -->
+  <!-- HOW TO ADD: Copy one <div class="staff-card"> block, paste inside the grid, fill in details -->
+  <div class="role-section" id="section-hm" data-role="hm">
+    <div class="role-heading">
+      <h2>👑 Headmaster</h2>
+      <span class="role-count" id="count-hm">1</span>
+      <div class="role-line"></div>
+    </div>
+    <div class="staff-grid">
+
+      <!-- ════════════ STAFF CARD TEMPLATE ════════════
+           Copy this entire block to add a new staff member.
+           Fill in: name, role, photo emoji (or img src), subjects, class, gender, extra info
+      ════════════════════════════════════════════════ -->
+      <div class="staff-card" data-role="hm" onclick="openModal(this)">
+        <div class="card-photo">
+          <!-- OPTION A: Use emoji placeholder -->
+          👨‍💼
+          <!-- OPTION B: Use real photo — delete emoji line above and uncomment below:
+          <img src="photos/staff-hm.jpg" alt="Headmaster">
+          -->
+          <span class="card-role-badge badge-hm">HM</span>
+          <div class="card-overlay"><span>View Details</span></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Mr. [Name Here]</div>
+          <div class="card-role-text">Headmaster</div>
+        </div>
+        <!-- Hidden data — fill these in -->
+        <div class="staff-data" style="display:none"
+          data-name="Mr. [Name Here]"
+          data-role="Headmaster"
+          data-role-type="hm"
+          data-gender="Male"
+          data-subjects="Administration, School Management"
+          data-class-teacher="—"
+          data-experience="25+ Years"
+          data-qualification="M.A., B.Ed."
+          data-extra="Add any extra information here — awards, achievements, message, etc."
+          data-photo-emoji="👨‍💼"
+          data-photo-src=""
+        ></div>
+      </div>
+      <!-- ════════════ END CARD ════════════ -->
+
+    </div>
+  </div>
+
+  <!-- ─── TEACHERS ─── -->
+  <div class="role-section" id="section-teacher" data-role="teacher">
+    <div class="role-heading">
+      <h2>👨‍🏫 Teachers</h2>
+      <span class="role-count" id="count-teacher">6</span>
+      <div class="role-line"></div>
+    </div>
+    <div class="staff-grid">
+
+      <!-- Teacher 1 — Tamil -->
+      <div class="staff-card" data-role="teacher" onclick="openModal(this)">
+        <div class="card-photo">
+          👩‍🏫
+          <span class="card-role-badge badge-teacher">Teacher</span>
+          <div class="card-overlay"><span>View Details</span></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Mrs. [Name Here]</div>
+          <div class="card-role-text">Tamil Teacher</div>
+        </div>
+        <div class="staff-data" style="display:none"
+          data-name="Mrs. [Name Here]"
+          data-role="Tamil Teacher"
+          data-role-type="teacher"
+          data-gender="Female"
+          data-subjects="Tamil"
+          data-class-teacher="6th Standard"
+          data-experience="12 Years"
+          data-qualification="M.A. Tamil, B.Ed."
+          data-extra="Add extra info here."
+          data-photo-emoji="👩‍🏫"
+          data-photo-src=""
+        ></div>
+      </div>
+
+      <!-- Teacher 2 — English -->
+      <div class="staff-card" data-role="teacher" onclick="openModal(this)">
+        <div class="card-photo">
+          👨‍🏫
+          <span class="card-role-badge badge-teacher">Teacher</span>
+          <div class="card-overlay"><span>View Details</span></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Mr. [Name Here]</div>
+          <div class="card-role-text">English Teacher</div>
+        </div>
+        <div class="staff-data" style="display:none"
+          data-name="Mr. [Name Here]"
+          data-role="English Teacher"
+          data-role-type="teacher"
+          data-gender="Male"
+          data-subjects="English"
+          data-class-teacher="7th Standard"
+          data-experience="9 Years"
+          data-qualification="M.A. English, B.Ed."
+          data-extra="Add extra info here."
+          data-photo-emoji="👨‍🏫"
+          data-photo-src=""
+        ></div>
+      </div>
+
+      <!-- Teacher 3 — Maths -->
+      <div class="staff-card" data-role="teacher" onclick="openModal(this)">
+        <div class="card-photo">
+          👩‍🏫
+          <span class="card-role-badge badge-teacher">Teacher</span>
+          <div class="card-overlay"><span>View Details</span></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Mrs. [Name Here]</div>
+          <div class="card-role-text">Maths Teacher</div>
+        </div>
+        <div class="staff-data" style="display:none"
+          data-name="Mrs. [Name Here]"
+          data-role="Maths Teacher"
+          data-role-type="teacher"
+          data-gender="Female"
+          data-subjects="Mathematics"
+          data-class-teacher="10th Standard"
+          data-experience="15 Years"
+          data-qualification="M.Sc. Maths, B.Ed."
+          data-extra="Add extra info here."
+          data-photo-emoji="👩‍🏫"
+          data-photo-src=""
+        ></div>
+      </div>
+
+      <!-- Teacher 4 — Science (teaches multiple subjects) -->
+      <div class="staff-card" data-role="teacher" onclick="openModal(this)">
+        <div class="card-photo">
+          👨‍🔬
+          <span class="card-role-badge badge-teacher">Teacher</span>
+          <div class="card-overlay"><span>View Details</span></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Mr. [Name Here]</div>
+          <div class="card-role-text">Science Teacher</div>
+        </div>
+        <div class="staff-data" style="display:none"
+          data-name="Mr. [Name Here]"
+          data-role="Science Teacher"
+          data-role-type="teacher"
+          data-gender="Male"
+          data-subjects="Physics, Chemistry, Biology"
+          data-class-teacher="9th Standard"
+          data-experience="11 Years"
+          data-qualification="M.Sc. Physics, B.Ed."
+          data-extra="Add extra info here."
+          data-photo-emoji="👨‍🔬"
+          data-photo-src=""
+        ></div>
+      </div>
+
+      <!-- Teacher 5 — Social Science -->
+      <div class="staff-card" data-role="teacher" onclick="openModal(this)">
+        <div class="card-photo">
+          👩‍🏫
+          <span class="card-role-badge badge-teacher">Teacher</span>
+          <div class="card-overlay"><span>View Details</span></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Mrs. [Name Here]</div>
+          <div class="card-role-text">Social Science Teacher</div>
+        </div>
+        <div class="staff-data" style="display:none"
+          data-name="Mrs. [Name Here]"
+          data-role="Social Science Teacher"
+          data-role-type="teacher"
+          data-gender="Female"
+          data-subjects="History, Geography, Civics"
+          data-class-teacher="8th Standard"
+          data-experience="8 Years"
+          data-qualification="M.A. History, B.Ed."
+          data-extra="Add extra info here."
+          data-photo-emoji="👩‍🏫"
+          data-photo-src=""
+        ></div>
+      </div>
+
+      <!-- Teacher 6 — Computer Science -->
+      <div class="staff-card" data-role="teacher" onclick="openModal(this)">
+        <div class="card-photo">
+          💻
+          <span class="card-role-badge badge-teacher">Teacher</span>
+          <div class="card-overlay"><span>View Details</span></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Mr. [Name Here]</div>
+          <div class="card-role-text">Computer Science Teacher</div>
+        </div>
+        <div class="staff-data" style="display:none"
+          data-name="Mr. [Name Here]"
+          data-role="Computer Science Teacher"
+          data-role-type="teacher"
+          data-gender="Male"
+          data-subjects="Computer Science, IT"
+          data-class-teacher="11th Standard"
+          data-experience="6 Years"
+          data-qualification="M.C.A., B.Ed."
+          data-extra="Add extra info here."
+          data-photo-emoji="💻"
+          data-photo-src=""
+        ></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── OTHERS ─── -->
+  <div class="role-section" id="section-other" data-role="other">
+    <div class="role-heading">
+      <h2>🧑‍💼 Others</h2>
+      <span class="role-count" id="count-other">2</span>
+      <div class="role-line"></div>
+    </div>
+    <div class="staff-grid">
+
+      <!-- Office Staff -->
+      <div class="staff-card" data-role="other" onclick="openModal(this)">
+        <div class="card-photo">
+          🧑‍💼
+          <span class="card-role-badge badge-other">Office</span>
+          <div class="card-overlay"><span>View Details</span></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Mr. [Name Here]</div>
+          <div class="card-role-text">Office Staff</div>
+        </div>
+        <div class="staff-data" style="display:none"
+          data-name="Mr. [Name Here]"
+          data-role="Office Staff"
+          data-role-type="other"
+          data-gender="Male"
+          data-subjects="—"
+          data-class-teacher="—"
+          data-experience="10 Years"
+          data-qualification="B.Com."
+          data-extra="Handles admissions, records, and administration."
+          data-photo-emoji="🧑‍💼"
+          data-photo-src=""
+        ></div>
+      </div>
+
+      <!-- Lab Assistant -->
+      <div class="staff-card" data-role="other" onclick="openModal(this)">
+        <div class="card-photo">
+          🔬
+          <span class="card-role-badge badge-other">Lab</span>
+          <div class="card-overlay"><span>View Details</span></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">Mr. [Name Here]</div>
+          <div class="card-role-text">Lab Assistant</div>
+        </div>
+        <div class="staff-data" style="display:none"
+          data-name="Mr. [Name Here]"
+          data-role="Lab Assistant"
+          data-role-type="other"
+          data-gender="Male"
+          data-subjects="—"
+          data-class-teacher="—"
+          data-experience="5 Years"
+          data-qualification="B.Sc."
+          data-extra="Maintains science labs and assists during practicals."
+          data-photo-emoji="🔬"
+          data-photo-src=""
+        ></div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end staff-section -->
+
+<!-- ══════════════════ MODAL ══════════════════ -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-photo" id="modalPhoto">
+      <span id="modalEmoji" style="font-size:96px;"></span>
+      <img id="modalImg" src="" alt="" style="display:none;">
+      <div class="modal-photo-overlay"></div>
+      <div class="modal-photo-text">
+        <div class="modal-name" id="modalName"></div>
+        <span class="modal-role-badge" id="modalRoleBadge"></span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <!-- Subjects + Class Teacher tags -->
+      <div class="modal-tags" id="modalTags"></div>
+      <!-- Detail grid -->
+      <div class="modal-details" id="modalDetails"></div>
+      <!-- Extra info -->
+      <div class="modal-extra" id="modalExtra" style="display:none">
+        <div class="modal-extra-label">Additional Information</div>
+        <p id="modalExtraText"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer style="background:#060f1e;padding:36px 5% 20px;text-align:center;">
+  <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--gold);margin-bottom:8px;">S.S. Hr. Sec. School</div>
+  <p style="color:#4a5568;font-size:13px;">Subramaniya Sasthri Higher Secondary School · Arani, Tiruvannamalai</p>
+  <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:14px 0;">
+    <a href="../index.html" style="color:#6b7280;font-size:13px;text-decoration:none;">Home</a>
+    <a href="../pages/staff.html" style="color:var(--gold);font-size:13px;text-decoration:none;">Staff</a>
+    <a href="../pages/contact.html" style="color:#6b7280;font-size:13px;text-decoration:none;">Contact</a>
+  </div>
+  <hr style="border:none;border-top:1px solid #1a2535;margin:18px 0;">
+  <p style="color:#374151;font-size:13px;">© 2025 Subramaniya Sasthri Higher Secondary School. All Rights Reserved.</p>
+</footer>
+
+<!-- External JavaScript File -->
+   <script src="../js/staff.js"></script>
+</body>
+</html>
