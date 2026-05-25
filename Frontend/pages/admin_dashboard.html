@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard – S.S. Hr. Sec. School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --deep:#0b1f3a;--navy:#112d4e;--saffron:#e8850a;--gold:#f5b94e;
+      --cream:#fdf6ec;--white:#fff;--text:#1a1a2e;--muted:#6b7280;--border:#e9d5b0;
+      --green:#16a34a;--red:#dc2626;--blue:#1d4ed8;--purple:#7c3aed;--teal:#0d9488;
+      --sidebar-w:260px;--topnav-h:66px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#f1f5f9;color:var(--text);overflow-x:hidden}
+
+    /* ════ TOP SCHOOL NAV ════ */
+    .top-nav{position:fixed;top:0;width:100%;z-index:1100;background:var(--deep);display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:var(--topnav-h);box-shadow:0 2px 24px rgba(0,0,0,.45)}
+    .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .nav-emblem{width:44px;height:44px;background:linear-gradient(135deg,var(--saffron),var(--gold));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:var(--deep);flex-shrink:0}
+    .nav-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--white);line-height:1.25}
+    .nav-title span{color:var(--gold);font-size:12px;font-weight:400}
+    .nav-links{display:flex;align-items:center;gap:26px;list-style:none}
+    .nav-links a{color:#c9d4e0;font-size:13.5px;font-weight:500;text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:var(--gold)}
+    .nav-right{display:flex;align-items:center;gap:14px}
+    .nav-profile-pic{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));border:2.5px solid var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;position:relative}
+    .nav-profile-pic:hover .profile-dropdown{display:block}
+    .profile-dropdown{display:none;position:absolute;top:calc(100% + 10px);right:0;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.15);min-width:190px;z-index:200}
+    .profile-dropdown::before{content:'';position:absolute;top:-6px;right:14px;width:12px;height:12px;background:var(--white);border-left:1px solid var(--border);border-top:1px solid var(--border);transform:rotate(45deg)}
+    .pd-header{padding:14px 16px;border-bottom:1px solid var(--border)}
+    .pd-name{font-size:14px;font-weight:700;color:var(--deep)}
+    .pd-role{font-size:11.5px;color:var(--red);font-weight:600}
+    .pd-links{padding:8px 0}
+    .pd-links a{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13.5px;color:var(--text);text-decoration:none;transition:background .2s}
+    .pd-links a:hover{background:var(--cream)}
+    .pd-divider{border:none;border-top:1px solid var(--border);margin:4px 0}
+    .pd-logout{padding:8px 16px 12px}
+    .pd-logout a{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--red);font-weight:600;text-decoration:none}
+    
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none}
+    .hamburger span{display:block;width:24px;height:2.5px;background:var(--white);border-radius:2px;transition:all .3s}
+    .hamburger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+    .hamburger.open span:nth-child(2){opacity:0}
+    .hamburger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+    .mobile-menu{display:none;position:fixed;top:var(--topnav-h);left:0;right:0;background:var(--deep);z-index:1099;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;transform:translateY(-10px)}
+    .mobile-menu.open{opacity:1;pointer-events:all;transform:translateY(0);display:block}
+
+    /* ════ DASHBOARD LAYOUT ════ */
+    .dash-root{margin-top:var(--topnav-h);display:flex;min-height:calc(100vh - var(--topnav-h))}
+
+    /* ── SIDEBAR ── */
+    .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--deep);position:fixed;top:var(--topnav-h);left:0;height:calc(100vh - var(--topnav-h));overflow-y:auto;display:flex;flex-direction:column;z-index:900;transition:transform .3s}
+    .sidebar::-webkit-scrollbar{width:0}
+    .sb-admin{padding:22px 18px 16px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+    .sb-avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;border:2.5px solid rgba(255,255,255,.15)}
+    .sb-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:900;color:var(--white);margin-bottom:2px}
+    .sb-type-badge{display:inline-block;margin-top:5px;padding:3px 11px;border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.5px;background:rgba(220,38,38,.2);border:1px solid rgba(220,38,38,.35);color:#fca5a5}
+    
+    .sb-nav{flex:1;padding:8px 0}
+    .sb-nav-item{display:flex;align-items:center;gap:11px;padding:12px 20px;color:#94a3b8;font-size:13.5px;font-weight:500;cursor:pointer;border-left:3px solid transparent;transition:all .2s;position:relative}
+    .sb-nav-item:hover{background:rgba(255,255,255,.04);color:var(--white)}
+    .sb-nav-item.active{background:rgba(232,133,10,.1);border-left-color:var(--saffron);color:var(--gold);font-weight:700}
+    .sb-nav-icon{font-size:17px;width:20px;text-align:center;flex-shrink:0}
+    .sb-divider{border:none;border-top:1px solid rgba(255,255,255,.06);margin:6px 0}
+    .sb-bottom{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08)}
+    .sb-logout{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.2);color:#f87171;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .2s;text-decoration:none}
+    .sb-logout:hover{background:rgba(220,38,38,.2)}
+
+    /* ── MAIN CONTENT ── */
+    .main-content{margin-left:var(--sidebar-w);flex:1;padding:32px;min-height:calc(100vh - var(--topnav-h))}
+    .dash-section{display:none}
+    .dash-section.active{display:block;animation:fadeUp .4s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Section header */
+    .sec-head{margin-bottom:28px}
+    .sec-head-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:4px}
+    .sec-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+    .sec-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--deep)}
+    .sec-sub{font-size:13.5px;color:var(--muted);margin-top:3px}
+
+    /* Stat cards */
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+    .stat-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+    .stat-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.08)}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .stat-card.green::before{background:var(--green)}
+    .stat-card.saffron::before{background:var(--saffron)}
+    .stat-card.blue::before{background:var(--blue)}
+    .stat-card.purple::before{background:var(--purple)}
+    .stat-card.teal::before{background:var(--teal)}
+    .stat-card.red::before{background:var(--red)}
+    .stat-icon{font-size:28px;margin-bottom:10px}
+    .stat-num{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:var(--deep);line-height:1}
+    .stat-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500}
+
+    /* Panel */
+    .panel{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:20px}
+    .panel-title{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+    .panel-title span{font-size:16px;margin-right:8px}
+
+    /* Data Table */
+    .data-table{width:100%;border-collapse:collapse}
+    .data-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
+    .data-table td{padding:12px 14px;font-size:13.5px;color:var(--text);border-bottom:1px solid #f3f4f6;vertical-align:middle}
+    .data-table tr:hover td{background:rgba(232,133,10,.02)}
+    
+    .status-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+    .status-active{background:rgba(22,163,74,.1);color:var(--green)}
+    .status-inactive{background:rgba(220,38,38,.1);color:var(--red)}
+    .status-pending{background:rgba(232,133,10,.1);color:var(--saffron)}
+    
+    .action-btn{padding:6px 12px;font-size:12px;font-weight:600;border-radius:6px;cursor:pointer;border:1px solid transparent;transition:all .2s;background:var(--cream);color:var(--text);border-color:var(--border)}
+    .action-btn:hover{background:var(--deep);color:var(--gold);border-color:var(--deep)}
+
+    /* Buttons & Forms */
+    .btn-action{padding:10px 20px;border:none;border-radius:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;transition:all .2s;display:inline-block;}
+    .btn-primary{background:linear-gradient(135deg,var(--saffron),var(--gold));color:var(--deep);box-shadow:0 4px 16px rgba(232,133,10,.3)}
+    .btn-primary:hover{transform:translateY(-2px)}
+    
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .form-field{display:flex;flex-direction:column;gap:6px}
+    .form-field.full{grid-column:1/-1}
+    .form-field label{font-size:11.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+    .form-field input, .form-field select, .form-field textarea{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--white);outline:none;transition:border-color .2s}
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus{border-color:var(--saffron)}
+    .form-field textarea{min-height:80px;resize:vertical}
+
+    /* Notice list */
+    .notice-list{display:flex;flex-direction:column;gap:12px}
+    .notice-item{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:10px;background:var(--cream);border:1px solid var(--border);transition:transform .2s}
+    .notice-item:hover{transform:translateX(3px)}
+    .notice-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
+    .notice-title{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:3px}
+    .notice-desc{font-size:13px;color:var(--muted);line-height:1.55}
+    .notice-date{font-size:11.5px;color:var(--muted);margin-top:5px;font-weight:500}
+
+    /* Quick Action Cards */
+    .quick-actions{display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:14px}
+    .q-card{background:var(--cream);border:1px dashed var(--saffron);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;color:var(--deep);font-weight:600;font-size:13.5px}
+    .q-card:hover{background:rgba(232,133,10,.1);transform:translateY(-2px)}
+    .q-icon{font-size:24px;margin-bottom:8px;display:block}
+
+    /* Mobile sidebar */
+    .sb-toggle{display:none;position:fixed;bottom:24px;left:16px;z-index:950;width:46px;height:46px;border-radius:50%;background:var(--deep);color:var(--white);border:2px solid var(--gold);font-size:20px;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+    .sb-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:899}
+
+    /* Toast */
+    .toast{position:fixed;top:80px;right:20px;z-index:9999;background:var(--green);color:#fff;padding:11px 20px;border-radius:10px;font-size:13.5px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateX(120px);transition:transform .3s;display:flex;align-items:center;gap:8px}
+    .toast.show{transform:translateX(0)}
+    .toast.err{background:var(--red)}
+
+    @media(max-width:900px){
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .main-content{margin-left:0;padding:20px 16px}
+      .sb-toggle{display:flex}
+      .sb-backdrop{display:block;pointer-events:none;opacity:0;transition:opacity .3s}
+      .sb-backdrop.open{pointer-events:all;opacity:1}
+      .form-grid{grid-template-columns: 1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<nav class="top-nav">
+  <a class="nav-logo" href="index.html">
+    <div class="nav-emblem">SS</div>
+    <div class="nav-title">S.S. Hr. Sec. School<br><span>Arani, Tiruvannamalai</span></div>
+  </a>
+  <div class="nav-right">
+    <div class="nav-profile-pic" tabindex="0">
+      🛡️
+      <div class="profile-dropdown">
+        <div class="pd-header">
+          <div class="pd-name">System Admin</div>
+          <div class="pd-role">🛡️ Admin Portal</div>
+        </div>
+        <div class="pd-links">
+          <a href="#" onclick="switchSection('settings')"><span>⚙️</span> Settings</a>
+        </div>
+        <hr class="pd-divider">
+        <div class="pd-logout"><a href="login.html"><span>🚪</span> Logout</a></div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="dash-root">
+  <div class="sb-backdrop" id="sbBackdrop" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-admin">
+      <div class="sb-avatar">🛡️</div>
+      <div class="sb-name">Administrator</div>
+      <div class="sb-type-badge">👑 Super Admin</div>
+    </div>
+
+    <nav class="sb-nav" id="sbNav">
+      <div class="sb-nav-item active" onclick="switchSection('home')"><span class="sb-nav-icon">📊</span>Dashboard</div>
+      <hr class="sb-divider">
+      <div class="sb-nav-item" onclick="switchSection('students')"><span class="sb-nav-icon">👨‍🎓</span>Students</div>
+      <div class="sb-nav-item" onclick="switchSection('teachers')"><span class="sb-nav-icon">👨‍🏫</span>Teachers</div>
+      <div class="sb-nav-item" onclick="switchSection('parents')"><span class="sb-nav-icon">👨‍👩‍👧</span>Parents</div>
+      <hr class="sb-divider">
+      <div class="sb-nav-item" onclick="switchSection('classes')"><span class="sb-nav-icon">🏫</span>Classes</div>
+      <div class="sb-nav-item" onclick="switchSection('attendance')"><span class="sb-nav-icon">📅</span>Attendance</div>
+      <div class="sb-nav-item" onclick="switchSection('exams')"><span class="sb-nav-icon">📝</span>Exams</div>
+      <div class="sb-nav-item" onclick="switchSection('timetable')"><span class="sb-nav-icon">⏰</span>Timetable</div>
+      <hr class="sb-divider">
+      <div class="sb-nav-item" onclick="switchSection('notices')"><span class="sb-nav-icon">📢</span>Notices</div>
+      <div class="sb-nav-item" onclick="switchSection('fees')"><span class="sb-nav-icon">💰</span>Fees Mgmt</div>
+      <div class="sb-nav-item" onclick="switchSection('settings')"><span class="sb-nav-icon">⚙️</span>Settings</div>
+    </nav>
+
+    <div class="sb-bottom">
+      <a class="sb-logout" href="login.html"><span>🚪</span> Logout</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <div class="dash-section active" id="sec-home">
+      <div class="sec-head">
+        <div class="sec-tag">Control Center</div>
+        <div class="sec-head-top">
+          <div class="sec-title">Admin Dashboard</div>
+          <span id="homeDateDisplay" style="font-size:13px;color:var(--muted)"></span>
+        </div>
+        <div class="sec-sub">System overview and quick access to core modules.</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card green"><div class="stat-icon">👨‍🎓</div><div class="stat-num">1,240</div><div class="stat-label">Total Students</div></div>
+        <div class="stat-card blue"><div class="stat-icon">👨‍🏫</div><div class="stat-num">65</div><div class="stat-label">Total Teachers</div></div>
+        <div class="stat-card purple"><div class="stat-icon">🏫</div><div class="stat-num">32</div><div class="stat-label">Total Classes</div></div>
+        <div class="stat-card saffron"><div class="stat-icon">📅</div><div class="stat-num">94%</div><div class="stat-label">Today's Attendance</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:20px">
+        <div class="panel">
+          <div class="panel-title">
+            <div><span>⚡</span> Quick Actions</div>
+          </div>
+          <div class="quick-actions">
+            <div class="q-card" onclick="switchSection('students')"><span class="q-icon">➕</span>Add Student</div>
+            <div class="q-card" onclick="switchSection('teachers')"><span class="q-icon">👨‍🏫</span>Add Teacher</div>
+            <div class="q-card" onclick="switchSection('notices')"><span class="q-icon">📢</span>Post Notice</div>
+            <div class="q-card" onclick="switchSection('fees')"><span class="q-icon">💰</span>Collect Fee</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title"><div><span>📢</span> Active System Notices</div><a href="#" style="font-size:12px;color:var(--saffron)" onclick="switchSection('notices')">View All</a></div>
+          <div class="notice-list">
+            <div class="notice-item"><div class="notice-dot" style="background:var(--saffron)"></div><div><div class="notice-title">Annual Day – Jan 12, 2026</div><div class="notice-desc">All staff and students must be present.</div></div></div>
+            <div class="notice-item"><div class="notice-dot" style="background:var(--red)"></div><div><div class="notice-title">Fee Payment Deadline</div><div class="notice-desc">Second term fee deadline approaching.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section" id="sec-students">
+      <div class="sec-head">
+        <div class="sec-tag">Directory</div>
+        <div class="sec-title">Student Management</div>
+        <div class="sec-sub">Add, edit, or remove student profiles from the ERP.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>➕</span> Register New Student</div></div>
+        <div class="form-grid">
+          <div class="form-field"><label>Full Name</label><input type="text" placeholder="e.g. John Doe"></div>
+          <div class="form-field"><label>Date of Birth</label><input type="date"></div>
+          <div class="form-field"><label>Assign Class</label>
+            <select>
+              <option>Class 10 - A</option>
+              <option>Class 11 - Bio Maths</option>
+              <option>Class 12 - Commerce</option>
+            </select>
+          </div>
+          <div class="form-field"><label>Parent Link (User ID)</label><input type="text" placeholder="e.g. PAR001"></div>
+          <div class="form-field full" style="margin-top:10px">
+            <button class="btn-action btn-primary" style="width:max-content" onclick="showToast('✅ Student Added to Database')">Add Student</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <div><span>👨‍🎓</span> Student Directory</div>
+          <input type="text" placeholder="Search ID or Name..." style="padding:6px 12px; border:1px solid var(--border); border-radius:6px; outline:none">
+        </div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Parent Link</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>STU001</strong></td><td>Student One</td><td>12-A</td><td>Linked</td><td><span class="status-badge status-active">Active</span></td><td><button class="action-btn">Edit</button></td></tr>
+              <tr><td><strong>STU002</strong></td><td>Student Two</td><td>11-B</td><td>Linked</td><td><span class="status-badge status-active">Active</span></td><td><button class="action-btn">Edit</button></td></tr>
+              <tr><td><strong>STU003</strong></td><td>Student Three</td><td>10-C</td><td>Pending</td><td><span class="status-badge status-inactive">Inactive</span></td><td><button class="action-btn">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section" id="sec-teachers">
+      <div class="sec-head">
+        <div class="sec-tag">Staffing</div>
+        <div class="sec-title">Teacher Management</div>
+        <div class="sec-sub">Assign subjects, classes, and roles to faculty members.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>➕</span> Add New Teacher</div></div>
+        <div class="form-grid">
+          <div class="form-field"><label>Full Name</label><input type="text" placeholder="e.g. Mr. Rajesh"></div>
+          <div class="form-field"><label>Specialization</label><input type="text" placeholder="e.g. Mathematics, Physics"></div>
+          <div class="form-field"><label>Teacher Role</label>
+            <select>
+              <option>Class Teacher</option>
+              <option>Subject Teacher</option>
+            </select>
+          </div>
+          <div class="form-field"><label>Assign Class (if applicable)</label>
+            <select>
+              <option>None</option>
+              <option>Class 10 - A</option>
+              <option>Class 12 - Commerce</option>
+            </select>
+          </div>
+          <div class="form-field full" style="margin-top:10px">
+            <button class="btn-action btn-primary" style="width:max-content" onclick="showToast('✅ Teacher Added Successfully')">Add Teacher</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>👨‍🏫</span> Staff Directory</div></div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Emp ID</th><th>Name</th><th>Role</th><th>Specialization</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>TCH001</strong></td><td>Mr. Raj</td><td>Class Teacher (12-A)</td><td>Physics</td><td><span class="status-badge status-active">Active</span></td><td><button class="action-btn">Manage</button></td></tr>
+              <tr><td><strong>TCH002</strong></td><td>Mrs. Priya</td><td>Subject Teacher</td><td>Mathematics</td><td><span class="status-badge status-active">Active</span></td><td><button class="action-btn">Manage</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section" id="sec-parents">
+      <div class="sec-head">
+        <div class="sec-tag">Directory</div>
+        <div class="sec-title">Parent Accounts</div>
+        <div class="sec-sub">Manage parent logins and link them to student accounts.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>➕</span> Register Parent</div></div>
+        <div class="form-grid">
+          <div class="form-field"><label>Parent/Guardian Name</label><input type="text" placeholder="e.g. Mr. Sharma"></div>
+          <div class="form-field"><label>Contact Number</label><input type="text" placeholder="+91 XXXXXXXXXX"></div>
+          <div class="form-field"><label>Email (Login ID)</label><input type="email" placeholder="parent@email.com"></div>
+          <div class="form-field"><label>Link Student ID</label><input type="text" placeholder="e.g. STU001"></div>
+          <div class="form-field full" style="margin-top:10px">
+            <button class="btn-action btn-primary" style="width:max-content" onclick="showToast('✅ Parent Account Created')">Create Account</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>👨‍👩‍👧</span> Parent Directory</div></div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Parent ID</th><th>Name</th><th>Contact</th><th>Linked Student(s)</th><th>Portal Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>PAR001</strong></td><td>Mr. Sharma</td><td>+91 9876543210</td><td>STU001</td><td><span class="status-badge status-active">Active</span></td><td><button class="action-btn">Edit</button></td></tr>
+              <tr><td><strong>PAR002</strong></td><td>Mrs. Iyer</td><td>+91 8765432109</td><td>STU002, STU045</td><td><span class="status-badge status-active">Active</span></td><td><button class="action-btn">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section" id="sec-classes">
+      <div class="sec-head">
+        <div class="sec-tag">Infrastructure</div>
+        <div class="sec-title">Classes & Sections</div>
+        <div class="sec-sub">Manage academic classes, sections, and assign class teachers.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>➕</span> Add New Class / Section</div></div>
+        <div class="form-grid">
+          <div class="form-field"><label>Class Level</label>
+            <select>
+              <option>Class 9</option>
+              <option>Class 10</option>
+              <option>Class 11</option>
+              <option>Class 12</option>
+            </select>
+          </div>
+          <div class="form-field"><label>Section</label><input type="text" placeholder="e.g. A, B, Bio-Maths"></div>
+          <div class="form-field"><label>Assign Class Teacher</label>
+            <select>
+              <option>Select Teacher...</option>
+              <option>TCH001 - Mr. Raj</option>
+              <option>TCH002 - Mrs. Priya</option>
+            </select>
+          </div>
+          <div class="form-field"><label>Room Number</label><input type="text" placeholder="e.g. 104"></div>
+          <div class="form-field full" style="margin-top:10px">
+            <button class="btn-action btn-primary" style="width:max-content" onclick="showToast('✅ Class Added Successfully')">Save Class</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>🏫</span> Active Classes</div></div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Class & Section</th><th>Class Teacher</th><th>Room</th><th>Total Students</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>12 - Bio Maths</strong></td><td>Mr. Raj</td><td>104</td><td>42</td><td><button class="action-btn">View Students</button></td></tr>
+              <tr><td><strong>11 - Commerce</strong></td><td>Mrs. Priya</td><td>105</td><td>38</td><td><button class="action-btn">View Students</button></td></tr>
+              <tr><td><strong>10 - A</strong></td><td>Mr. Kumar</td><td>201</td><td>45</td><td><button class="action-btn">View Students</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section" id="sec-attendance">
+      <div class="sec-head">
+        <div class="sec-tag">Monitoring</div>
+        <div class="sec-title">School Attendance Overview</div>
+        <div class="sec-sub">Review daily attendance aggregated by class. Marking is done by teachers.</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-num">94%</div><div class="stat-label">School Average Today</div></div>
+        <div class="stat-card blue"><div class="stat-icon">👨‍🎓</div><div class="stat-num">1,165</div><div class="stat-label">Total Present</div></div>
+        <div class="stat-card red"><div class="stat-icon">❌</div><div class="stat-num">75</div><div class="stat-label">Total Absent</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <div><span>📅</span> Attendance by Class</div>
+          <input type="date" value="2026-05-24" style="padding:6px 12px; border:1px solid var(--border); border-radius:6px; outline:none">
+        </div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Class</th><th>Class Teacher</th><th>Strength</th><th>Present</th><th>Absent</th><th>Percentage</th></tr></thead>
+            <tbody>
+              <tr><td>12 - Bio Maths</td><td>Mr. Raj</td><td>42</td><td>40</td><td>2</td><td><span style="color:var(--green);font-weight:700">95.2%</span></td></tr>
+              <tr><td>11 - Commerce</td><td>Mrs. Priya</td><td>38</td><td>38</td><td>0</td><td><span style="color:var(--green);font-weight:700">100%</span></td></tr>
+              <tr><td>10 - A</td><td>Mr. Kumar</td><td>45</td><td>35</td><td>10</td><td><span style="color:var(--red);font-weight:700">77.7%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section" id="sec-exams">
+      <div class="sec-head">
+        <div class="sec-tag">Assessments</div>
+        <div class="sec-title">Exam Management</div>
+        <div class="sec-sub">Schedule exams and monitor mark entry status across the school.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>➕</span> Create New Exam</div></div>
+        <div class="form-grid">
+          <div class="form-field"><label>Exam Name</label><input type="text" placeholder="e.g. First Mid Term"></div>
+          <div class="form-field"><label>Exam Code</label><input type="text" placeholder="e.g. 3301"></div>
+          <div class="form-field"><label>Start Date</label><input type="date"></div>
+          <div class="form-field"><label>End Date</label><input type="date"></div>
+          <div class="form-field full" style="margin-top:10px">
+            <button class="btn-action btn-primary" style="width:max-content" onclick="showToast('✅ Exam Scheduled Successfully')">Schedule Exam</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>📝</span> Academic Year Exams</div></div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Exam Code</th><th>Exam Name</th><th>Dates</th><th>Marks Entry Progress</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>5012</strong></td><td>Half Yearly</td><td>Aug 10 - Aug 22, 2026</td><td>0%</td><td><span class="status-badge status-pending">Upcoming</span></td><td><button class="action-btn">Edit</button></td></tr>
+              <tr><td><strong>1024</strong></td><td>Second Mid Term</td><td>Jun 15 - Jun 20, 2026</td><td>0%</td><td><span class="status-badge status-pending">Upcoming</span></td><td><button class="action-btn">Edit</button></td></tr>
+              <tr><td><strong>3301</strong></td><td>First Mid Term</td><td>Apr 8 - Apr 12, 2026</td><td>100%</td><td><span class="status-badge status-active">Completed</span></td><td><button class="action-btn">View Results</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section" id="sec-timetable">
+      <div class="sec-head">
+        <div class="sec-tag">Schedule</div>
+        <div class="sec-title">Master Timetable</div>
+        <div class="sec-sub">Assign subjects and teachers to class periods.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>⏰</span> Assign Period</div></div>
+        <div class="form-grid">
+          <div class="form-field"><label>Class</label>
+            <select><option>12 - Bio Maths</option><option>11 - Commerce</option></select>
+          </div>
+          <div class="form-field"><label>Day</label>
+            <select><option>Monday</option><option>Tuesday</option><option>Wednesday</option></select>
+          </div>
+          <div class="form-field"><label>Time Slot</label>
+            <select><option>9:00 - 9:45</option><option>9:45 - 10:30</option></select>
+          </div>
+          <div class="form-field"><label>Subject & Teacher</label>
+            <select><option>Physics - Mr. Raj</option><option>Maths - Mrs. Priya</option></select>
+          </div>
+          <div class="form-field full" style="margin-top:10px">
+            <button class="btn-action btn-primary" style="width:max-content" onclick="showToast('✅ Period Assigned')">Update Timetable</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section" id="sec-notices">
+      <div class="sec-head">
+        <div class="sec-tag">Communications</div>
+        <div class="sec-title">Broadcast Notices</div>
+        <div class="sec-sub">Publish announcements to Students, Teachers, and Parents.</div>
+      </div>
+
+      <div class="panel" style="max-width: 600px;">
+        <div class="panel-title"><div><span>📝</span> Create Notice</div></div>
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <div class="form-field">
+            <label>Audience</label>
+            <select>
+              <option>All School (Students, Teachers, Parents)</option>
+              <option>Teachers Only</option>
+              <option>Parents Only</option>
+            </select>
+          </div>
+          <div class="form-field"><label>Notice Title</label><input type="text" placeholder="e.g. Annual Sports Day"></div>
+          <div class="form-field"><label>Message</label><textarea placeholder="Type full announcement here..."></textarea></div>
+          <div class="form-field" style="margin-top:10px">
+            <button class="btn-action btn-primary" onclick="showToast('✅ Notice Broadcasted Successfully')">Broadcast Notice</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section" id="sec-fees">
+      <div class="sec-head">
+        <div class="sec-tag">Finance</div>
+        <div class="sec-title">Fees Management</div>
+        <div class="sec-sub">Log payments and track dues across the school.</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card green"><div class="stat-icon">💰</div><div class="stat-num">₹12.4L</div><div class="stat-label">Collected This Term</div></div>
+        <div class="stat-card red"><div class="stat-icon">⚠️</div><div class="stat-num">₹3.2L</div><div class="stat-label">Pending Dues</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>💳</span> Record Payment</div></div>
+        <div class="form-grid">
+          <div class="form-field"><label>Student ID</label><input type="text" placeholder="e.g. STU001"></div>
+          <div class="form-field"><label>Amount (₹)</label><input type="number" placeholder="0.00"></div>
+          <div class="form-field"><label>Payment Method</label>
+            <select><option>Cash</option><option>Bank Transfer</option><option>UPI</option></select>
+          </div>
+          <div class="form-field"><label>Term/Type</label>
+            <select><option>Term 1 Tuition</option><option>Term 2 Tuition</option><option>Transport</option></select>
+          </div>
+          <div class="form-field full" style="margin-top:10px">
+            <button class="btn-action btn-primary" style="width:max-content" onclick="showToast('✅ Payment Recorded & Receipt Generated')">Record Payment</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><div><span>🧾</span> Recent Transactions</div></div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Txn ID</th><th>Date</th><th>Student ID</th><th>Type</th><th>Method</th><th>Amount</th></tr></thead>
+            <tbody>
+              <tr><td>TXN-9021</td><td>May 24, 2026</td><td>STU045</td><td>Term 2 Tuition</td><td>UPI</td><td>₹15,000</td></tr>
+              <tr><td>TXN-9020</td><td>May 23, 2026</td><td>STU002</td><td>Term 2 Tuition</td><td>Cash</td><td>₹15,000</td></tr>
+              <tr><td>TXN-9019</td><td>May 22, 2026</td><td>STU112</td><td>Transport</td><td>Bank Tx</td><td>₹4,500</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section" id="sec-settings">
+      <div class="sec-head">
+        <div class="sec-tag">Configuration</div>
+        <div class="sec-title">System Settings</div>
+        <div class="sec-sub">Manage core school details and global application preferences.</div>
+      </div>
+
+      <div class="panel" style="max-width: 800px;">
+        <div class="panel-title"><div><span>⚙️</span> General Configuration</div></div>
+        <div class="form-grid">
+          <div class="form-field full"><label>School Name</label><input type="text" value="S.S. Hr. Sec. School"></div>
+          <div class="form-field full"><label>Address</label><textarea>Arani, Tiruvannamalai, Tamil Nadu</textarea></div>
+          <div class="form-field"><label>Contact Email</label><input type="email" value="admin@ssschool.edu.in"></div>
+          <div class="form-field"><label>Contact Phone</label><input type="text" value="+91 12345 67890"></div>
+          <div class="form-field"><label>Current Academic Year</label>
+            <select><option>2025-2026</option><option>2026-2027</option></select>
+          </div>
+          <div class="form-field"><label>System Maintenance Mode</label>
+            <select><option>Off (Live)</option><option>On (Maintenance)</option></select>
+          </div>
+          <div class="form-field full" style="margin-top:10px">
+            <button class="btn-action btn-primary" style="width:max-content" onclick="showToast('✅ Settings Updated')">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()">☰</button>
+
+<script>
+/* Date Display */
+document.getElementById('homeDateDisplay').textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+/* ── Section switching ── */
+function switchSection(id){
+  const validSections = [
+    'home', 'students', 'teachers', 'parents', 
+    'classes', 'attendance', 'exams', 'timetable', 
+    'notices', 'fees', 'settings'
+  ];
+  
+  if(!validSections.includes(id)) {
+    showToast('Module not found', 'err');
+    return;
+  }
+
+  document.querySelectorAll('.dash-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-nav-item').forEach(n=>n.classList.remove('active'));
+  
+  document.getElementById('sec-'+id).classList.add('active');
+  
+  const labels = {
+    home:'Dashboard', students:'Students', teachers:'Teachers', 
+    parents:'Parents', classes:'Classes', attendance:'Attendance', 
+    exams:'Exams', timetable:'Timetable', notices:'Notices', 
+    fees:'Fees Mgmt', settings:'Settings'
+  };
+  
+  document.querySelectorAll('.sb-nav-item').forEach(n=>{
+    if(n.textContent.includes(labels[id])) n.classList.add('active');
+  });
+  
+  closeSidebar();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ── Mobile sidebar ── */
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sbBackdrop').classList.toggle('open')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbBackdrop').classList.remove('open')}
+
+/* ── Toast Notification ── */
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+(type==='err'?'err':'');
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>

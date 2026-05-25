@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard – S.S. Hr. Sec. School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --deep:#0b1f3a;--navy:#112d4e;--saffron:#e8850a;--gold:#f5b94e;
+      --cream:#fdf6ec;--white:#fff;--text:#1a1a2e;--muted:#6b7280;--border:#e9d5b0;
+      --green:#16a34a;--red:#dc2626;--blue:#1d4ed8;--purple:#7c3aed;
+      --sidebar-w:240px;--topnav-h:66px;--subnav-h:56px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#f1f5f9;color:var(--text);overflow-x:hidden}
+
+    /* ════════════════════════════════
+       TOP SCHOOL NAV (same as all pages)
+    ════════════════════════════════ */
+    .top-nav{
+      position:fixed;top:0;width:100%;z-index:1100;
+      background:var(--deep);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 5%;height:var(--topnav-h);
+      box-shadow:0 2px 24px rgba(0,0,0,.45);
+    }
+    .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .nav-emblem{width:44px;height:44px;background:linear-gradient(135deg,var(--saffron),var(--gold));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:var(--deep);flex-shrink:0}
+    .nav-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--white);line-height:1.25}
+    .nav-title span{color:var(--gold);font-size:12px;font-weight:400}
+    .nav-links{display:flex;align-items:center;gap:26px;list-style:none}
+    .nav-links a{color:#c9d4e0;font-size:13.5px;font-weight:500;text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:var(--gold)}
+    .nav-right{display:flex;align-items:center;gap:14px}
+    .nav-profile-pic{
+      width:38px;height:38px;border-radius:50%;
+      background:linear-gradient(135deg,var(--navy),#1e3a5f);
+      border:2.5px solid var(--gold);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;font-size:18px;
+      position:relative;
+    }
+    .nav-profile-pic:hover .profile-dropdown{display:block}
+    .profile-dropdown{
+      display:none;position:absolute;top:calc(100% + 10px);right:0;
+      background:var(--white);border:1px solid var(--border);border-radius:12px;
+      box-shadow:0 12px 36px rgba(0,0,0,.15);min-width:180px;z-index:200;
+    }
+    .profile-dropdown::before{content:'';position:absolute;top:-6px;right:14px;width:12px;height:12px;background:var(--white);border-left:1px solid var(--border);border-top:1px solid var(--border);transform:rotate(45deg)}
+    .pd-header{padding:14px 16px;border-bottom:1px solid var(--border)}
+    .pd-name{font-size:14px;font-weight:700;color:var(--deep)}
+    .pd-role{font-size:11.5px;color:var(--saffron);font-weight:600}
+    .pd-links{padding:8px 0}
+    .pd-links a{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13.5px;color:var(--text);text-decoration:none;transition:background .2s}
+    .pd-links a:hover{background:var(--cream)}
+    .pd-links a .pdi{font-size:15px}
+    .pd-divider{border:none;border-top:1px solid var(--border);margin:4px 0}
+    .pd-logout{padding:8px 16px 12px}
+    .pd-logout a{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--red);font-weight:600;text-decoration:none}
+
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none}
+    .hamburger span{display:block;width:24px;height:2.5px;background:var(--white);border-radius:2px;transition:all .3s}
+    .hamburger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+    .hamburger.open span:nth-child(2){opacity:0}
+    .hamburger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+    .mobile-menu{display:none;position:fixed;top:var(--topnav-h);left:0;right:0;background:var(--deep);z-index:1099;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;transform:translateY(-10px)}
+    .mobile-menu.open{opacity:1;pointer-events:all;transform:translateY(0);display:block}
+    .mobile-profile-bar{display:flex;align-items:center;gap:14px;padding:20px 24px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .mobile-profile-pic2{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--navy),#1e3a5f);border:2.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:26px}
+    .mobile-profile-name{color:var(--white);font-weight:600;font-size:14px}
+    .mobile-profile-sub{color:#94a3b8;font-size:12px;margin-top:2px}
+    .mobile-nav-links{list-style:none;padding:8px 0}
+    .mobile-nav-links li a{display:flex;align-items:center;gap:12px;padding:14px 24px;color:#c9d4e0;font-size:15px;text-decoration:none;transition:background .2s,color .2s;border-left:3px solid transparent}
+    .mobile-nav-links li a:hover{background:rgba(245,185,78,.07);color:var(--gold);border-left-color:var(--gold)}
+    .link-icon{font-size:17px;width:22px;text-align:center}
+    .mobile-login-wrap{padding:16px 24px 24px;border-top:1px solid rgba(255,255,255,.08)}
+    .mobile-login-wrap a{display:block;width:100%;text-align:center;padding:13px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:var(--deep);font-weight:700;font-size:15px;border-radius:8px;text-decoration:none}
+    @media(max-width:900px){.nav-links{display:none}.hamburger{display:flex}.mobile-menu{display:block}}
+    @media(max-width:480px){.nav-title{display:none}}
+
+    /* ════════════════════════════════
+       DASHBOARD LAYOUT
+    ════════════════════════════════ */
+    .dash-root{
+      margin-top:var(--topnav-h);
+      display:flex;min-height:calc(100vh - var(--topnav-h));
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar{
+      width:var(--sidebar-w);flex-shrink:0;
+      background:var(--deep);
+      position:fixed;top:var(--topnav-h);left:0;
+      height:calc(100vh - var(--topnav-h));
+      overflow-y:auto;
+      display:flex;flex-direction:column;
+      z-index:900;
+      transition:transform .3s;
+    }
+    .sidebar::-webkit-scrollbar{width:0}
+
+    /* Student card in sidebar */
+    .sb-student{
+      padding:22px 18px 16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      flex-shrink:0;
+    }
+    .sb-avatar{
+      width:56px;height:56px;border-radius:50%;
+      background:linear-gradient(135deg,var(--saffron),var(--gold));
+      display:flex;align-items:center;justify-content:center;
+      font-size:24px;margin-bottom:12px;
+      border:2.5px solid rgba(255,255,255,.15);
+    }
+    .sb-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:900;color:var(--white);margin-bottom:2px}
+    .sb-class{font-size:12px;color:#94a3b8}
+    .sb-badge{
+      display:inline-block;margin-top:7px;
+      background:rgba(232,133,10,.2);border:1px solid rgba(232,133,10,.35);
+      color:var(--gold);font-size:10.5px;font-weight:700;letter-spacing:.5px;
+      padding:3px 10px;border-radius:20px;
+    }
+
+    /* Nav items */
+    .sb-nav{flex:1;padding:8px 0}
+    .sb-nav-item{
+      display:flex;align-items:center;gap:11px;
+      padding:12px 20px;
+      color:#94a3b8;font-size:13.5px;font-weight:500;
+      cursor:pointer;border-left:3px solid transparent;
+      transition:all .2s;position:relative;
+    }
+    .sb-nav-item:hover{background:rgba(255,255,255,.04);color:var(--white)}
+    .sb-nav-item.active{
+      background:rgba(232,133,10,.1);
+      border-left-color:var(--saffron);
+      color:var(--gold);font-weight:700;
+    }
+    .sb-nav-icon{font-size:17px;width:20px;text-align:center;flex-shrink:0}
+    .sb-badge-count{
+      margin-left:auto;background:var(--red);color:#fff;
+      font-size:10px;font-weight:700;
+      padding:2px 7px;border-radius:20px;min-width:20px;text-align:center;
+    }
+
+    .sb-divider{border:none;border-top:1px solid rgba(255,255,255,.06);margin:6px 0}
+
+    .sb-bottom{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08)}
+    .sb-logout{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 14px;border-radius:8px;
+      background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.2);
+      color:#f87171;font-size:13.5px;font-weight:600;cursor:pointer;
+      transition:background .2s;text-decoration:none;
+    }
+    .sb-logout:hover{background:rgba(220,38,38,.2)}
+
+    /* ── MAIN CONTENT ── */
+    .main-content{
+      margin-left:var(--sidebar-w);
+      flex:1;padding:32px;
+      min-height:calc(100vh - var(--topnav-h));
+    }
+
+    /* Section visibility */
+    .dash-section{display:none}
+    .dash-section.active{display:block;animation:fadeUp .4s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Section header */
+    .sec-head{margin-bottom:28px}
+    .sec-head-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:4px}
+    .sec-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--saffron);margin-bottom:6px}
+    .sec-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--deep)}
+    .sec-sub{font-size:13.5px;color:var(--muted);margin-top:3px}
+
+    /* ── CARDS ── */
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+    .stat-card{
+      background:var(--white);border:1px solid var(--border);border-radius:14px;
+      padding:20px;position:relative;overflow:hidden;
+      transition:transform .2s,box-shadow .2s;
+    }
+    .stat-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.08)}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .stat-card.green::before{background:var(--green)}
+    .stat-card.saffron::before{background:var(--saffron)}
+    .stat-card.blue::before{background:var(--blue)}
+    .stat-card.purple::before{background:var(--purple)}
+    .stat-icon{font-size:28px;margin-bottom:10px}
+    .stat-num{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:var(--deep);line-height:1}
+    .stat-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500}
+
+    /* ── WHITE PANEL ── */
+    .panel{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:20px}
+    .panel-title{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .panel-title span{font-size:16px}
+
+    /* Notice tabs */
+    .tab-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+    .tab-pill{padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;border:1.5px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:all .2s}
+    .tab-pill:hover{border-color:var(--saffron);color:var(--saffron)}
+    .tab-pill.active{background:var(--deep);border-color:var(--deep);color:var(--gold)}
+
+    /* Notice items */
+    .notice-list{display:flex;flex-direction:column;gap:12px}
+    .notice-item{
+      display:flex;align-items:flex-start;gap:14px;
+      padding:14px 16px;border-radius:10px;
+      background:var(--cream);border:1px solid var(--border);
+      transition:transform .2s;
+    }
+    .notice-item:hover{transform:translateX(3px)}
+    .notice-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
+    .notice-title{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:3px}
+    .notice-desc{font-size:13px;color:var(--muted);line-height:1.55}
+    .notice-date{font-size:11.5px;color:var(--muted);margin-top:5px;font-weight:500}
+
+    /* Attendance bar */
+    .att-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+    .att-item{background:var(--cream);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border)}
+    .att-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--deep)}
+    .att-lbl{font-size:11.5px;color:var(--muted);margin-top:3px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+    .progress-bar-wrap{background:#e2e8f0;border-radius:20px;height:14px;overflow:hidden;margin:6px 0 4px}
+    .progress-bar{height:100%;border-radius:20px;transition:width 1s ease}
+    .progress-label{font-size:12px;color:var(--muted);font-weight:600}
+
+    /* Timetable */
+    .tt-grid{display:flex;flex-direction:column;gap:10px}
+    .tt-row{
+      display:flex;align-items:center;gap:14px;
+      padding:13px 16px;background:var(--cream);border-radius:10px;border:1px solid var(--border);
+      transition:transform .2s;
+    }
+    .tt-row:hover{transform:translateX(3px)}
+    .tt-time{font-size:12px;font-weight:700;color:var(--muted);min-width:80px;flex-shrink:0}
+    .tt-subj{font-size:14px;font-weight:700;color:var(--deep)}
+    .tt-teacher{font-size:12.5px;color:var(--muted);margin-left:auto}
+    .tt-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+
+    /* Exams */
+    .exam-grid{display:flex;flex-direction:column;gap:12px}
+    .exam-card{
+      display:flex;align-items:center;gap:16px;
+      padding:16px 18px;background:var(--cream);border-radius:12px;
+      border:1px solid var(--border);
+      transition:transform .2s,box-shadow .2s;
+    }
+    .exam-card:hover{transform:translateX(4px);box-shadow:0 4px 14px rgba(0,0,0,.06)}
+    .exam-code{
+      background:var(--deep);color:var(--gold);
+      font-family:'Playfair Display',serif;font-weight:900;font-size:14px;
+      padding:8px 14px;border-radius:8px;flex-shrink:0;min-width:80px;text-align:center;
+    }
+    .exam-info{flex:1}
+    .exam-name{font-size:14.5px;font-weight:700;color:var(--deep);margin-bottom:2px}
+    .exam-date{font-size:12.5px;color:var(--muted)}
+    .exam-status{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;flex-shrink:0}
+    .es-upcoming{background:rgba(29,78,216,.1);color:var(--blue)}
+    .es-completed{background:rgba(22,163,74,.1);color:var(--green)}
+    .es-ongoing{background:rgba(232,133,10,.12);color:var(--saffron)}
+
+    /* Marks table */
+    .marks-table{width:100%;border-collapse:collapse}
+    .marks-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border)}
+    .marks-table td{padding:12px 14px;font-size:14px;color:var(--text);border-bottom:1px solid #f3f4f6}
+    .marks-table tr:last-child td{border-bottom:none}
+    .marks-table tr:hover td{background:rgba(232,133,10,.03)}
+    .m-pass{color:var(--green);font-weight:700}
+    .m-fail{color:var(--red);font-weight:700}
+    .m-bar-wrap{width:100px;background:#e2e8f0;border-radius:20px;height:7px;overflow:hidden}
+    .m-bar{height:100%;border-radius:20px}
+    .exam-filter-row{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+
+    /* Homework */
+    .hw-list{display:flex;flex-direction:column;gap:12px}
+    .hw-item{
+      display:flex;align-items:center;gap:14px;
+      padding:15px 18px;background:var(--cream);border-radius:12px;border:1px solid var(--border);
+      transition:transform .2s;
+    }
+    .hw-item:hover{transform:translateX(3px)}
+    .hw-check{
+      width:22px;height:22px;border-radius:6px;border:2px solid var(--border);
+      display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+      transition:all .2s;
+    }
+    .hw-check.done{background:var(--green);border-color:var(--green);color:#fff;font-size:13px}
+    .hw-subj{font-size:14px;font-weight:700;color:var(--deep)}
+    .hw-task{font-size:13px;color:var(--muted);margin-top:1px}
+    .hw-due{font-size:12px;font-weight:700;margin-left:auto;flex-shrink:0;padding:4px 11px;border-radius:20px}
+    .due-tomorrow{background:rgba(220,38,38,.1);color:var(--red)}
+    .due-soon{background:rgba(232,133,10,.1);color:var(--saffron)}
+    .due-ok{background:rgba(22,163,74,.1);color:var(--green)}
+    .hw-item.completed .hw-subj{text-decoration:line-through;color:var(--muted)}
+
+    /* Academic subjects */
+    .subj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+    .subj-card{
+      background:var(--white);border:1px solid var(--border);border-radius:12px;
+      padding:20px 18px;text-align:center;
+      transition:transform .2s,box-shadow .2s;
+    }
+    .subj-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,.08)}
+    .subj-icon{font-size:32px;margin-bottom:10px}
+    .subj-name{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:4px}
+    .subj-teacher{font-size:12px;color:var(--muted)}
+    .subj-avg{font-size:12.5px;font-weight:700;margin-top:8px;padding:3px 10px;border-radius:20px;display:inline-block}
+
+    /* Profile */
+    .profile-layout{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
+    .profile-avatar-wrap{text-align:center}
+    .profile-avatar{
+      width:100px;height:100px;border-radius:50%;
+      background:linear-gradient(135deg,var(--deep),var(--navy));
+      border:4px solid var(--gold);
+      display:flex;align-items:center;justify-content:center;
+      font-size:44px;margin:0 auto 10px;
+    }
+    .profile-badge{font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;background:rgba(22,163,74,.1);color:var(--green);border:1px solid rgba(22,163,74,.2)}
+    .profile-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .pi-item{background:var(--cream);border-radius:10px;padding:13px 15px;border-left:3px solid var(--saffron)}
+    .pi-key{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .pi-val{font-size:14px;font-weight:700;color:var(--deep)}
+
+    /* ── MOBILE SIDEBAR TOGGLE ── */
+    .sb-toggle{
+      display:none;
+      position:fixed;bottom:24px;left:16px;z-index:950;
+      width:46px;height:46px;border-radius:50%;
+      background:var(--deep);color:var(--white);
+      border:2px solid var(--gold);font-size:20px;
+      align-items:center;justify-content:center;cursor:pointer;
+      box-shadow:0 4px 16px rgba(0,0,0,.3);
+    }
+    .sb-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:899}
+
+    /* Toast */
+    .toast{position:fixed;top:80px;right:20px;z-index:9999;background:var(--green);color:#fff;padding:11px 20px;border-radius:10px;font-size:13.5px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateX(120px);transition:transform .3s;display:flex;align-items:center;gap:8px}
+    .toast.show{transform:translateX(0)}
+    .toast.err{background:var(--red)}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .main-content{margin-left:0;padding:20px 16px}
+      .sb-toggle{display:flex}
+      .sb-backdrop{display:block;pointer-events:none;opacity:0;transition:opacity .3s}
+      .sb-backdrop.open{pointer-events:all;opacity:1}
+      .att-grid{grid-template-columns:repeat(2,1fr)}
+      .profile-layout{grid-template-columns:1fr}
+      .profile-info-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:600px){
+      .stat-grid{grid-template-columns:repeat(2,1fr)}
+      .subj-grid{grid-template-columns:repeat(2,1fr)}
+      .att-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:400px){
+      .main-content{padding:14px 12px}
+      .stat-grid{grid-template-columns:1fr 1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════════════════
+     TOP SCHOOL NAV (same as all pages)
+════════════════════════════════ -->
+<nav class="top-nav">
+  <a class="nav-logo" href="index.html">
+    <div class="nav-emblem">SS</div>
+    <div class="nav-title">S.S. Hr. Sec. School<br><span>Arani, Tiruvannamalai</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="academics.html">Academics</a></li>
+    <li><a href="facilities.html">Facilities</a></li>
+    <li><a href="staff.html">Staff</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <!-- Profile with dropdown -->
+    <div class="nav-profile-pic" tabindex="0">
+      🎒
+      <div class="profile-dropdown">
+        <div class="pd-header">
+          <div class="pd-name" id="navStudentName">Student Name</div>
+          <div class="pd-role">🎒 Student Portal</div>
+        </div>
+        <div class="pd-links">
+          <a href="#" onclick="switchSection('profile');closeDropdown()"><span class="pdi">👤</span> My Profile</a>
+          <a href="#" onclick="switchSection('notices');closeDropdown()"><span class="pdi">📢</span> Notices</a>
+          <a href="contact.html"><span class="pdi">📞</span> Contact School</a>
+        </div>
+        <hr class="pd-divider">
+        <div class="pd-logout">
+          <a href="login.html"><span>🚪</span> Logout</a>
+        </div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Mobile school nav menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-profile-bar">
+    <div class="mobile-profile-pic2">🎒</div>
+    <div>
+      <div class="mobile-profile-name" id="mobNavName">Student Name</div>
+      <div class="mobile-profile-sub">Student Portal · Active</div>
+    </div>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html"><span class="link-icon">🏠</span>Home</a></li>
+    <li><a href="academics.html"><span class="link-icon">📖</span>Academics</a></li>
+    <li><a href="facilities.html"><span class="link-icon">🏛️</span>Facilities</a></li>
+    <li><a href="staff.html"><span class="link-icon">👨‍🏫</span>Staff</a></li>
+    <li><a href="gallery.html"><span class="link-icon">🖼️</span>Gallery</a></li>
+    <li><a href="contact.html"><span class="link-icon">📞</span>Contact</a></li>
+  </ul>
+  <div class="mobile-login-wrap">
+    <a href="login.html">🚪 Logout</a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     DASHBOARD LAYOUT
+════════════════════════════════ -->
+<div class="dash-root">
+
+  <!-- Sidebar backdrop (mobile) -->
+  <div class="sb-backdrop" id="sbBackdrop" onclick="closeSidebar()"></div>
+
+  <!-- ════ SIDEBAR ════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Student card -->
+    <div class="sb-student">
+      <div class="sb-avatar">🎒</div>
+      <div class="sb-name" id="sbStudentName">Student Name</div>
+      <div class="sb-class" id="sbStudentClass">Class — · Roll No. —</div>
+      <div class="sb-badge">🟢 Active</div>
+    </div>
+
+    <!-- Nav items -->
+    <nav class="sb-nav">
+      <div class="sb-nav-item active" onclick="switchSection('home')">
+        <span class="sb-nav-icon">🏠</span> Dashboard
+      </div>
+      <div class="sb-nav-item" onclick="switchSection('notices')">
+        <span class="sb-nav-icon">📢</span> Notices
+        <span class="sb-badge-count">3</span>
+      </div>
+      <hr class="sb-divider">
+      <div class="sb-nav-item" onclick="switchSection('attendance')">
+        <span class="sb-nav-icon">📅</span> Attendance
+      </div>
+      <div class="sb-nav-item" onclick="switchSection('timetable')">
+        <span class="sb-nav-icon">⏰</span> Timetable
+      </div>
+      <div class="sb-nav-item" onclick="switchSection('exams')">
+        <span class="sb-nav-icon">📆</span> Exams
+      </div>
+      <div class="sb-nav-item" onclick="switchSection('marks')">
+        <span class="sb-nav-icon">📊</span> Marks
+      </div>
+      <hr class="sb-divider">
+      <div class="sb-nav-item" onclick="switchSection('homework')">
+        <span class="sb-nav-icon">📚</span> Homework
+        <span class="sb-badge-count">3</span>
+      </div>
+      <div class="sb-nav-item" onclick="switchSection('academic')">
+        <span class="sb-nav-icon">📘</span> Academic
+      </div>
+      <hr class="sb-divider">
+      <div class="sb-nav-item" onclick="switchSection('profile')">
+        <span class="sb-nav-icon">👤</span> My Profile
+      </div>
+    </nav>
+
+    <!-- Logout -->
+    <div class="sb-bottom">
+      <a class="sb-logout" href="login.html">
+        <span>🚪</span> Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- ════ MAIN CONTENT ════ -->
+  <main class="main-content">
+
+    <!-- ══════════════════════════════
+         HOME / OVERVIEW
+    ══════════════════════════════ -->
+    <div class="dash-section active" id="sec-home">
+      <div class="sec-head">
+        <div class="sec-tag">Student Portal</div>
+        <div class="sec-head-top">
+          <div class="sec-title">Welcome back, <span id="homeGreetName" style="color:var(--saffron)">Student</span> 👋</div>
+          <span id="homeDateDisplay" style="font-size:13px;color:var(--muted)"></span>
+        </div>
+        <div class="sec-sub">Here's your academic overview for today.</div>
+      </div>
+
+      <!-- Quick stats -->
+      <div class="stat-grid">
+        <div class="stat-card green">
+          <div class="stat-icon">📅</div>
+          <div class="stat-num">91.6%</div>
+          <div class="stat-label">Attendance</div>
+        </div>
+        <div class="stat-card saffron">
+          <div class="stat-icon">📚</div>
+          <div class="stat-num">3</div>
+          <div class="stat-label">Pending Homework</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">📆</div>
+          <div class="stat-num">1</div>
+          <div class="stat-label">Upcoming Exam</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-icon">📊</div>
+          <div class="stat-num">78%</div>
+          <div class="stat-label">Average Marks</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+        <!-- Latest notices -->
+        <div class="panel">
+          <div class="panel-title"><span>📢</span> Latest Notices</div>
+          <div class="notice-list">
+            <div class="notice-item">
+              <div class="notice-dot" style="background:var(--red)"></div>
+              <div>
+                <div class="notice-title">Math Test on Friday</div>
+                <div class="notice-desc">Class 12 Bio-Maths — Chapters 5 &amp; 6</div>
+                <div class="notice-date">📅 Posted: May 20, 2026</div>
+              </div>
+            </div>
+            <div class="notice-item">
+              <div class="notice-dot" style="background:var(--saffron)"></div>
+              <div>
+                <div class="notice-title">Annual Day Rehearsal</div>
+                <div class="notice-desc">All participants report to auditorium by 3 PM</div>
+                <div class="notice-date">📅 Posted: May 19, 2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today's timetable -->
+        <div class="panel">
+          <div class="panel-title"><span>⏰</span> Today's Schedule</div>
+          <div class="tt-grid">
+            <div class="tt-row">
+              <div class="tt-time">9:00 – 9:45</div>
+              <div>
+                <div class="tt-subj">Mathematics</div>
+              </div>
+              <div class="tt-teacher">Mr. [Teacher]</div>
+            </div>
+            <div class="tt-row">
+              <div class="tt-time">9:45 – 10:30</div>
+              <div><div class="tt-subj">Physics</div></div>
+              <div class="tt-teacher">Mrs. [Teacher]</div>
+            </div>
+            <div class="tt-row">
+              <div class="tt-time">10:45 – 11:30</div>
+              <div><div class="tt-subj">Chemistry</div></div>
+              <div class="tt-teacher">Mr. [Teacher]</div>
+            </div>
+            <div class="tt-row" style="opacity:.5">
+              <div class="tt-time">11:30 – 12:15</div>
+              <div><div class="tt-subj">Tamil</div></div>
+              <div class="tt-teacher">Mrs. [Teacher]</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         NOTICES
+    ══════════════════════════════ -->
+    <div class="dash-section" id="sec-notices">
+      <div class="sec-head">
+        <div class="sec-tag">Updates</div>
+        <div class="sec-title">Notices</div>
+        <div class="sec-sub">All important updates from school and your class teacher.</div>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-pill active" onclick="switchNoticeTab('school',this)">🏫 School Notices</button>
+        <button class="tab-pill" onclick="switchNoticeTab('class',this)">📋 Class Notices</button>
+      </div>
+
+      <div id="noticeSchool" class="notice-list">
+        <div class="notice-item"><div class="notice-dot" style="background:var(--saffron)"></div><div><div class="notice-title">Annual Day – Jan 12, 2026</div><div class="notice-desc">All students must attend. Cultural program from 9 AM. Dress code: School uniform.</div><div class="notice-date">📅 May 18, 2026</div></div></div>
+        <div class="notice-item"><div class="notice-dot" style="background:var(--red)"></div><div><div class="notice-title">Fee Payment Deadline</div><div class="notice-desc">Second term fee must be paid before June 1, 2026. Late fine will be applied.</div><div class="notice-date">📅 May 15, 2026</div></div></div>
+        <div class="notice-item"><div class="notice-dot" style="background:var(--green)"></div><div><div class="notice-title">Sports Day Winners Announced</div><div class="notice-desc">Congratulations to all winners. Prize distribution on May 25 during assembly.</div><div class="notice-date">📅 May 10, 2026</div></div></div>
+      </div>
+
+      <div id="noticeClass" class="notice-list" style="display:none">
+        <div class="notice-item"><div class="notice-dot" style="background:var(--red)"></div><div><div class="notice-title">Maths Test – This Friday</div><div class="notice-desc">Chapters 5 &amp; 6 (Differentiation &amp; Integration). Bring graph paper.</div><div class="notice-date">📅 May 20, 2026</div></div></div>
+        <div class="notice-item"><div class="notice-dot" style="background:var(--saffron)"></div><div><div class="notice-title">Submit Science Assignment Tomorrow</div><div class="notice-desc">Diagram work on plant cell and animal cell. Hand-drawn only.</div><div class="notice-date">📅 May 19, 2026</div></div></div>
+        <div class="notice-item"><div class="notice-dot" style="background:var(--blue)"></div><div><div class="notice-title">Parent-Teacher Meeting</div><div class="notice-desc">Scheduled for May 28, 2026 from 10 AM – 1 PM. Parents must attend.</div><div class="notice-date">📅 May 17, 2026</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         ATTENDANCE
+    ══════════════════════════════ -->
+    <div class="dash-section" id="sec-attendance">
+      <div class="sec-head">
+        <div class="sec-tag">Academic Year 2025–26</div>
+        <div class="sec-title">Attendance</div>
+        <div class="sec-sub">Your daily school presence and overall attendance percentage.</div>
+      </div>
+
+      <div class="panel">
+        <div class="att-grid">
+          <div class="att-item"><div class="att-num" style="color:var(--muted)">120</div><div class="att-lbl">Total Days</div></div>
+          <div class="att-item"><div class="att-num" style="color:var(--green)">110</div><div class="att-lbl">Present</div></div>
+          <div class="att-item"><div class="att-num" style="color:var(--red)">10</div><div class="att-lbl">Absent</div></div>
+          <div class="att-item"><div class="att-num" style="color:var(--blue)">91.6%</div><div class="att-lbl">Percentage</div></div>
+        </div>
+        <div style="margin-top:6px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span style="font-size:13px;font-weight:700;color:var(--deep)">Attendance Progress</span>
+            <span style="font-size:13px;font-weight:700;color:var(--green)">91.6% — Good</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar" style="width:91.6%;background:linear-gradient(90deg,var(--green),#4ade80)"></div>
+          </div>
+          <div class="progress-label">Minimum required: 75% &nbsp;·&nbsp; Your status: <span style="color:var(--green);font-weight:700">✅ Above requirement</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span>📋</span> Subject-wise Attendance</div>
+        <table class="marks-table">
+          <thead><tr><th>Subject</th><th>Total</th><th>Present</th><th>Absent</th><th>%</th></tr></thead>
+          <tbody>
+            <tr><td>Mathematics</td><td>24</td><td>23</td><td>1</td><td><span class="m-pass">95.8%</span></td></tr>
+            <tr><td>Physics</td><td>22</td><td>20</td><td>2</td><td><span class="m-pass">90.9%</span></td></tr>
+            <tr><td>Chemistry</td><td>22</td><td>21</td><td>1</td><td><span class="m-pass">95.4%</span></td></tr>
+            <tr><td>Biology</td><td>20</td><td>16</td><td>4</td><td><span class="m-fail">80.0%</span></td></tr>
+            <tr><td>Tamil</td><td>18</td><td>17</td><td>1</td><td><span class="m-pass">94.4%</span></td></tr>
+            <tr><td>English</td><td>14</td><td>13</td><td>1</td><td><span class="m-pass">92.8%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         TIMETABLE
+    ══════════════════════════════ -->
+    <div class="dash-section" id="sec-timetable">
+      <div class="sec-head">
+        <div class="sec-tag">Schedule</div>
+        <div class="sec-title">Timetable</div>
+        <div class="sec-sub">Your daily class schedule and upcoming exam timetable.</div>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-pill active" onclick="switchTTTab('class',this)">📘 Class Timetable</button>
+        <button class="tab-pill" onclick="switchTTTab('exam',this)">📆 Exam Timetable</button>
+      </div>
+
+      <div id="ttClass" class="panel">
+        <div class="panel-title"><span>⏰</span> Daily Class Schedule — Class 12 Bio-Maths</div>
+        <div class="tt-grid">
+          <div class="tt-row"><div class="tt-time">9:00 – 9:45</div><div><div class="tt-subj">Mathematics</div><div style="font-size:12px;color:var(--muted)">Mr. [Teacher Name]</div></div><span class="tt-badge" style="background:rgba(29,78,216,.1);color:var(--blue)">Theory</span></div>
+          <div class="tt-row"><div class="tt-time">9:45 – 10:30</div><div><div class="tt-subj">Physics</div><div style="font-size:12px;color:var(--muted)">Mrs. [Teacher Name]</div></div><span class="tt-badge" style="background:rgba(22,163,74,.1);color:var(--green)">Theory</span></div>
+          <div class="tt-row"><div class="tt-time">10:30 – 10:45</div><div><div class="tt-subj" style="color:var(--muted)">Break</div></div><span class="tt-badge" style="background:#f3f4f6;color:var(--muted)">Rest</span></div>
+          <div class="tt-row"><div class="tt-time">10:45 – 11:30</div><div><div class="tt-subj">Chemistry</div><div style="font-size:12px;color:var(--muted)">Mr. [Teacher Name]</div></div><span class="tt-badge" style="background:rgba(124,58,237,.1);color:var(--purple)">Theory</span></div>
+          <div class="tt-row"><div class="tt-time">11:30 – 12:15</div><div><div class="tt-subj">Tamil</div><div style="font-size:12px;color:var(--muted)">Mrs. [Teacher Name]</div></div><span class="tt-badge" style="background:rgba(232,133,10,.1);color:var(--saffron)">Language</span></div>
+          <div class="tt-row"><div class="tt-time">12:15 – 1:00</div><div><div class="tt-subj" style="color:var(--muted)">Lunch Break</div></div><span class="tt-badge" style="background:#f3f4f6;color:var(--muted)">Break</span></div>
+          <div class="tt-row"><div class="tt-time">1:00 – 1:45</div><div><div class="tt-subj">Biology</div><div style="font-size:12px;color:var(--muted)">Mrs. [Teacher Name]</div></div><span class="tt-badge" style="background:rgba(22,163,74,.1);color:var(--green)">Theory</span></div>
+          <div class="tt-row"><div class="tt-time">1:45 – 2:30</div><div><div class="tt-subj">English</div><div style="font-size:12px;color:var(--muted)">Mr. [Teacher Name]</div></div><span class="tt-badge" style="background:rgba(29,78,216,.1);color:var(--blue)">Language</span></div>
+        </div>
+      </div>
+
+      <div id="ttExam" style="display:none">
+        <div class="panel">
+          <div class="panel-title"><span>📆</span> Exam Schedule 2025–26</div>
+          <div class="exam-grid">
+            <div class="exam-card"><div class="exam-code">5012</div><div class="exam-info"><div class="exam-name">Half Yearly Examination</div><div class="exam-date">📅 Aug 10 – Aug 22, 2026 &nbsp;·&nbsp; All Subjects</div></div><span class="exam-status es-upcoming">Upcoming</span></div>
+            <div class="exam-card"><div class="exam-code">1024</div><div class="exam-info"><div class="exam-name">Second Mid Term</div><div class="exam-date">📅 Jun 15 – Jun 20, 2026 &nbsp;·&nbsp; All Subjects</div></div><span class="exam-status es-upcoming">Upcoming</span></div>
+            <div class="exam-card"><div class="exam-code">3301</div><div class="exam-info"><div class="exam-name">First Mid Term</div><div class="exam-date">📅 Apr 8 – Apr 12, 2026 &nbsp;·&nbsp; All Subjects</div></div><span class="exam-status es-completed">Completed</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         EXAMS
+    ══════════════════════════════ -->
+    <div class="dash-section" id="sec-exams">
+      <div class="sec-head">
+        <div class="sec-tag">Examination</div>
+        <div class="sec-title">Exams</div>
+        <div class="sec-sub">All upcoming and completed exams with Exam Codes for easy tracking.</div>
+      </div>
+
+      <div class="exam-grid">
+        <div class="exam-card"><div class="exam-code">5012</div><div class="exam-info"><div class="exam-name">Half Yearly Examination</div><div class="exam-date">📅 Aug 10 – Aug 22, 2026 &nbsp;·&nbsp; All Subjects</div></div><span class="exam-status es-upcoming">Upcoming</span></div>
+        <div class="exam-card"><div class="exam-code">1024</div><div class="exam-info"><div class="exam-name">Second Mid Term Exam</div><div class="exam-date">📅 Jun 15 – Jun 20, 2026 &nbsp;·&nbsp; All Subjects</div></div><span class="exam-status es-upcoming">Upcoming</span></div>
+        <div class="exam-card"><div class="exam-code">3301</div><div class="exam-info"><div class="exam-name">First Mid Term Exam</div><div class="exam-date">📅 Apr 8 – Apr 12, 2026 &nbsp;·&nbsp; All Subjects</div></div><span class="exam-status es-completed">Completed</span></div>
+        <div class="exam-card"><div class="exam-code">2201</div><div class="exam-info"><div class="exam-name">Class Test — Maths</div><div class="exam-date">📅 Mar 14, 2026 &nbsp;·&nbsp; Mathematics only</div></div><span class="exam-status es-completed">Completed</span></div>
+        <div class="exam-card"><div class="exam-code">9901</div><div class="exam-info"><div class="exam-name">Annual Examination</div><div class="exam-date">📅 Feb 2027 &nbsp;·&nbsp; All Subjects (Board)</div></div><span class="exam-status" style="background:rgba(107,114,128,.1);color:var(--muted)">Scheduled</span></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         MARKS
+    ══════════════════════════════ -->
+    <div class="dash-section" id="sec-marks">
+      <div class="sec-head">
+        <div class="sec-tag">Performance</div>
+        <div class="sec-title">Marks</div>
+        <div class="sec-sub">Your exam-wise performance with pass/fail status.</div>
+      </div>
+
+      <div class="exam-filter-row">
+        <button class="tab-pill active" onclick="switchMarksTab('mid1',this)">First Mid Term</button>
+        <button class="tab-pill" onclick="switchMarksTab('test',this)">Class Test</button>
+      </div>
+
+      <div class="panel" id="marksPanel">
+        <div class="panel-title"><span>📊</span> First Mid Term — Exam Code 3301</div>
+        <div style="display:flex;gap:20px;margin-bottom:20px;flex-wrap:wrap">
+          <div style="background:rgba(22,163,74,.1);border-radius:10px;padding:12px 18px;text-align:center;min-width:110px"><div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--green)">78%</div><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Average</div></div>
+          <div style="background:rgba(29,78,216,.1);border-radius:10px;padding:12px 18px;text-align:center;min-width:110px"><div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--blue)">5/6</div><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Passed</div></div>
+          <div style="background:rgba(232,133,10,.1);border-radius:10px;padding:12px 18px;text-align:center;min-width:110px"><div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--saffron)">1</div><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Failed</div></div>
+        </div>
+        <div id="marksBody">
+          <table class="marks-table">
+            <thead><tr><th>Subject</th><th>Max</th><th>Scored</th><th>%</th><th>Progress</th><th>Status</th></tr></thead>
+            <tbody id="marksTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         HOMEWORK
+    ══════════════════════════════ -->
+    <div class="dash-section" id="sec-homework">
+      <div class="sec-head">
+        <div class="sec-tag">Assignments</div>
+        <div class="sec-title">Homework</div>
+        <div class="sec-sub">All assignments with due dates. Tap the checkbox when done.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span>📚</span> Current Assignments</div>
+        <div class="hw-list" id="hwList">
+          <div class="hw-item" id="hw1">
+            <div class="hw-check" onclick="toggleHw('hw1')"></div>
+            <div style="flex:1"><div class="hw-subj">Mathematics</div><div class="hw-task">Exercise 5 — Q.1 to Q.10 (Differentiation)</div></div>
+            <span class="hw-due due-tomorrow">Due Tomorrow</span>
+          </div>
+          <div class="hw-item" id="hw2">
+            <div class="hw-check" onclick="toggleHw('hw2')"></div>
+            <div style="flex:1"><div class="hw-subj">Science — Biology</div><div class="hw-task">Draw and label plant cell and animal cell (full page)</div></div>
+            <span class="hw-due due-tomorrow">Due Tomorrow</span>
+          </div>
+          <div class="hw-item" id="hw3">
+            <div class="hw-check" onclick="toggleHw('hw3')"></div>
+            <div style="flex:1"><div class="hw-subj">English</div><div class="hw-task">Write a paragraph on "My School" (150 words)</div></div>
+            <span class="hw-due due-soon">Due in 3 Days</span>
+          </div>
+          <div class="hw-item" id="hw4">
+            <div class="hw-check" onclick="toggleHw('hw4')"></div>
+            <div style="flex:1"><div class="hw-subj">Tamil</div><div class="hw-task">Learn poem — "திருக்குறள்" verses 1–10</div></div>
+            <span class="hw-due due-ok">Due in 5 Days</span>
+          </div>
+          <div class="hw-item" id="hw5">
+            <div class="hw-check" onclick="toggleHw('hw5')"></div>
+            <div style="flex:1"><div class="hw-subj">Chemistry</div><div class="hw-task">Revise organic chemistry reactions — Chapter 7</div></div>
+            <span class="hw-due due-ok">Due in 5 Days</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         ACADEMIC
+    ══════════════════════════════ -->
+    <div class="dash-section" id="sec-academic">
+      <div class="sec-head">
+        <div class="sec-tag">Curriculum</div>
+        <div class="sec-title">Academic Subjects</div>
+        <div class="sec-sub">All subjects you are studying this academic year with average marks.</div>
+      </div>
+
+      <div class="subj-grid">
+        <div class="subj-card"><div class="subj-icon">📐</div><div class="subj-name">Mathematics</div><div class="subj-teacher">Mr. [Teacher Name]</div><div class="subj-avg" style="background:rgba(22,163,74,.1);color:var(--green)">Avg: 85%</div></div>
+        <div class="subj-card"><div class="subj-icon">⚡</div><div class="subj-name">Physics</div><div class="subj-teacher">Mrs. [Teacher Name]</div><div class="subj-avg" style="background:rgba(22,163,74,.1);color:var(--green)">Avg: 80%</div></div>
+        <div class="subj-card"><div class="subj-icon">⚗️</div><div class="subj-name">Chemistry</div><div class="subj-teacher">Mr. [Teacher Name]</div><div class="subj-avg" style="background:rgba(232,133,10,.1);color:var(--saffron)">Avg: 72%</div></div>
+        <div class="subj-card"><div class="subj-icon">🌿</div><div class="subj-name">Biology</div><div class="subj-teacher">Mrs. [Teacher Name]</div><div class="subj-avg" style="background:rgba(220,38,38,.1);color:var(--red)">Avg: 55%</div></div>
+        <div class="subj-card"><div class="subj-icon">📖</div><div class="subj-name">Tamil</div><div class="subj-teacher">Mrs. [Teacher Name]</div><div class="subj-avg" style="background:rgba(22,163,74,.1);color:var(--green)">Avg: 88%</div></div>
+        <div class="subj-card"><div class="subj-icon">🔤</div><div class="subj-name">English</div><div class="subj-teacher">Mr. [Teacher Name]</div><div class="subj-avg" style="background:rgba(22,163,74,.1);color:var(--green)">Avg: 82%</div></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         PROFILE
+    ══════════════════════════════ -->
+    <div class="dash-section" id="sec-profile">
+      <div class="sec-head">
+        <div class="sec-tag">My Account</div>
+        <div class="sec-title">Student Profile</div>
+        <div class="sec-sub">Your personal and academic details on record.</div>
+      </div>
+
+      <div class="panel">
+        <div class="profile-layout">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar">🎒</div>
+            <div id="profileNameDisplay" style="font-family:'Playfair Display',serif;font-size:16px;font-weight:900;color:var(--deep);margin-bottom:5px">Student Name</div>
+            <div class="profile-badge">✅ Active Student</div>
+          </div>
+          <div class="profile-info-grid">
+            <div class="pi-item"><div class="pi-key">Full Name</div><div class="pi-val" id="piName">—</div></div>
+            <div class="pi-item"><div class="pi-key">User ID</div><div class="pi-val" id="piId">—</div></div>
+            <div class="pi-item"><div class="pi-key">Class</div><div class="pi-val">12 – Bio Maths</div></div>
+            <div class="pi-item"><div class="pi-key">Section</div><div class="pi-val">A</div></div>
+            <div class="pi-item"><div class="pi-key">Roll Number</div><div class="pi-val">23</div></div>
+            <div class="pi-item"><div class="pi-key">Academic Year</div><div class="pi-val">2025 – 2026</div></div>
+            <div class="pi-item"><div class="pi-key">Medium</div><div class="pi-val">Tamil Medium</div></div>
+            <div class="pi-item"><div class="pi-key">School</div><div class="pi-val">S.S. Hr. Sec. School</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div><!-- end dash-root -->
+
+<!-- Mobile sidebar toggle button -->
+<button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()">☰</button>
+
+<script>
+/* ════════════════════════════════════
+   LOAD STUDENT DATA FROM SESSION
+════════════════════════════════════ */
+const stored = sessionStorage.getItem('loggedInUser');
+const user = stored ? JSON.parse(stored) : {name:'[Student Name]', id:'STU001', role:'student'};
+
+/* Fill name everywhere */
+document.getElementById('sbStudentName').textContent = user.name;
+document.getElementById('sbStudentClass').textContent = 'Class 12 · Roll No. 23';
+document.getElementById('homeGreetName').textContent = user.name.split(' ')[0];
+document.getElementById('navStudentName').textContent = user.name;
+document.getElementById('mobNavName').textContent = user.name;
+document.getElementById('profileNameDisplay').textContent = user.name;
+document.getElementById('piName').textContent = user.name;
+document.getElementById('piId').textContent = user.id;
+
+/* Date display */
+document.getElementById('homeDateDisplay').textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+/* ── Hamburger (school nav mobile) ── */
+const hb=document.getElementById('hamburger'),mm=document.getElementById('mobileMenu');
+hb.addEventListener('click',()=>{hb.classList.toggle('open');mm.classList.toggle('open')});
+document.querySelectorAll('.mobile-nav-links a').forEach(a=>a.addEventListener('click',()=>{hb.classList.remove('open');mm.classList.remove('open')}));
+
+/* ── Profile dropdown ── */
+function closeDropdown(){}
+
+/* ── Sidebar (mobile) ── */
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sbBackdrop').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbBackdrop').classList.remove('open');
+}
+
+/* ── Section switching ── */
+function switchSection(id){
+  document.querySelectorAll('.dash-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.sb-nav-item').forEach(n=>{
+    if(n.textContent.toLowerCase().includes(id)||
+       (id==='home'&&n.textContent.toLowerCase().includes('dashboard'))||
+       (id==='academic'&&n.textContent.toLowerCase().includes('academic'))||
+       (id==='homework'&&n.textContent.toLowerCase().includes('homework'))||
+       (id==='profile'&&n.textContent.toLowerCase().includes('profile'))
+    ) n.classList.add('active');
+  });
+  closeSidebar();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ── Notice tabs ── */
+function switchNoticeTab(tab,btn){
+  document.querySelectorAll('#sec-notices .tab-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('noticeSchool').style.display = tab==='school'?'flex':'none';
+  document.getElementById('noticeClass').style.display  = tab==='class' ?'flex':'none';
+}
+
+/* ── Timetable tabs ── */
+function switchTTTab(tab,btn){
+  document.querySelectorAll('#sec-timetable .tab-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ttClass').style.display = tab==='class'?'block':'none';
+  document.getElementById('ttExam').style.display  = tab==='exam' ?'block':'none';
+}
+
+/* ── Marks data ── */
+const MARKS_DATA = {
+  mid1:{
+    title:'First Mid Term — Exam Code 3301',
+    rows:[
+      {subj:'Mathematics', max:100, scored:78},
+      {subj:'Physics',     max:100, scored:80},
+      {subj:'Chemistry',   max:100, scored:72},
+      {subj:'Biology',     max:100, scored:32},
+      {subj:'Tamil',       max:100, scored:88},
+      {subj:'English',     max:100, scored:82},
+    ]
+  },
+  test:{
+    title:'Class Test — Exam Code 2201',
+    rows:[
+      {subj:'Mathematics', max:25, scored:22},
+      {subj:'Physics',     max:25, scored:20},
+    ]
+  }
+};
+
+function switchMarksTab(key,btn){
+  document.querySelectorAll('#sec-marks .tab-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d=MARKS_DATA[key];
+  document.querySelector('#marksPanel .panel-title').innerHTML=`<span>📊</span> ${d.title}`;
+  const tbody=document.getElementById('marksTableBody');
+  tbody.innerHTML='';
+  d.rows.forEach(r=>{
+    const pct=Math.round((r.scored/r.max)*100);
+    const pass=pct>=35;
+    const barColor=pct>=75?'var(--green)':pct>=35?'var(--saffron)':'var(--red)';
+    tbody.innerHTML+=`<tr>
+      <td>${r.subj}</td>
+      <td>${r.max}</td>
+      <td><strong>${r.scored}</strong></td>
+      <td>${pct}%</td>
+      <td><div class="m-bar-wrap"><div class="m-bar" style="width:${pct}%;background:${barColor}"></div></div></td>
+      <td><span class="${pass?'m-pass':'m-fail'}">${pass?'✅ Pass':'❌ Fail'}</span></td>
+    </tr>`;
+  });
+}
+/* Init marks */
+switchMarksTab('mid1', document.querySelector('#sec-marks .tab-pill'));
+
+/* ── Homework toggle ── */
+function toggleHw(id){
+  const item=document.getElementById(id);
+  const check=item.querySelector('.hw-check');
+  const done=check.classList.toggle('done');
+  if(done){check.textContent='✓';item.classList.add('completed')}
+  else{check.textContent='';item.classList.remove('completed')}
+  showToast(done?'✅ Marked as done!':'↩️ Marked as pending');
+}
+
+/* ── Toast ── */
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+(type==='err'?'err':'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+</script>
+</body>
+</html>

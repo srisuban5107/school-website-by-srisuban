@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Dashboard – S.S. Hr. Sec. School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --deep:#0b1f3a;--navy:#112d4e;--saffron:#e8850a;--gold:#f5b94e;
+      --cream:#fdf6ec;--white:#fff;--text:#1a1a2e;--muted:#6b7280;--border:#e9d5b0;
+      --green:#16a34a;--red:#dc2626;--blue:#1d4ed8;--purple:#7c3aed;--teal:#0d9488;
+      --sidebar-w:250px;--topnav-h:66px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#f1f5f9;color:var(--text);overflow-x:hidden}
+
+    /* ════ TOP SCHOOL NAV ════ */
+    .top-nav{position:fixed;top:0;width:100%;z-index:1100;background:var(--deep);display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:var(--topnav-h);box-shadow:0 2px 24px rgba(0,0,0,.45)}
+    .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .nav-emblem{width:44px;height:44px;background:linear-gradient(135deg,var(--saffron),var(--gold));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:var(--deep);flex-shrink:0}
+    .nav-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--white);line-height:1.25}
+    .nav-title span{color:var(--gold);font-size:12px;font-weight:400}
+    .nav-links{display:flex;align-items:center;gap:26px;list-style:none}
+    .nav-links a{color:#c9d4e0;font-size:13.5px;font-weight:500;text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:var(--gold)}
+    .nav-right{display:flex;align-items:center;gap:14px}
+    .nav-profile-pic{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--navy),#1e3a5f);border:2.5px solid var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;position:relative}
+    .nav-profile-pic:hover .profile-dropdown{display:block}
+    .profile-dropdown{display:none;position:absolute;top:calc(100% + 10px);right:0;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.15);min-width:190px;z-index:200}
+    .profile-dropdown::before{content:'';position:absolute;top:-6px;right:14px;width:12px;height:12px;background:var(--white);border-left:1px solid var(--border);border-top:1px solid var(--border);transform:rotate(45deg)}
+    .pd-header{padding:14px 16px;border-bottom:1px solid var(--border)}
+    .pd-name{font-size:14px;font-weight:700;color:var(--deep)}
+    .pd-role{font-size:11.5px;color:var(--saffron);font-weight:600}
+    .pd-links{padding:8px 0}
+    .pd-links a{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13.5px;color:var(--text);text-decoration:none;transition:background .2s}
+    .pd-links a:hover{background:var(--cream)}
+    .pd-divider{border:none;border-top:1px solid var(--border);margin:4px 0}
+    .pd-logout{padding:8px 16px 12px}
+    .pd-logout a{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--red);font-weight:600;text-decoration:none}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none}
+    .hamburger span{display:block;width:24px;height:2.5px;background:var(--white);border-radius:2px;transition:all .3s}
+    .hamburger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+    .hamburger.open span:nth-child(2){opacity:0}
+    .hamburger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+    .mobile-menu{display:none;position:fixed;top:var(--topnav-h);left:0;right:0;background:var(--deep);z-index:1099;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;transform:translateY(-10px)}
+    .mobile-menu.open{opacity:1;pointer-events:all;transform:translateY(0);display:block}
+    .mobile-profile-bar{display:flex;align-items:center;gap:14px;padding:20px 24px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .mob-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--navy),#1e3a5f);border:2.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:26px}
+    .mobile-profile-name{color:var(--white);font-weight:600;font-size:14px}
+    .mobile-profile-sub{color:#94a3b8;font-size:12px;margin-top:2px}
+    .mobile-nav-links{list-style:none;padding:8px 0}
+    .mobile-nav-links li a{display:flex;align-items:center;gap:12px;padding:14px 24px;color:#c9d4e0;font-size:15px;text-decoration:none;transition:background .2s,color .2s;border-left:3px solid transparent}
+    .mobile-nav-links li a:hover{background:rgba(245,185,78,.07);color:var(--gold);border-left-color:var(--gold)}
+    .link-icon{font-size:17px;width:22px;text-align:center}
+    .mobile-login-wrap{padding:16px 24px 24px;border-top:1px solid rgba(255,255,255,.08)}
+    .mobile-login-wrap a{display:block;width:100%;text-align:center;padding:13px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:var(--deep);font-weight:700;font-size:15px;border-radius:8px;text-decoration:none}
+    @media(max-width:900px){.nav-links{display:none}.hamburger{display:flex}.mobile-menu{display:block}}
+    @media(max-width:480px){.nav-title{display:none}}
+
+    /* ════ DASHBOARD LAYOUT ════ */
+    .dash-root{margin-top:var(--topnav-h);display:flex;min-height:calc(100vh - var(--topnav-h))}
+
+    /* ── SIDEBAR ── */
+    .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--deep);position:fixed;top:var(--topnav-h);left:0;height:calc(100vh - var(--topnav-h));overflow-y:auto;display:flex;flex-direction:column;z-index:900;transition:transform .3s}
+    .sidebar::-webkit-scrollbar{width:0}
+    .sb-teacher{padding:22px 18px 16px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+    .sb-avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;border:2.5px solid rgba(255,255,255,.15)}
+    .sb-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:900;color:var(--white);margin-bottom:2px}
+    .sb-role-info{font-size:12px;color:#94a3b8;margin-bottom:6px}
+    .sb-type-badge{display:inline-block;padding:3px 11px;border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.5px}
+    .badge-class{background:rgba(245,185,78,.2);border:1px solid rgba(245,185,78,.35);color:var(--gold)}
+    .badge-subject{background:rgba(29,78,216,.2);border:1px solid rgba(29,78,216,.35);color:#93c5fd}
+    .sb-nav{flex:1;padding:8px 0}
+    .sb-nav-item{display:flex;align-items:center;gap:11px;padding:12px 20px;color:#94a3b8;font-size:13.5px;font-weight:500;cursor:pointer;border-left:3px solid transparent;transition:all .2s;position:relative}
+    .sb-nav-item:hover{background:rgba(255,255,255,.04);color:var(--white)}
+    .sb-nav-item.active{background:rgba(232,133,10,.1);border-left-color:var(--saffron);color:var(--gold);font-weight:700}
+    .sb-nav-icon{font-size:17px;width:20px;text-align:center;flex-shrink:0}
+    .sb-divider{border:none;border-top:1px solid rgba(255,255,255,.06);margin:6px 0}
+    /* Class-only / Subject-only items */
+    .class-only{display:none}
+    .subject-only{display:none}
+    .sb-bottom{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08)}
+    .sb-logout{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.2);color:#f87171;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .2s;text-decoration:none}
+    .sb-logout:hover{background:rgba(220,38,38,.2)}
+    .sb-badge-count{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;min-width:20px;text-align:center}
+
+    /* ── MAIN CONTENT ── */
+    .main-content{margin-left:var(--sidebar-w);flex:1;padding:32px;min-height:calc(100vh - var(--topnav-h))}
+    .dash-section{display:none}
+    .dash-section.active{display:block;animation:fadeUp .4s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Section header */
+    .sec-head{margin-bottom:28px}
+    .sec-head-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:4px}
+    .sec-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--saffron);margin-bottom:6px}
+    .sec-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--deep)}
+    .sec-sub{font-size:13.5px;color:var(--muted);margin-top:3px}
+
+    /* Role switch banner */
+    .role-banner{
+      border-radius:14px;padding:16px 20px;margin-bottom:24px;
+      display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    }
+    .role-banner.class-mode{background:rgba(232,133,10,.1);border:1px solid rgba(232,133,10,.25)}
+    .role-banner.subject-mode{background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.2)}
+    .rb-icon{font-size:28px}
+    .rb-title{font-size:15px;font-weight:700;color:var(--deep)}
+    .rb-sub{font-size:13px;color:var(--muted)}
+    .rb-badge{margin-left:auto;font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px}
+
+    /* Stat cards */
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-bottom:28px}
+    .stat-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+    .stat-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.08)}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .stat-card.green::before{background:var(--green)}
+    .stat-card.saffron::before{background:var(--saffron)}
+    .stat-card.blue::before{background:var(--blue)}
+    .stat-card.purple::before{background:var(--purple)}
+    .stat-card.teal::before{background:var(--teal)}
+    .stat-icon{font-size:28px;margin-bottom:10px}
+    .stat-num{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:var(--deep);line-height:1}
+    .stat-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500}
+
+    /* Panel */
+    .panel{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:20px}
+    .panel-title{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .panel-title span{font-size:16px}
+
+    /* Tab bar */
+    .tab-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+    .tab-pill{padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;border:1.5px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:all .2s}
+    .tab-pill:hover{border-color:var(--saffron);color:var(--saffron)}
+    .tab-pill.active{background:var(--deep);border-color:var(--deep);color:var(--gold)}
+
+    /* Notice items */
+    .notice-list{display:flex;flex-direction:column;gap:12px}
+    .notice-item{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:10px;background:var(--cream);border:1px solid var(--border);transition:transform .2s}
+    .notice-item:hover{transform:translateX(3px)}
+    .notice-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
+    .notice-title{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:3px}
+    .notice-desc{font-size:13px;color:var(--muted);line-height:1.55}
+    .notice-date{font-size:11.5px;color:var(--muted);margin-top:5px;font-weight:500}
+
+    /* Student list / table */
+    .data-table{width:100%;border-collapse:collapse}
+    .data-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
+    .data-table td{padding:12px 14px;font-size:13.5px;color:var(--text);border-bottom:1px solid #f3f4f6;vertical-align:middle}
+    .data-table tr:last-child td{border-bottom:none}
+    .data-table tr:hover td{background:rgba(232,133,10,.02)}
+    .status-present{color:var(--green);font-weight:700;font-size:12px}
+    .status-absent{color:var(--red);font-weight:700;font-size:12px}
+    .roll-badge{background:rgba(11,31,58,.08);border:1px solid rgba(11,31,58,.12);color:var(--deep);font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:6px}
+    .m-pass{color:var(--green);font-weight:700}
+    .m-fail{color:var(--red);font-weight:700}
+
+    /* Attendance marking */
+    .att-date-row{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+    .att-date-row input[type=date]{padding:9px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);background:var(--white);outline:none;transition:border-color .2s}
+    .att-date-row input[type=date]:focus{border-color:var(--saffron)}
+    .att-filter-btns{display:flex;gap:8px}
+    .att-filter-btn{padding:9px 16px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
+    .att-filter-btn:hover{border-color:var(--saffron);color:var(--saffron)}
+    .att-toggle{width:36px;height:20px;border-radius:20px;border:none;cursor:pointer;font-size:11px;font-weight:700;transition:all .2s;flex-shrink:0}
+    .att-toggle.present{background:var(--green);color:#fff}
+    .att-toggle.absent{background:#fecaca;color:var(--red);border:1px solid #fca5a5}
+    .save-att-btn{padding:10px 24px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:var(--deep);font-weight:700;font-size:14px;border:none;border-radius:9px;cursor:pointer;box-shadow:0 4px 16px rgba(232,133,10,.3);transition:transform .2s}
+    .save-att-btn:hover{transform:translateY(-2px)}
+
+    /* Marks entry */
+    .marks-entry-grid{display:flex;flex-direction:column;gap:10px}
+    .marks-entry-row{display:flex;align-items:center;gap:14px;padding:13px 16px;background:var(--cream);border-radius:10px;border:1px solid var(--border)}
+    .me-roll{font-size:11.5px;font-weight:700;color:var(--muted);width:40px;flex-shrink:0}
+    .me-name{flex:1;font-size:14px;font-weight:700;color:var(--deep)}
+    .me-input{width:80px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;text-align:center;font-weight:700;color:var(--deep);background:var(--white);outline:none;transition:border-color .2s}
+    .me-input:focus{border-color:var(--saffron)}
+    .me-max{font-size:12px;color:var(--muted);flex-shrink:0}
+    .me-status{font-size:12px;font-weight:700;min-width:50px;text-align:center}
+
+    /* Homework assign */
+    .hw-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .hw-form-grid.full{grid-column:1/-1}
+    .form-field{display:flex;flex-direction:column;gap:6px}
+    .form-field label{font-size:11.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+    .form-field input,.form-field select,.form-field textarea{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--cream);outline:none;transition:border-color .2s}
+    .form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--saffron)}
+    .form-field textarea{resize:vertical;min-height:80px}
+    .btn-action{padding:11px 24px;border:none;border-radius:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;transition:all .2s}
+    .btn-primary{background:linear-gradient(135deg,var(--saffron),var(--gold));color:var(--deep);box-shadow:0 4px 16px rgba(232,133,10,.3)}
+    .btn-primary:hover{transform:translateY(-2px)}
+    .btn-outline{background:var(--white);border:1.5px solid var(--border);color:var(--text)}
+    .btn-outline:hover{border-color:var(--saffron);color:var(--saffron)}
+
+    /* Progress bar */
+    .progress-bar-wrap{background:#e2e8f0;border-radius:20px;height:8px;overflow:hidden;flex:1}
+    .progress-bar{height:100%;border-radius:20px}
+
+    /* Timetable */
+    .tt-row{display:flex;align-items:center;gap:14px;padding:13px 16px;background:var(--cream);border-radius:10px;border:1px solid var(--border);margin-bottom:10px;transition:transform .2s}
+    .tt-row:hover{transform:translateX(3px)}
+    .tt-time{font-size:12px;font-weight:700;color:var(--muted);min-width:90px;flex-shrink:0}
+    .tt-subj{font-size:14px;font-weight:700;color:var(--deep)}
+    .tt-class-lbl{font-size:12px;color:var(--muted);margin-left:auto}
+    .tt-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;flex-shrink:0}
+
+    /* Profile grid */
+    .profile-layout{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
+    .profile-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));border:4px solid var(--white);display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 10px;box-shadow:0 6px 20px rgba(232,133,10,.3)}
+    .profile-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .pi-item{background:var(--cream);border-radius:10px;padding:13px 15px;border-left:3px solid var(--saffron)}
+    .pi-key{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .pi-val{font-size:14px;font-weight:700;color:var(--deep)}
+
+    /* hw assigned list */
+    .hw-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:10px;background:var(--cream);border:1px solid var(--border);margin-bottom:10px}
+    .hw-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:5px}
+    .hw-subj{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:2px}
+    .hw-desc{font-size:13px;color:var(--muted)}
+    .hw-meta{font-size:12px;color:var(--muted);margin-top:4px}
+    .hw-del{margin-left:auto;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);color:var(--red);border-radius:7px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;transition:background .2s}
+    .hw-del:hover{background:rgba(220,38,38,.2)}
+
+    /* Mobile sidebar */
+    .sb-toggle{display:none;position:fixed;bottom:24px;left:16px;z-index:950;width:46px;height:46px;border-radius:50%;background:var(--deep);color:var(--white);border:2px solid var(--gold);font-size:20px;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+    .sb-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:899}
+
+    /* Toast */
+    .toast{position:fixed;top:80px;right:20px;z-index:9999;background:var(--green);color:#fff;padding:11px 20px;border-radius:10px;font-size:13.5px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateX(120px);transition:transform .3s;display:flex;align-items:center;gap:8px}
+    .toast.show{transform:translateX(0)}
+    .toast.err{background:var(--red)}
+
+    /* Add notice inline form */
+    .add-notice-box{background:rgba(232,133,10,.06);border:1.5px dashed rgba(232,133,10,.3);border-radius:12px;padding:18px;margin-top:16px}
+    .add-notice-box input,.add-notice-box textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);background:var(--white);outline:none;margin-bottom:10px;transition:border-color .2s}
+    .add-notice-box input:focus,.add-notice-box textarea:focus{border-color:var(--saffron)}
+    .add-notice-box textarea{min-height:70px;resize:vertical}
+
+    @media(max-width:900px){
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .main-content{margin-left:0;padding:20px 16px}
+      .sb-toggle{display:flex}
+      .sb-backdrop{display:block;pointer-events:none;opacity:0;transition:opacity .3s}
+      .sb-backdrop.open{pointer-events:all;opacity:1}
+      .profile-layout{grid-template-columns:1fr}
+      .profile-info-grid{grid-template-columns:1fr}
+      .hw-form-grid{grid-template-columns:1fr}
+      .stat-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:500px){
+      .stat-grid{grid-template-columns:repeat(2,1fr)}
+      .main-content{padding:14px 10px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ════ TOP SCHOOL NAV ════ -->
+<nav class="top-nav">
+  <a class="nav-logo" href="index.html">
+    <div class="nav-emblem">SS</div>
+    <div class="nav-title">S.S. Hr. Sec. School<br><span>Arani, Tiruvannamalai</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="academics.html">Academics</a></li>
+    <li><a href="facilities.html">Facilities</a></li>
+    <li><a href="staff.html">Staff</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-profile-pic" tabindex="0">
+      👨‍🏫
+      <div class="profile-dropdown">
+        <div class="pd-header">
+          <div class="pd-name" id="navTeacherName">Teacher Name</div>
+          <div class="pd-role" id="navTeacherRole">👨‍🏫 Teacher Portal</div>
+        </div>
+        <div class="pd-links">
+          <a href="#" onclick="switchSection('profile')"><span>👤</span> My Profile</a>
+          <a href="#" onclick="switchSection('notices')"><span>📢</span> Notices</a>
+          <a href="contact.html"><span>📞</span> Contact School</a>
+        </div>
+        <hr class="pd-divider">
+        <div class="pd-logout"><a href="login.html"><span>🚪</span> Logout</a></div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Mobile school nav -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-profile-bar">
+    <div class="mob-avatar">👨‍🏫</div>
+    <div>
+      <div class="mobile-profile-name" id="mobNavName">Teacher Name</div>
+      <div class="mobile-profile-sub">Teacher Portal · Active</div>
+    </div>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html"><span class="link-icon">🏠</span>Home</a></li>
+    <li><a href="academics.html"><span class="link-icon">📖</span>Academics</a></li>
+    <li><a href="facilities.html"><span class="link-icon">🏛️</span>Facilities</a></li>
+    <li><a href="staff.html"><span class="link-icon">👨‍🏫</span>Staff</a></li>
+    <li><a href="gallery.html"><span class="link-icon">🖼️</span>Gallery</a></li>
+    <li><a href="contact.html"><span class="link-icon">📞</span>Contact</a></li>
+  </ul>
+  <div class="mobile-login-wrap"><a href="login.html">🚪 Logout</a></div>
+</div>
+
+<!-- ════ DASHBOARD ════ -->
+<div class="dash-root">
+  <div class="sb-backdrop" id="sbBackdrop" onclick="closeSidebar()"></div>
+
+  <!-- ════ SIDEBAR ════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-teacher">
+      <div class="sb-avatar">👨‍🏫</div>
+      <div class="sb-name" id="sbTeacherName">Teacher Name</div>
+      <div class="sb-role-info" id="sbTeacherSubject">Subject · Class —</div>
+      <div class="sb-type-badge" id="sbTypeBadge">🏷️ Loading…</div>
+    </div>
+
+    <nav class="sb-nav" id="sbNav">
+      <div class="sb-nav-item active" onclick="switchSection('home')"><span class="sb-nav-icon">🏠</span>Dashboard</div>
+      <div class="sb-nav-item" onclick="switchSection('notices')"><span class="sb-nav-icon">📢</span>Notices<span class="sb-badge-count">2</span></div>
+      <hr class="sb-divider">
+
+      <!-- Class Teacher only -->
+      <div class="sb-nav-item class-only" onclick="switchSection('myclass')"><span class="sb-nav-icon">🏫</span>My Class</div>
+      <div class="sb-nav-item class-only" onclick="switchSection('attendance')"><span class="sb-nav-icon">📅</span>Attendance</div>
+
+      <!-- Both -->
+      <div class="sb-nav-item" onclick="switchSection('students')"><span class="sb-nav-icon">👨‍🎓</span>Students</div>
+      <div class="sb-nav-item" onclick="switchSection('marks')"><span class="sb-nav-icon">📊</span>Marks Entry</div>
+      <div class="sb-nav-item" onclick="switchSection('homework')"><span class="sb-nav-icon">📚</span>Homework</div>
+      <hr class="sb-divider">
+
+      <!-- Subject Teacher only -->
+      <div class="sb-nav-item subject-only" onclick="switchSection('mysubject')"><span class="sb-nav-icon">📘</span>My Subject</div>
+
+      <div class="sb-nav-item" onclick="switchSection('timetable')"><span class="sb-nav-icon">⏰</span>Timetable</div>
+      <div class="sb-nav-item" onclick="switchSection('reports')"><span class="sb-nav-icon">📈</span>Reports</div>
+      <hr class="sb-divider">
+      <div class="sb-nav-item" onclick="switchSection('profile')"><span class="sb-nav-icon">👤</span>My Profile</div>
+    </nav>
+
+    <div class="sb-bottom">
+      <a class="sb-logout" href="login.html"><span>🚪</span> Logout</a>
+    </div>
+  </aside>
+
+  <!-- ════ MAIN CONTENT ════ -->
+  <main class="main-content">
+
+    <!-- ══ HOME ══ -->
+    <div class="dash-section active" id="sec-home">
+      <div class="sec-head">
+        <div class="sec-tag">Teacher Portal</div>
+        <div class="sec-head-top">
+          <div class="sec-title">Welcome, <span id="homeGreet" style="color:var(--saffron)">Teacher</span> 👋</div>
+          <span id="homeDateDisplay" style="font-size:13px;color:var(--muted)"></span>
+        </div>
+        <div class="sec-sub" id="homeSubLine">Your academic overview for today.</div>
+      </div>
+
+      <!-- Role banner -->
+      <div class="role-banner" id="roleBanner">
+        <div class="rb-icon">👨‍🏫</div>
+        <div><div class="rb-title" id="rbTitle">Teacher</div><div class="rb-sub" id="rbSub">Loading role…</div></div>
+        <div class="rb-badge" id="rbBadge">…</div>
+      </div>
+
+      <div class="stat-grid" id="homeStats"></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="panel">
+          <div class="panel-title"><span>📢</span> Latest Notices</div>
+          <div class="notice-list">
+            <div class="notice-item"><div class="notice-dot" style="background:var(--saffron)"></div><div><div class="notice-title">Annual Day – Jan 12, 2026</div><div class="notice-desc">All staff must be present. Report by 8:30 AM.</div><div class="notice-date">📅 May 18, 2026</div></div></div>
+            <div class="notice-item"><div class="notice-dot" style="background:var(--red)"></div><div><div class="notice-title">Staff Meeting – May 26</div><div class="notice-desc">Mandatory meeting. Venue: Auditorium, 3 PM.</div><div class="notice-date">📅 May 20, 2026</div></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><span>⏰</span> Today's Schedule</div>
+          <div id="homeTT"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ NOTICES ══ -->
+    <div class="dash-section" id="sec-notices">
+      <div class="sec-head">
+        <div class="sec-tag">Communications</div>
+        <div class="sec-title">Notices</div>
+        <div class="sec-sub">School announcements and class notices.</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-pill active" onclick="switchNoticeTab('school',this)">🏫 School Notices</button>
+        <button class="tab-pill class-only-el" onclick="switchNoticeTab('class',this)">📋 Class Notices</button>
+      </div>
+      <div id="noticeSchool" class="notice-list">
+        <div class="notice-item"><div class="notice-dot" style="background:var(--saffron)"></div><div><div class="notice-title">Annual Day – Jan 12, 2026</div><div class="notice-desc">All staff must be present. Report by 8:30 AM.</div><div class="notice-date">📅 May 18, 2026</div></div></div>
+        <div class="notice-item"><div class="notice-dot" style="background:var(--red)"></div><div><div class="notice-title">Staff Meeting – May 26</div><div class="notice-desc">Mandatory. Venue: Auditorium, 3 PM.</div><div class="notice-date">📅 May 20, 2026</div></div></div>
+        <div class="notice-item"><div class="notice-dot" style="background:var(--green)"></div><div><div class="notice-title">Sports Day Results Published</div><div class="notice-desc">Prize distribution on May 25 during assembly.</div><div class="notice-date">📅 May 10, 2026</div></div></div>
+      </div>
+      <div id="noticeClass" class="notice-list" style="display:none">
+        <div id="classNoticeList">
+          <div class="notice-item"><div class="notice-dot" style="background:var(--red)"></div><div><div class="notice-title">Maths Test – This Friday</div><div class="notice-desc">Chapters 5 & 6. Inform all students.</div><div class="notice-date">📅 May 20, 2026</div></div></div>
+        </div>
+        <div class="add-notice-box">
+          <div style="font-size:13px;font-weight:700;color:var(--saffron);margin-bottom:10px">➕ Add Class Notice</div>
+          <input type="text" id="noticeTitle" placeholder="Notice title…">
+          <textarea id="noticeDesc" placeholder="Notice description…"></textarea>
+          <button class="btn-action btn-primary" onclick="addNotice()">Post Notice</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MY CLASS (Class Teacher only) ══ -->
+    <div class="dash-section" id="sec-myclass">
+      <div class="sec-head">
+        <div class="sec-tag">Class Teacher</div>
+        <div class="sec-title">My Class — <span id="myClassLabel" style="color:var(--saffron)">12-A</span></div>
+        <div class="sec-sub">Full overview of your class students and performance.</div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card green"><div class="stat-icon">👨‍🎓</div><div class="stat-num">42</div><div class="stat-label">Total Students</div></div>
+        <div class="stat-card blue"><div class="stat-icon">📅</div><div class="stat-num">91%</div><div class="stat-label">Today's Attendance</div></div>
+        <div class="stat-card saffron"><div class="stat-icon">📊</div><div class="stat-num">78%</div><div class="stat-label">Class Average</div></div>
+        <div class="stat-card purple"><div class="stat-icon">📚</div><div class="stat-num">3</div><div class="stat-label">Pending HW</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span>👨‍🎓</span> Student List — Class 12-A</div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Roll</th><th>Name</th><th>Section</th><th>Attendance</th><th>Avg Marks</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="roll-badge">01</span></td><td>Student One</td><td>A</td><td><span class="status-present">Present</span></td><td>82%</td><td><span class="m-pass">Good</span></td></tr>
+              <tr><td><span class="roll-badge">02</span></td><td>Student Two</td><td>A</td><td><span class="status-absent">Absent</span></td><td>55%</td><td><span style="color:var(--saffron);font-weight:700">Average</span></td></tr>
+              <tr><td><span class="roll-badge">03</span></td><td>Student Three</td><td>A</td><td><span class="status-present">Present</span></td><td>91%</td><td><span class="m-pass">Excellent</span></td></tr>
+              <tr><td><span class="roll-badge">04</span></td><td>Student Four</td><td>A</td><td><span class="status-present">Present</span></td><td>34%</td><td><span class="m-fail">Below avg</span></td></tr>
+              <tr><td><span class="roll-badge">05</span></td><td>Student Five</td><td>A</td><td><span class="status-present">Present</span></td><td>76%</td><td><span class="m-pass">Good</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ATTENDANCE (Class Teacher) ══ -->
+    <div class="dash-section" id="sec-attendance">
+      <div class="sec-head">
+        <div class="sec-tag">Class Teacher</div>
+        <div class="sec-title">Mark Attendance</div>
+        <div class="sec-sub">Select date and mark present or absent for each student.</div>
+      </div>
+      <div class="panel">
+        <div class="att-date-row">
+          <label style="font-size:13px;font-weight:700;color:var(--muted)">Date:</label>
+          <input type="date" id="attDate">
+          <div class="att-filter-btns">
+            <button class="att-filter-btn" onclick="markAll('present')">✅ All Present</button>
+            <button class="att-filter-btn" onclick="markAll('absent')">❌ All Absent</button>
+          </div>
+          <button class="save-att-btn" onclick="saveAttendance()">💾 Save Attendance</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="data-table" id="attTable">
+            <thead><tr><th>Roll</th><th>Name</th><th>Status</th><th>Toggle</th></tr></thead>
+            <tbody id="attBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STUDENTS ══ -->
+    <div class="dash-section" id="sec-students">
+      <div class="sec-head">
+        <div class="sec-tag">People</div>
+        <div class="sec-title">Students</div>
+        <div class="sec-sub" id="studentsSubLine">Students in your class/subject.</div>
+      </div>
+      <div class="panel">
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Roll</th><th>Name</th><th>Class</th><th>Attendance</th><th>Last Marks</th></tr></thead>
+            <tbody>
+              <tr><td><span class="roll-badge">01</span></td><td>Student One</td><td>12-A</td><td>95%</td><td>82 / 100</td></tr>
+              <tr><td><span class="roll-badge">02</span></td><td>Student Two</td><td>12-A</td><td>78%</td><td>55 / 100</td></tr>
+              <tr><td><span class="roll-badge">03</span></td><td>Student Three</td><td>12-A</td><td>100%</td><td>91 / 100</td></tr>
+              <tr><td><span class="roll-badge">04</span></td><td>Student Four</td><td>12-A</td><td>72%</td><td>34 / 100</td></tr>
+              <tr><td><span class="roll-badge">05</span></td><td>Student Five</td><td>12-A</td><td>88%</td><td>76 / 100</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MARKS ENTRY ══ -->
+    <div class="dash-section" id="sec-marks">
+      <div class="sec-head">
+        <div class="sec-tag">Assessment</div>
+        <div class="sec-title">Marks Entry</div>
+        <div class="sec-sub">Enter student marks exam-wise. Save when done.</div>
+      </div>
+      <div class="panel">
+        <div style="display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap;align-items:flex-end">
+          <div class="form-field" style="min-width:180px">
+            <label>Select Exam</label>
+            <select id="examSelect">
+              <option value="mid1">First Mid Term (3301)</option>
+              <option value="mid2">Second Mid Term (1024)</option>
+              <option value="half">Half Yearly (5012)</option>
+            </select>
+          </div>
+          <div class="form-field" style="min-width:120px">
+            <label>Max Marks</label>
+            <input type="number" id="maxMarks" value="100" min="1">
+          </div>
+          <button class="btn-action btn-primary" onclick="saveMarks()" style="margin-bottom:1px">💾 Save Marks</button>
+        </div>
+        <div class="marks-entry-grid" id="marksEntryGrid"></div>
+      </div>
+    </div>
+
+    <!-- ══ HOMEWORK ══ -->
+    <div class="dash-section" id="sec-homework">
+      <div class="sec-head">
+        <div class="sec-tag">Assignments</div>
+        <div class="sec-title">Homework</div>
+        <div class="sec-sub">Assign and manage homework for your class/subject.</div>
+      </div>
+
+      <!-- Assign form -->
+      <div class="panel">
+        <div class="panel-title"><span>➕</span> Assign New Homework</div>
+        <div class="hw-form-grid">
+          <div class="form-field"><label>Subject</label><input type="text" id="hwSubject" placeholder="e.g. Mathematics"></div>
+          <div class="form-field"><label>Due Date</label><input type="date" id="hwDue"></div>
+          <div class="form-field" style="grid-column:1/-1"><label>Task Description</label><textarea id="hwTask" placeholder="Describe the homework task…"></textarea></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <button class="btn-action btn-primary" onclick="assignHw()">📤 Assign Homework</button>
+          <button class="btn-action btn-outline" onclick="clearHwForm()">✕ Clear</button>
+        </div>
+      </div>
+
+      <!-- Assigned list -->
+      <div class="panel">
+        <div class="panel-title"><span>📋</span> Assigned Homework</div>
+        <div id="hwAssignedList">
+          <div class="hw-item"><div class="hw-dot" style="background:var(--saffron)"></div><div style="flex:1"><div class="hw-subj">Mathematics</div><div class="hw-desc">Exercise 5 — Q.1 to Q.10 (Differentiation)</div><div class="hw-meta">📅 Due: May 24, 2026</div></div><button class="hw-del" onclick="this.closest('.hw-item').remove();showToast('Homework removed')">Remove</button></div>
+          <div class="hw-item"><div class="hw-dot" style="background:var(--blue)"></div><div style="flex:1"><div class="hw-subj">Biology</div><div class="hw-desc">Draw and label plant cell and animal cell</div><div class="hw-meta">📅 Due: May 24, 2026</div></div><button class="hw-del" onclick="this.closest('.hw-item').remove();showToast('Homework removed')">Remove</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MY SUBJECT (Subject Teacher only) ══ -->
+    <div class="dash-section" id="sec-mysubject">
+      <div class="sec-head">
+        <div class="sec-tag">Subject Teacher</div>
+        <div class="sec-title">My Subject — <span id="mySubjectLabel" style="color:var(--saffron)">Physics</span></div>
+        <div class="sec-sub">Performance and student stats for your subject only.</div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card blue"><div class="stat-icon">👨‍🎓</div><div class="stat-num">42</div><div class="stat-label">Students</div></div>
+        <div class="stat-card green"><div class="stat-icon">📊</div><div class="stat-num">75%</div><div class="stat-label">Subject Average</div></div>
+        <div class="stat-card saffron"><div class="stat-icon">✅</div><div class="stat-num">38</div><div class="stat-label">Passed Last Exam</div></div>
+        <div class="stat-card purple"><div class="stat-icon">❌</div><div class="stat-num">4</div><div class="stat-label">Need Attention</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span>📊</span> Subject Performance — Last Exam</div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>Roll</th><th>Name</th><th>Marks</th><th>%</th><th>Progress</th><th>Result</th></tr></thead>
+            <tbody>
+              <tr><td><span class="roll-badge">01</span></td><td>Student One</td><td>82</td><td>82%</td><td><div class="progress-bar-wrap"><div class="progress-bar" style="width:82%;background:var(--green)"></div></div></td><td><span class="m-pass">Pass</span></td></tr>
+              <tr><td><span class="roll-badge">02</span></td><td>Student Two</td><td>55</td><td>55%</td><td><div class="progress-bar-wrap"><div class="progress-bar" style="width:55%;background:var(--saffron)"></div></div></td><td><span class="m-pass">Pass</span></td></tr>
+              <tr><td><span class="roll-badge">03</span></td><td>Student Three</td><td>91</td><td>91%</td><td><div class="progress-bar-wrap"><div class="progress-bar" style="width:91%;background:var(--green)"></div></div></td><td><span class="m-pass">Pass</span></td></tr>
+              <tr><td><span class="roll-badge">04</span></td><td>Student Four</td><td>32</td><td>32%</td><td><div class="progress-bar-wrap"><div class="progress-bar" style="width:32%;background:var(--red)"></div></div></td><td><span class="m-fail">Fail</span></td></tr>
+              <tr><td><span class="roll-badge">05</span></td><td>Student Five</td><td>76</td><td>76%</td><td><div class="progress-bar-wrap"><div class="progress-bar" style="width:76%;background:var(--green)"></div></div></td><td><span class="m-pass">Pass</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TIMETABLE ══ -->
+    <div class="dash-section" id="sec-timetable">
+      <div class="sec-head">
+        <div class="sec-tag">Schedule</div>
+        <div class="sec-title">My Timetable</div>
+        <div class="sec-sub">Your teaching schedule for this week.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span>⏰</span> Weekly Teaching Schedule</div>
+        <div id="teacherTT"></div>
+      </div>
+    </div>
+
+    <!-- ══ REPORTS ══ -->
+    <div class="dash-section" id="sec-reports">
+      <div class="sec-head">
+        <div class="sec-tag">Analytics</div>
+        <div class="sec-title">Reports</div>
+        <div class="sec-sub">Class and subject performance summary.</div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card green"><div class="stat-icon">📊</div><div class="stat-num">78%</div><div class="stat-label">Class Average</div></div>
+        <div class="stat-card blue"><div class="stat-icon">✅</div><div class="stat-num">38 / 42</div><div class="stat-label">Students Passed</div></div>
+        <div class="stat-card saffron"><div class="stat-icon">📅</div><div class="stat-num">91%</div><div class="stat-label">Avg Attendance</div></div>
+        <div class="stat-card purple"><div class="stat-icon">⚠️</div><div class="stat-num">4</div><div class="stat-label">Need Attention</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span>📈</span> Subject-wise Class Performance</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;gap:14px"><span style="min-width:120px;font-size:13.5px;font-weight:700">Mathematics</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:85%;background:var(--green)"></div></div><span style="font-size:13px;font-weight:700;color:var(--green);min-width:36px">85%</span></div>
+          <div style="display:flex;align-items:center;gap:14px"><span style="min-width:120px;font-size:13.5px;font-weight:700">Physics</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:75%;background:var(--green)"></div></div><span style="font-size:13px;font-weight:700;color:var(--green);min-width:36px">75%</span></div>
+          <div style="display:flex;align-items:center;gap:14px"><span style="min-width:120px;font-size:13.5px;font-weight:700">Chemistry</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:72%;background:var(--saffron)"></div></div><span style="font-size:13px;font-weight:700;color:var(--saffron);min-width:36px">72%</span></div>
+          <div style="display:flex;align-items:center;gap:14px"><span style="min-width:120px;font-size:13.5px;font-weight:700">Biology</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:55%;background:var(--saffron)"></div></div><span style="font-size:13px;font-weight:700;color:var(--saffron);min-width:36px">55%</span></div>
+          <div style="display:flex;align-items:center;gap:14px"><span style="min-width:120px;font-size:13.5px;font-weight:700">Tamil</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:88%;background:var(--green)"></div></div><span style="font-size:13px;font-weight:700;color:var(--green);min-width:36px">88%</span></div>
+          <div style="display:flex;align-items:center;gap:14px"><span style="min-width:120px;font-size:13.5px;font-weight:700">English</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:82%;background:var(--green)"></div></div><span style="font-size:13px;font-weight:700;color:var(--green);min-width:36px">82%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PROFILE ══ -->
+    <div class="dash-section" id="sec-profile">
+      <div class="sec-head">
+        <div class="sec-tag">My Account</div>
+        <div class="sec-title">My Profile</div>
+        <div class="sec-sub">Your personal and professional details on record.</div>
+      </div>
+      <div class="panel">
+        <div class="profile-layout">
+          <div style="text-align:center">
+            <div class="profile-avatar">👨‍🏫</div>
+            <div id="profileNameDisplay" style="font-family:'Playfair Display',serif;font-size:16px;font-weight:900;color:var(--deep);margin-bottom:6px">Teacher Name</div>
+            <div style="font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;background:rgba(232,133,10,.1);color:var(--saffron);display:inline-block">✅ Active Teacher</div>
+          </div>
+          <div class="profile-info-grid">
+            <div class="pi-item"><div class="pi-key">Full Name</div><div class="pi-val" id="piName">—</div></div>
+            <div class="pi-item"><div class="pi-key">User ID</div><div class="pi-val" id="piId">—</div></div>
+            <div class="pi-item"><div class="pi-key">Role</div><div class="pi-val" id="piRole">Teacher</div></div>
+            <div class="pi-item"><div class="pi-key">Teacher Type</div><div class="pi-val" id="piType">—</div></div>
+            <div class="pi-item"><div class="pi-key">Subject</div><div class="pi-val" id="piSubject">—</div></div>
+            <div class="pi-item"><div class="pi-key">Class</div><div class="pi-val" id="piClass">—</div></div>
+            <div class="pi-item"><div class="pi-key">Qualification</div><div class="pi-val">M.Sc., B.Ed.</div></div>
+            <div class="pi-item"><div class="pi-key">School</div><div class="pi-val">S.S. Hr. Sec. School</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()">☰</button>
+
+<!-- ════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+/* ══════════════════════════════════════════════
+   TEACHER DATA — comes from sessionStorage after login
+   For now: set teacher type manually here.
+
+   HOW TO CHANGE TEACHER TYPE:
+   Change teacherType to 'class' or 'subject'
+   Change subject, assignedClass as needed.
+
+   PHASE 3: Replace this with real API response.
+══════════════════════════════════════════════ */
+const stored = sessionStorage.getItem('loggedInUser');
+const baseUser = stored ? JSON.parse(stored) : {name:'Mr. [Teacher Name]', id:'TCH001', role:'teacher'};
+
+/* Teacher-specific data (later comes from DB) */
+const TEACHER = {
+  name:         baseUser.name || 'Mr. [Teacher Name]',
+  id:           baseUser.id   || 'TCH001',
+  teacherType:  'class',         // 'class' or 'subject' — CHANGE THIS
+  subject:      'Physics',       // subject teacher's subject
+  assignedClass:'12-A',          // class teacher's class
+  qualification:'M.Sc., B.Ed.',
+};
+
+/* ── Fill all name fields ── */
+document.getElementById('sbTeacherName').textContent  = TEACHER.name;
+document.getElementById('navTeacherName').textContent = TEACHER.name;
+document.getElementById('mobNavName').textContent     = TEACHER.name;
+document.getElementById('homeGreet').textContent      = TEACHER.name.split(' ').slice(-1)[0];
+document.getElementById('profileNameDisplay').textContent = TEACHER.name;
+document.getElementById('piName').textContent   = TEACHER.name;
+document.getElementById('piId').textContent     = TEACHER.id;
+document.getElementById('piSubject').textContent = TEACHER.subject;
+document.getElementById('piClass').textContent  = TEACHER.teacherType==='class' ? TEACHER.assignedClass : '—';
+document.getElementById('piRole').textContent   = 'Teacher';
+document.getElementById('piType').textContent   = TEACHER.teacherType==='class' ? 'Class Teacher' : 'Subject Teacher';
+document.getElementById('myClassLabel').textContent   = TEACHER.assignedClass;
+document.getElementById('mySubjectLabel').textContent = TEACHER.subject;
+document.getElementById('homeDateDisplay').textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+/* ── Role-based UI ── */
+function applyRoleUI(){
+  const isClass   = TEACHER.teacherType === 'class';
+  const isSubject = TEACHER.teacherType === 'subject';
+
+  /* Sidebar items */
+  document.querySelectorAll('.class-only').forEach(el=>el.style.display=isClass?'flex':'none');
+  document.querySelectorAll('.subject-only').forEach(el=>el.style.display=isSubject?'flex':'none');
+
+  /* Notice class tab */
+  document.querySelectorAll('.class-only-el').forEach(el=>el.style.display=isClass?'inline-block':'none');
+
+  /* Sidebar badge */
+  const badge = document.getElementById('sbTypeBadge');
+  if(isClass){
+    badge.textContent = '🏫 Class Teacher · '+TEACHER.assignedClass;
+    badge.className = 'sb-type-badge badge-class';
+    document.getElementById('sbTeacherSubject').textContent = 'Class Teacher · '+TEACHER.assignedClass;
+    document.getElementById('navTeacherRole').textContent = '🏫 Class Teacher';
+  } else {
+    badge.textContent = '📘 Subject Teacher · '+TEACHER.subject;
+    badge.className = 'sb-type-badge badge-subject';
+    document.getElementById('sbTeacherSubject').textContent = TEACHER.subject+' Teacher';
+    document.getElementById('navTeacherRole').textContent = '📘 Subject Teacher';
+  }
+
+  /* Role banner */
+  const banner = document.getElementById('roleBanner');
+  const rbBadge = document.getElementById('rbBadge');
+  if(isClass){
+    banner.className='role-banner class-mode';
+    document.getElementById('rbTitle').textContent='Class Teacher — '+TEACHER.assignedClass;
+    document.getElementById('rbSub').textContent='You have full control: attendance, notices, student management, and marks.';
+    rbBadge.textContent='🏫 Class Teacher';
+    rbBadge.style.cssText='background:rgba(232,133,10,.15);color:var(--saffron);border:1px solid rgba(232,133,10,.25);margin-left:auto;font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px';
+  } else {
+    banner.className='role-banner subject-mode';
+    document.getElementById('rbTitle').textContent='Subject Teacher — '+TEACHER.subject;
+    document.getElementById('rbSub').textContent='You can manage marks and homework for your subject. Class attendance is handled by the class teacher.';
+    rbBadge.textContent='📘 Subject Teacher';
+    rbBadge.style.cssText='background:rgba(29,78,216,.1);color:var(--blue);border:1px solid rgba(29,78,216,.2);margin-left:auto;font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px';
+  }
+
+  /* Home stats */
+  const statsEl = document.getElementById('homeStats');
+  if(isClass){
+    statsEl.innerHTML=`
+      <div class="stat-card green"><div class="stat-icon">👨‍🎓</div><div class="stat-num">42</div><div class="stat-label">Total Students</div></div>
+      <div class="stat-card blue"><div class="stat-icon">📅</div><div class="stat-num">91%</div><div class="stat-label">Today's Attendance</div></div>
+      <div class="stat-card saffron"><div class="stat-icon">📊</div><div class="stat-num">78%</div><div class="stat-label">Class Average</div></div>
+      <div class="stat-card purple"><div class="stat-icon">📢</div><div class="stat-num">2</div><div class="stat-label">Pending Notices</div></div>
+      <div class="stat-card teal"><div class="stat-icon">📚</div><div class="stat-num">3</div><div class="stat-label">HW Assigned</div></div>`;
+  } else {
+    statsEl.innerHTML=`
+      <div class="stat-card blue"><div class="stat-icon">👨‍🎓</div><div class="stat-num">42</div><div class="stat-label">My Students</div></div>
+      <div class="stat-card green"><div class="stat-icon">📊</div><div class="stat-num">75%</div><div class="stat-label">Subject Average</div></div>
+      <div class="stat-card saffron"><div class="stat-icon">✅</div><div class="stat-num">38</div><div class="stat-label">Passed Last Exam</div></div>
+      <div class="stat-card purple"><div class="stat-icon">📚</div><div class="stat-num">2</div><div class="stat-label">HW Assigned</div></div>`;
+  }
+
+  /* Home sub line */
+  document.getElementById('homeSubLine').textContent = isClass
+    ? 'You are the Class Teacher for '+TEACHER.assignedClass+'. Manage attendance, notices, and student overview.'
+    : 'You teach '+TEACHER.subject+'. View your students and manage marks and homework.';
+
+  /* Students sub line */
+  document.getElementById('studentsSubLine').textContent = isClass
+    ? 'All students in your class '+TEACHER.assignedClass+'.'
+    : 'Students who study '+TEACHER.subject+' with you.';
+
+  /* Timetable */
+  buildTimetable();
+}
+
+/* ── Timetable builder ── */
+const TT_DATA = [
+  {time:'9:00 – 9:45',   subj:'Physics',     cls:'12-A', badge:'Theory',    color:'rgba(29,78,216,.1)',  tc:'var(--blue)'},
+  {time:'10:45 – 11:30', subj:'Physics',     cls:'11-B', badge:'Theory',    color:'rgba(29,78,216,.1)',  tc:'var(--blue)'},
+  {time:'11:30 – 12:15', subj:'Mathematics', cls:'12-A', badge:'Theory',    color:'rgba(22,163,74,.1)',  tc:'var(--green)'},
+  {time:'1:00 – 1:45',   subj:'Physics Lab', cls:'12-A', badge:'Practical', color:'rgba(124,58,237,.1)',tc:'var(--purple)'},
+  {time:'2:30 – 3:15',   subj:'Chemistry',   cls:'10-B', badge:'Theory',    color:'rgba(13,148,136,.1)',tc:'var(--teal)'},
+];
+function buildTimetable(){
+  const html = TT_DATA.map(t=>`
+    <div class="tt-row">
+      <div class="tt-time">${t.time}</div>
+      <div><div class="tt-subj">${t.subj}</div></div>
+      <span class="tt-badge" style="background:${t.color};color:${t.tc}">${t.badge}</span>
+      <div class="tt-class-lbl">Class ${t.cls}</div>
+    </div>`).join('');
+  document.getElementById('teacherTT').innerHTML = html;
+  document.getElementById('homeTT').innerHTML = html;
+}
+
+/* ── Attendance table ── */
+const STUDENTS = [
+  {roll:'01',name:'Student One'},
+  {roll:'02',name:'Student Two'},
+  {roll:'03',name:'Student Three'},
+  {roll:'04',name:'Student Four'},
+  {roll:'05',name:'Student Five'},
+  {roll:'06',name:'Student Six'},
+];
+const attState = {};
+STUDENTS.forEach(s=>attState[s.roll]='present');
+
+function buildAttTable(){
+  document.getElementById('attDate').value = new Date().toISOString().split('T')[0];
+  const tbody = document.getElementById('attBody');
+  tbody.innerHTML = STUDENTS.map(s=>`
+    <tr id="att-row-${s.roll}">
+      <td><span class="roll-badge">${s.roll}</span></td>
+      <td>${s.name}</td>
+      <td id="att-status-${s.roll}" class="status-present">Present</td>
+      <td><button class="att-toggle present" id="att-btn-${s.roll}" onclick="toggleAtt('${s.roll}')">P</button></td>
+    </tr>`).join('');
+}
+
+function toggleAtt(roll){
+  attState[roll] = attState[roll]==='present' ? 'absent' : 'present';
+  const present = attState[roll]==='present';
+  document.getElementById('att-btn-'+roll).textContent = present?'P':'A';
+  document.getElementById('att-btn-'+roll).className = 'att-toggle '+(present?'present':'absent');
+  const s = document.getElementById('att-status-'+roll);
+  s.textContent = present?'Present':'Absent';
+  s.className = present?'status-present':'status-absent';
+}
+
+function markAll(status){
+  STUDENTS.forEach(s=>{
+    attState[s.roll]=status;
+    const present=status==='present';
+    document.getElementById('att-btn-'+s.roll).textContent=present?'P':'A';
+    document.getElementById('att-btn-'+s.roll).className='att-toggle '+(present?'present':'absent');
+    const el=document.getElementById('att-status-'+s.roll);
+    el.textContent=present?'Present':'Absent';
+    el.className=present?'status-present':'status-absent';
+  });
+}
+
+function saveAttendance(){
+  showToast('✅ Attendance saved for '+document.getElementById('attDate').value+' (Backend connection coming in Phase 3)');
+}
+
+/* ── Marks entry ── */
+function buildMarksEntry(){
+  const max = parseInt(document.getElementById('maxMarks').value)||100;
+  document.getElementById('marksEntryGrid').innerHTML = STUDENTS.map(s=>`
+    <div class="marks-entry-row">
+      <div class="me-roll">${s.roll}</div>
+      <div class="me-name">${s.name}</div>
+      <input class="me-input" type="number" id="marks-${s.roll}" min="0" max="${max}" placeholder="—" oninput="updateMarkStatus('${s.roll}',${max})">
+      <div class="me-max">/ ${max}</div>
+      <div class="me-status" id="mstatus-${s.roll}">—</div>
+    </div>`).join('');
+}
+
+function updateMarkStatus(roll,max){
+  const val=parseInt(document.getElementById('marks-'+roll).value);
+  const el=document.getElementById('mstatus-'+roll);
+  if(isNaN(val)){el.textContent='—';el.style.color='';}
+  else if(val>=35){el.textContent='✅ Pass';el.style.color='var(--green)';}
+  else{el.textContent='❌ Fail';el.style.color='var(--red)';}
+}
+
+document.getElementById('examSelect').addEventListener('change',buildMarksEntry);
+document.getElementById('maxMarks').addEventListener('change',buildMarksEntry);
+function saveMarks(){showToast('✅ Marks saved! (Backend connection coming in Phase 3)')}
+
+/* ── Homework ── */
+function assignHw(){
+  const subj=document.getElementById('hwSubject').value.trim();
+  const due=document.getElementById('hwDue').value;
+  const task=document.getElementById('hwTask').value.trim();
+  if(!subj||!task){showToast('Fill subject and task','err');return}
+  const dueStr=due?new Date(due).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'No date';
+  const item=document.createElement('div');
+  item.className='hw-item';
+  item.innerHTML=`<div class="hw-dot" style="background:var(--saffron)"></div>
+    <div style="flex:1"><div class="hw-subj">${subj}</div><div class="hw-desc">${task}</div><div class="hw-meta">📅 Due: ${dueStr}</div></div>
+    <button class="hw-del" onclick="this.closest('.hw-item').remove();showToast('Homework removed')">Remove</button>`;
+  document.getElementById('hwAssignedList').prepend(item);
+  clearHwForm();
+  showToast('✅ Homework assigned!');
+}
+function clearHwForm(){
+  document.getElementById('hwSubject').value='';
+  document.getElementById('hwDue').value='';
+  document.getElementById('hwTask').value='';
+}
+
+/* ── Add Notice ── */
+function addNotice(){
+  const title=document.getElementById('noticeTitle').value.trim();
+  const desc=document.getElementById('noticeDesc').value.trim();
+  if(!title){showToast('Enter notice title','err');return}
+  const item=document.createElement('div');
+  item.className='notice-item';
+  item.innerHTML=`<div class="notice-dot" style="background:var(--saffron)"></div>
+    <div><div class="notice-title">${title}</div><div class="notice-desc">${desc}</div>
+    <div class="notice-date">📅 ${new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div></div>`;
+  document.getElementById('classNoticeList').prepend(item);
+  document.getElementById('noticeTitle').value='';
+  document.getElementById('noticeDesc').value='';
+  showToast('✅ Notice posted!');
+}
+
+/* ── Notice tabs ── */
+function switchNoticeTab(tab,btn){
+  document.querySelectorAll('#sec-notices .tab-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('noticeSchool').style.display=tab==='school'?'flex':'none';
+  document.getElementById('noticeClass').style.display=tab==='class'?'block':'none';
+}
+
+/* ── Section switching ── */
+function switchSection(id){
+  document.querySelectorAll('.dash-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  const label = {home:'Dashboard',notices:'Notices',myclass:'My Class',attendance:'Attendance',students:'Students',marks:'Marks Entry',homework:'Homework',mysubject:'My Subject',timetable:'Timetable',reports:'Reports',profile:'My Profile'};
+  document.querySelectorAll('.sb-nav-item').forEach(n=>{
+    if(n.textContent.trim().startsWith(label[id]?.charAt(0)||'?')){}
+    if(n.textContent.includes(label[id]||'__none__'))n.classList.add('active');
+  });
+  closeSidebar();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ── Hamburger ── */
+const hb=document.getElementById('hamburger'),mm=document.getElementById('mobileMenu');
+hb.addEventListener('click',()=>{hb.classList.toggle('open');mm.classList.toggle('open')});
+document.querySelectorAll('.mobile-nav-links a').forEach(a=>a.addEventListener('click',()=>{hb.classList.remove('open');mm.classList.remove('open')}));
+
+/* ── Mobile sidebar ── */
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sbBackdrop').classList.toggle('open')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbBackdrop').classList.remove('open')}
+
+/* ── Toast ── */
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+(type==='err'?'err':'');
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* ── INIT ── */
+applyRoleUI();
+buildAttTable();
+buildMarksEntry();
+</script>
+</body>
+</html>

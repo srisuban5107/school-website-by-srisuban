@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Parent Dashboard – S.S. Hr. Sec. School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --deep:#0b1f3a;--navy:#112d4e;--saffron:#e8850a;--gold:#f5b94e;
+      --cream:#fdf6ec;--white:#fff;--text:#1a1a2e;--muted:#6b7280;--border:#e9d5b0;
+      --green:#16a34a;--red:#dc2626;--blue:#1d4ed8;--purple:#7c3aed;--teal:#0d9488;--rose:#be185d;
+      --sidebar-w:255px;--topnav-h:66px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#f1f5f9;color:var(--text);overflow-x:hidden}
+
+    /* ════ TOP SCHOOL NAV ════ */
+    .top-nav{position:fixed;top:0;width:100%;z-index:1100;background:var(--deep);display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:var(--topnav-h);box-shadow:0 2px 24px rgba(0,0,0,.45)}
+    .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .nav-emblem{width:44px;height:44px;background:linear-gradient(135deg,var(--saffron),var(--gold));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:var(--deep);flex-shrink:0}
+    .nav-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--white);line-height:1.25}
+    .nav-title span{color:var(--gold);font-size:12px;font-weight:400}
+    .nav-links{display:flex;align-items:center;gap:26px;list-style:none}
+    .nav-links a{color:#c9d4e0;font-size:13.5px;font-weight:500;text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:var(--gold)}
+    .nav-right{display:flex;align-items:center;gap:14px}
+    .nav-profile-pic{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--navy),#1e3a5f);border:2.5px solid var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;position:relative}
+    .nav-profile-pic:hover .profile-dropdown{display:block}
+    .profile-dropdown{display:none;position:absolute;top:calc(100% + 10px);right:0;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.15);min-width:200px;z-index:200}
+    .profile-dropdown::before{content:'';position:absolute;top:-6px;right:14px;width:12px;height:12px;background:var(--white);border-left:1px solid var(--border);border-top:1px solid var(--border);transform:rotate(45deg)}
+    .pd-header{padding:14px 16px;border-bottom:1px solid var(--border)}
+    .pd-name{font-size:14px;font-weight:700;color:var(--deep)}
+    .pd-role{font-size:11.5px;color:var(--saffron);font-weight:600}
+    .pd-links{padding:8px 0}
+    .pd-links a{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13.5px;color:var(--text);text-decoration:none;transition:background .2s}
+    .pd-links a:hover{background:var(--cream)}
+    .pd-divider{border:none;border-top:1px solid var(--border);margin:4px 0}
+    .pd-logout{padding:8px 16px 12px}
+    .pd-logout a{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--red);font-weight:600;text-decoration:none}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none}
+    .hamburger span{display:block;width:24px;height:2.5px;background:var(--white);border-radius:2px;transition:all .3s}
+    .hamburger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+    .hamburger.open span:nth-child(2){opacity:0}
+    .hamburger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+    .mobile-menu{display:none;position:fixed;top:var(--topnav-h);left:0;right:0;background:var(--deep);z-index:1099;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;transform:translateY(-10px)}
+    .mobile-menu.open{opacity:1;pointer-events:all;transform:translateY(0);display:block}
+    .mobile-profile-bar{display:flex;align-items:center;gap:14px;padding:20px 24px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .mob-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--navy),#1e3a5f);border:2.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:26px}
+    .mobile-profile-name{color:var(--white);font-weight:600;font-size:14px}
+    .mobile-profile-sub{color:#94a3b8;font-size:12px;margin-top:2px}
+    .mobile-nav-links{list-style:none;padding:8px 0}
+    .mobile-nav-links li a{display:flex;align-items:center;gap:12px;padding:14px 24px;color:#c9d4e0;font-size:15px;text-decoration:none;transition:background .2s,color .2s;border-left:3px solid transparent}
+    .mobile-nav-links li a:hover{background:rgba(245,185,78,.07);color:var(--gold);border-left-color:var(--gold)}
+    .link-icon{font-size:17px;width:22px;text-align:center}
+    .mobile-login-wrap{padding:16px 24px 24px;border-top:1px solid rgba(255,255,255,.08)}
+    .mobile-login-wrap a{display:block;width:100%;text-align:center;padding:13px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:var(--deep);font-weight:700;font-size:15px;border-radius:8px;text-decoration:none}
+    @media(max-width:900px){.nav-links{display:none}.hamburger{display:flex}.mobile-menu{display:block}}
+    @media(max-width:480px){.nav-title{display:none}}
+
+    /* ════ DASHBOARD LAYOUT ════ */
+    .dash-root{margin-top:var(--topnav-h);display:flex;min-height:calc(100vh - var(--topnav-h))}
+
+    /* ── SIDEBAR ── */
+    .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--deep);position:fixed;top:var(--topnav-h);left:0;height:calc(100vh - var(--topnav-h));overflow-y:auto;display:flex;flex-direction:column;z-index:900;transition:transform .3s}
+    .sidebar::-webkit-scrollbar{width:0}
+
+    /* Parent card */
+    .sb-parent{padding:22px 18px 16px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+    .sb-avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--rose),#f43f5e);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;border:2.5px solid rgba(255,255,255,.15)}
+    .sb-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:900;color:var(--white);margin-bottom:2px}
+    .sb-role-info{font-size:12px;color:#94a3b8;margin-bottom:8px}
+    .sb-type-badge{display:inline-block;padding:3px 11px;border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.5px;background:rgba(190,24,93,.25);border:1px solid rgba(190,24,93,.4);color:#fda4af}
+
+    /* Child quick-switch in sidebar */
+    .sb-child-switcher{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .sb-child-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#94a3b8;margin-bottom:8px}
+    .sb-child-pills{display:flex;flex-direction:column;gap:6px}
+    .child-pill{
+      display:flex;align-items:center;gap:10px;padding:9px 12px;
+      border-radius:9px;cursor:pointer;border:1.5px solid transparent;
+      transition:all .2s;background:rgba(255,255,255,.04);
+    }
+    .child-pill:hover{background:rgba(255,255,255,.08)}
+    .child-pill.active{background:rgba(232,133,10,.15);border-color:rgba(232,133,10,.35)}
+    .child-pill-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+    .child-pill-name{font-size:13px;font-weight:700;color:var(--white);line-height:1.2}
+    .child-pill-class{font-size:11px;color:#94a3b8}
+    .child-pill.active .child-pill-name{color:var(--gold)}
+
+    /* Nav items */
+    .sb-nav{flex:1;padding:8px 0}
+    .sb-nav-item{display:flex;align-items:center;gap:11px;padding:12px 20px;color:#94a3b8;font-size:13.5px;font-weight:500;cursor:pointer;border-left:3px solid transparent;transition:all .2s}
+    .sb-nav-item:hover{background:rgba(255,255,255,.04);color:var(--white)}
+    .sb-nav-item.active{background:rgba(232,133,10,.1);border-left-color:var(--saffron);color:var(--gold);font-weight:700}
+    .sb-nav-icon{font-size:17px;width:20px;text-align:center;flex-shrink:0}
+    .sb-badge-count{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;min-width:20px;text-align:center}
+    .sb-divider{border:none;border-top:1px solid rgba(255,255,255,.06);margin:6px 0}
+    .sb-bottom{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08)}
+    .sb-logout{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.2);color:#f87171;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .2s;text-decoration:none}
+    .sb-logout:hover{background:rgba(220,38,38,.2)}
+
+    /* ── MAIN CONTENT ── */
+    .main-content{margin-left:var(--sidebar-w);flex:1;padding:32px;min-height:calc(100vh - var(--topnav-h))}
+    .dash-section{display:none}
+    .dash-section.active{display:block;animation:fadeUp .4s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Section header */
+    .sec-head{margin-bottom:28px}
+    .sec-head-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:4px}
+    .sec-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--saffron);margin-bottom:6px}
+    .sec-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--deep)}
+    .sec-sub{font-size:13.5px;color:var(--muted);margin-top:3px}
+
+    /* Child selector bar (top of each section) */
+    .child-select-bar{
+      display:flex;align-items:center;gap:12px;
+      background:var(--white);border:1px solid var(--border);border-radius:12px;
+      padding:12px 16px;margin-bottom:24px;flex-wrap:wrap;
+    }
+    .csb-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;flex-shrink:0}
+    .child-tab{
+      display:flex;align-items:center;gap:8px;
+      padding:8px 16px;border-radius:8px;cursor:pointer;
+      border:1.5px solid var(--border);background:var(--cream);
+      font-size:13px;font-weight:700;color:var(--muted);
+      transition:all .2s;
+    }
+    .child-tab:hover{border-color:var(--saffron);color:var(--saffron)}
+    .child-tab.active{background:var(--deep);border-color:var(--deep);color:var(--gold)}
+    .child-tab-avatar{font-size:16px}
+    .csb-all{
+      margin-left:auto;padding:7px 14px;border-radius:8px;
+      background:none;border:1.5px solid var(--border);
+      font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;
+    }
+    .csb-all:hover{border-color:var(--saffron);color:var(--saffron)}
+
+    /* Stat grid */
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-bottom:28px}
+    .stat-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+    .stat-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.08)}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .stat-card.green::before{background:var(--green)}
+    .stat-card.saffron::before{background:var(--saffron)}
+    .stat-card.blue::before{background:var(--blue)}
+    .stat-card.purple::before{background:var(--purple)}
+    .stat-card.rose::before{background:var(--rose)}
+    .stat-card.teal::before{background:var(--teal)}
+    .stat-icon{font-size:28px;margin-bottom:10px}
+    .stat-num{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:var(--deep);line-height:1}
+    .stat-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500}
+
+    /* Panel */
+    .panel{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:20px}
+    .panel-title{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .panel-title span{font-size:16px}
+
+    /* Tab bar */
+    .tab-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+    .tab-pill{padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;border:1.5px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:all .2s}
+    .tab-pill:hover{border-color:var(--saffron);color:var(--saffron)}
+    .tab-pill.active{background:var(--deep);border-color:var(--deep);color:var(--gold)}
+
+    /* Children cards (My Children section) */
+    .children-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-bottom:24px}
+    .child-card{
+      background:var(--white);border:1px solid var(--border);border-radius:16px;
+      overflow:hidden;transition:transform .2s,box-shadow .2s;
+    }
+    .child-card:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(0,0,0,.09)}
+    .child-card-top{padding:22px 20px 16px;display:flex;align-items:center;gap:14px;position:relative}
+    .child-card-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:3px solid var(--white);box-shadow:0 4px 12px rgba(0,0,0,.12);flex-shrink:0}
+    .child-card-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:var(--deep);margin-bottom:3px}
+    .child-card-class{font-size:12.5px;color:var(--muted)}
+    .active-chip{position:absolute;top:16px;right:16px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(22,163,74,.1);color:var(--green);border:1px solid rgba(22,163,74,.2)}
+    .child-stats-row{display:flex;border-top:1px solid var(--border)}
+    .cs-stat{flex:1;padding:12px 16px;text-align:center;border-right:1px solid var(--border)}
+    .cs-stat:last-child{border-right:none}
+    .cs-num{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--deep)}
+    .cs-lbl{font-size:10.5px;color:var(--muted);margin-top:2px;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+    .child-card-actions{padding:12px 16px;display:flex;gap:8px;background:#fafafa;border-top:1px solid var(--border)}
+    .cc-btn{flex:1;padding:8px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:var(--white);color:var(--text);transition:all .2s;text-align:center}
+    .cc-btn:hover{border-color:var(--saffron);color:var(--saffron)}
+    .cc-btn.primary{background:var(--deep);border-color:var(--deep);color:var(--gold)}
+    .cc-btn.primary:hover{background:var(--navy)}
+
+    /* Add child form */
+    .add-child-box{background:rgba(232,133,10,.05);border:2px dashed rgba(232,133,10,.25);border-radius:14px;padding:28px;text-align:center;cursor:pointer;transition:all .2s}
+    .add-child-box:hover{background:rgba(232,133,10,.08);border-color:rgba(232,133,10,.45)}
+    .add-child-form{display:none;padding:24px}
+    .add-child-form.show{display:block;animation:fadeUp .3s ease both}
+    .form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+    .form-field label{font-size:11.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+    .form-field input,.form-field select{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--cream);outline:none;transition:border-color .2s}
+    .form-field input:focus,.form-field select:focus{border-color:var(--saffron)}
+    .btn-action{padding:11px 22px;border:none;border-radius:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;transition:all .2s}
+    .btn-primary{background:linear-gradient(135deg,var(--saffron),var(--gold));color:var(--deep);box-shadow:0 4px 16px rgba(232,133,10,.3)}
+    .btn-primary:hover{transform:translateY(-2px)}
+    .btn-outline{background:var(--white);border:1.5px solid var(--border);color:var(--text)}
+
+    /* Notice items */
+    .notice-list{display:flex;flex-direction:column;gap:12px}
+    .notice-item{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:10px;background:var(--cream);border:1px solid var(--border);transition:transform .2s}
+    .notice-item:hover{transform:translateX(3px)}
+    .notice-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
+    .notice-title{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:3px}
+    .notice-desc{font-size:13px;color:var(--muted);line-height:1.55}
+    .notice-date{font-size:11.5px;color:var(--muted);margin-top:5px;font-weight:500}
+
+    /* Data table */
+    .data-table{width:100%;border-collapse:collapse}
+    .data-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
+    .data-table td{padding:12px 14px;font-size:13.5px;color:var(--text);border-bottom:1px solid #f3f4f6;vertical-align:middle}
+    .data-table tr:last-child td{border-bottom:none}
+    .data-table tr:hover td{background:rgba(232,133,10,.02)}
+    .m-pass{color:var(--green);font-weight:700}
+    .m-fail{color:var(--red);font-weight:700}
+    .status-present{color:var(--green);font-weight:700;font-size:12px}
+    .status-absent{color:var(--red);font-weight:700;font-size:12px}
+
+    /* Progress bar */
+    .progress-bar-wrap{background:#e2e8f0;border-radius:20px;height:8px;overflow:hidden;flex:1}
+    .progress-bar{height:100%;border-radius:20px}
+
+    /* Attendance calendar */
+    .att-month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}
+    .att-day-header{font-size:11px;font-weight:700;color:var(--muted);text-align:center;padding:4px}
+    .att-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:13px;font-weight:700;cursor:default;transition:transform .15s}
+    .att-day:hover{transform:scale(1.1)}
+    .att-present{background:rgba(22,163,74,.15);color:var(--green)}
+    .att-absent{background:rgba(220,38,38,.12);color:var(--red)}
+    .att-holiday{background:rgba(107,114,128,.1);color:var(--muted)}
+    .att-today{outline:2.5px solid var(--saffron)}
+    .att-empty{background:transparent}
+    .att-legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+    .att-leg-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+    .att-leg-dot{width:12px;height:12px;border-radius:4px}
+
+    /* Timetable */
+    .tt-row{display:flex;align-items:center;gap:14px;padding:13px 16px;background:var(--cream);border-radius:10px;border:1px solid var(--border);margin-bottom:10px;transition:transform .2s}
+    .tt-row:hover{transform:translateX(3px)}
+    .tt-time{font-size:12px;font-weight:700;color:var(--muted);min-width:90px;flex-shrink:0}
+    .tt-subj{font-size:14px;font-weight:700;color:var(--deep)}
+    .tt-teacher{font-size:12px;color:var(--muted);margin-top:1px}
+    .tt-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:auto;flex-shrink:0}
+
+    /* Homework */
+    .hw-item{display:flex;align-items:flex-start;gap:14px;padding:15px 18px;border-radius:12px;background:var(--cream);border:1px solid var(--border);margin-bottom:10px;transition:transform .2s}
+    .hw-item:hover{transform:translateX(3px)}
+    .hw-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
+    .hw-subj{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:2px}
+    .hw-task{font-size:13px;color:var(--muted)}
+    .hw-meta{font-size:12px;color:var(--muted);margin-top:5px}
+    .hw-due{margin-left:auto;font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;flex-shrink:0}
+    .due-tomorrow{background:rgba(220,38,38,.1);color:var(--red)}
+    .due-soon{background:rgba(232,133,10,.1);color:var(--saffron)}
+    .due-ok{background:rgba(22,163,74,.1);color:var(--green)}
+    .hw-item.done .hw-subj{text-decoration:line-through;color:var(--muted)}
+
+    /* Profile */
+    .profile-layout{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
+    .profile-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--rose),#f43f5e);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 10px;border:4px solid var(--white);box-shadow:0 6px 20px rgba(190,24,93,.25)}
+    .profile-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .pi-item{background:var(--cream);border-radius:10px;padding:13px 15px;border-left:3px solid var(--saffron)}
+    .pi-key{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .pi-val{font-size:14px;font-weight:700;color:var(--deep)}
+
+    /* Child profile card */
+    .child-profile-card{
+      display:flex;align-items:center;gap:16px;
+      background:linear-gradient(135deg,var(--deep),var(--navy));
+      border-radius:14px;padding:20px 22px;margin-bottom:20px;
+      position:relative;overflow:hidden;
+    }
+    .child-profile-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(232,133,10,.25),transparent 70%);border-radius:50%}
+    .cpc-avatar{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:3px solid rgba(255,255,255,.2);flex-shrink:0}
+    .cpc-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--white);margin-bottom:3px}
+    .cpc-meta{font-size:12.5px;color:#94a3b8}
+    .cpc-badge{margin-left:auto;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;background:rgba(245,185,78,.2);border:1px solid rgba(245,185,78,.35);color:var(--gold);flex-shrink:0}
+
+    /* Mobile sidebar */
+    .sb-toggle{display:none;position:fixed;bottom:24px;left:16px;z-index:950;width:46px;height:46px;border-radius:50%;background:var(--deep);color:var(--white);border:2px solid var(--gold);font-size:20px;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+    .sb-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:899}
+
+    /* Toast */
+    .toast{position:fixed;top:80px;right:20px;z-index:9999;background:var(--green);color:#fff;padding:11px 20px;border-radius:10px;font-size:13.5px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateX(120px);transition:transform .3s;display:flex;align-items:center;gap:8px}
+    .toast.show{transform:translateX(0)}
+    .toast.err{background:var(--red)}
+
+    @media(max-width:900px){
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .main-content{margin-left:0;padding:20px 16px}
+      .sb-toggle{display:flex}
+      .sb-backdrop{display:block;pointer-events:none;opacity:0;transition:opacity .3s}
+      .sb-backdrop.open{pointer-events:all;opacity:1}
+      .profile-layout{grid-template-columns:1fr}
+      .profile-info-grid{grid-template-columns:1fr}
+      .stat-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:500px){
+      .stat-grid{grid-template-columns:repeat(2,1fr)}
+      .main-content{padding:14px 10px}
+      .children-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ════ TOP SCHOOL NAV ════ -->
+<nav class="top-nav">
+  <a class="nav-logo" href="index.html">
+    <div class="nav-emblem">SS</div>
+    <div class="nav-title">S.S. Hr. Sec. School<br><span>Arani, Tiruvannamalai</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="academics.html">Academics</a></li>
+    <li><a href="facilities.html">Facilities</a></li>
+    <li><a href="staff.html">Staff</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-profile-pic" tabindex="0">
+      👨‍👩‍👧
+      <div class="profile-dropdown">
+        <div class="pd-header">
+          <div class="pd-name" id="navParentName">Parent Name</div>
+          <div class="pd-role">👨‍👩‍👧 Parent Portal</div>
+        </div>
+        <div class="pd-links">
+          <a href="#" onclick="switchSection('profile')"><span>👤</span> My Profile</a>
+          <a href="#" onclick="switchSection('children')"><span>👨‍👩‍👧</span> My Children</a>
+          <a href="contact.html"><span>📞</span> Contact School</a>
+        </div>
+        <hr class="pd-divider">
+        <div class="pd-logout"><a href="login.html"><span>🚪</span> Logout</a></div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Mobile school nav -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-profile-bar">
+    <div class="mob-avatar">👨‍👩‍👧</div>
+    <div>
+      <div class="mobile-profile-name" id="mobNavName">Parent Name</div>
+      <div class="mobile-profile-sub">Parent Portal · Active</div>
+    </div>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html"><span class="link-icon">🏠</span>Home</a></li>
+    <li><a href="academics.html"><span class="link-icon">📖</span>Academics</a></li>
+    <li><a href="facilities.html"><span class="link-icon">🏛️</span>Facilities</a></li>
+    <li><a href="staff.html"><span class="link-icon">👨‍🏫</span>Staff</a></li>
+    <li><a href="gallery.html"><span class="link-icon">🖼️</span>Gallery</a></li>
+    <li><a href="contact.html"><span class="link-icon">📞</span>Contact</a></li>
+  </ul>
+  <div class="mobile-login-wrap"><a href="login.html">🚪 Logout</a></div>
+</div>
+
+<!-- ════ DASHBOARD ════ -->
+<div class="dash-root">
+  <div class="sb-backdrop" id="sbBackdrop" onclick="closeSidebar()"></div>
+
+  <!-- ════ SIDEBAR ════ -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Parent card -->
+    <div class="sb-parent">
+      <div class="sb-avatar">👨‍👩‍👧</div>
+      <div class="sb-name" id="sbParentName">Parent Name</div>
+      <div class="sb-role-info" id="sbChildCount">2 Children Linked</div>
+      <div class="sb-type-badge">👨‍👩‍👧 Parent Portal</div>
+    </div>
+
+    <!-- Child quick-switcher -->
+    <div class="sb-child-switcher">
+      <div class="sb-child-label">Switch Child</div>
+      <div class="sb-child-pills" id="sbChildPills"></div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sb-nav">
+      <div class="sb-nav-item active" onclick="switchSection('home')"><span class="sb-nav-icon">🏠</span>Dashboard</div>
+      <div class="sb-nav-item" onclick="switchSection('children')"><span class="sb-nav-icon">👨‍👩‍👧</span>My Children</div>
+      <div class="sb-nav-item" onclick="switchSection('notices')"><span class="sb-nav-icon">📢</span>Notices<span class="sb-badge-count">3</span></div>
+      <hr class="sb-divider">
+      <div class="sb-nav-item" onclick="switchSection('attendance')"><span class="sb-nav-icon">📅</span>Attendance</div>
+      <div class="sb-nav-item" onclick="switchSection('marks')"><span class="sb-nav-icon">📊</span>Marks</div>
+      <div class="sb-nav-item" onclick="switchSection('timetable')"><span class="sb-nav-icon">⏰</span>Timetable</div>
+      <div class="sb-nav-item" onclick="switchSection('homework')"><span class="sb-nav-icon">📚</span>Homework</div>
+      <hr class="sb-divider">
+      <div class="sb-nav-item" onclick="switchSection('profile')"><span class="sb-nav-icon">👤</span>My Profile</div>
+    </nav>
+
+    <div class="sb-bottom">
+      <a class="sb-logout" href="login.html"><span>🚪</span> Logout</a>
+    </div>
+  </aside>
+
+  <!-- ════ MAIN CONTENT ════ -->
+  <main class="main-content">
+
+    <!-- ══ HOME ══ -->
+    <div class="dash-section active" id="sec-home">
+      <div class="sec-head">
+        <div class="sec-tag">Parent Portal</div>
+        <div class="sec-head-top">
+          <div class="sec-title">Welcome, <span id="homeGreet" style="color:var(--saffron)">Parent</span> 👋</div>
+          <span id="homeDateDisplay" style="font-size:13px;color:var(--muted)"></span>
+        </div>
+        <div class="sec-sub">Tracking your children's academic journey at S.S. Higher Secondary School.</div>
+      </div>
+
+      <!-- Child selector -->
+      <div class="child-select-bar" id="homeChildBar"></div>
+
+      <!-- Quick stats -->
+      <div class="stat-grid" id="homeStats"></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="panel">
+          <div class="panel-title"><span>📢</span> Latest Notices</div>
+          <div class="notice-list">
+            <div class="notice-item"><div class="notice-dot" style="background:var(--red)"></div><div><div class="notice-title">Parent–Teacher Meeting</div><div class="notice-desc">May 28, 2026 · 10 AM – 1 PM · Auditorium</div><div class="notice-date">📅 May 20, 2026</div></div></div>
+            <div class="notice-item"><div class="notice-dot" style="background:var(--saffron)"></div><div><div class="notice-title">Fee Payment Deadline</div><div class="notice-desc">Second term fee due before June 1, 2026.</div><div class="notice-date">📅 May 15, 2026</div></div></div>
+            <div class="notice-item"><div class="notice-dot" style="background:var(--green)"></div><div><div class="notice-title">Exam Schedule Released</div><div class="notice-desc">Half Yearly: Aug 10–22. Check timetable.</div><div class="notice-date">📅 May 10, 2026</div></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><span>⏰</span> Today's Schedule</div>
+          <div id="homeTT"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MY CHILDREN ══ -->
+    <div class="dash-section" id="sec-children">
+      <div class="sec-head">
+        <div class="sec-tag">Family</div>
+        <div class="sec-title">My Children</div>
+        <div class="sec-sub">Manage your linked children and switch between their dashboards.</div>
+      </div>
+
+      <div class="children-grid" id="childrenGrid"></div>
+
+      <!-- Add child -->
+      <div class="panel" style="border:2px dashed rgba(232,133,10,.3);background:rgba(232,133,10,.03)">
+        <div id="addChildToggle" style="text-align:center;cursor:pointer;padding:10px 0" onclick="toggleAddChild()">
+          <div style="font-size:36px;margin-bottom:8px">➕</div>
+          <div style="font-size:15px;font-weight:700;color:var(--saffron)">Link Another Child</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px">Enter the student ID given by school to link your child's account.</div>
+        </div>
+        <div class="add-child-form" id="addChildForm">
+          <div class="form-field"><label>Student ID</label><input type="text" id="newChildId" placeholder="e.g. STU003" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+          <div class="form-field"><label>Student Name (verify)</label><input type="text" id="newChildName" placeholder="Full name as in records"></div>
+          <div class="form-field"><label>Relationship</label>
+            <select id="newChildRel">
+              <option>Father</option><option>Mother</option><option>Guardian</option><option>Other</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:6px">
+            <button class="btn-action btn-primary" onclick="addChild()">🔗 Link Child</button>
+            <button class="btn-action btn-outline" onclick="toggleAddChild()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ NOTICES ══ -->
+    <div class="dash-section" id="sec-notices">
+      <div class="sec-head">
+        <div class="sec-tag">Updates</div>
+        <div class="sec-title">Notices</div>
+        <div class="sec-sub">Important updates from school and class teachers.</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-pill active" onclick="switchNoticeTab('school',this)">🏫 School Notices</button>
+        <button class="tab-pill" onclick="switchNoticeTab('class',this)">📋 Class Notices</button>
+      </div>
+      <div id="noticeSchool" class="notice-list">
+        <div class="notice-item"><div class="notice-dot" style="background:var(--red)"></div><div><div class="notice-title">Parent–Teacher Meeting – May 28</div><div class="notice-desc">All parents must attend. Venue: Auditorium, 10 AM – 1 PM. Bring children's progress reports.</div><div class="notice-date">📅 May 20, 2026</div></div></div>
+        <div class="notice-item"><div class="notice-dot" style="background:var(--saffron)"></div><div><div class="notice-title">Fee Payment Deadline – June 1</div><div class="notice-desc">Second term fee must be paid before June 1, 2026. Late fine of ₹50/day will be applied.</div><div class="notice-date">📅 May 15, 2026</div></div></div>
+        <div class="notice-item"><div class="notice-dot" style="background:var(--green)"></div><div><div class="notice-title">Annual Day – Jan 12, 2026</div><div class="notice-desc">Grand annual day celebration. Parents are cordially invited. Event starts at 9 AM.</div><div class="notice-date">📅 May 10, 2026</div></div></div>
+      </div>
+      <div id="noticeClass" class="notice-list" style="display:none">
+        <div class="notice-item"><div class="notice-dot" style="background:var(--red)"></div><div><div class="notice-title">Maths Test – This Friday</div><div class="notice-desc">Chapters 5 & 6. Please ensure your child revises tonight.</div><div class="notice-date">📅 May 20, 2026</div></div></div>
+        <div class="notice-item"><div class="notice-dot" style="background:var(--saffron)"></div><div><div class="notice-title">Science Assignment Due Tomorrow</div><div class="notice-desc">Diagram work on cell structure. Hand-drawn only — no printouts accepted.</div><div class="notice-date">📅 May 19, 2026</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══ ATTENDANCE ══ -->
+    <div class="dash-section" id="sec-attendance">
+      <div class="sec-head">
+        <div class="sec-tag">School Presence</div>
+        <div class="sec-title">Attendance</div>
+        <div class="sec-sub">Monthly attendance calendar and subject-wise attendance for your child.</div>
+      </div>
+      <div class="child-select-bar" id="attChildBar"></div>
+
+      <div class="panel" id="attSummaryPanel"></div>
+
+      <div class="panel">
+        <div class="panel-title"><span>📆</span> May 2026 — Attendance Calendar</div>
+        <div class="att-month-grid" id="attCalGrid"></div>
+        <div class="att-legend">
+          <div class="att-leg-item"><div class="att-leg-dot" style="background:rgba(22,163,74,.2)"></div>Present</div>
+          <div class="att-leg-item"><div class="att-leg-dot" style="background:rgba(220,38,38,.15)"></div>Absent</div>
+          <div class="att-leg-item"><div class="att-leg-dot" style="background:rgba(107,114,128,.15)"></div>Holiday</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span>📘</span> Subject-wise Attendance</div>
+        <div style="overflow-x:auto">
+          <table class="data-table" id="attSubjTable"></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MARKS ══ -->
+    <div class="dash-section" id="sec-marks">
+      <div class="sec-head">
+        <div class="sec-tag">Academic Performance</div>
+        <div class="sec-title">Marks</div>
+        <div class="sec-sub">Exam-wise marks and subject performance for your child.</div>
+      </div>
+      <div class="child-select-bar" id="marksChildBar"></div>
+
+      <div class="child-profile-card" id="marksChildCard"></div>
+
+      <div class="tab-bar">
+        <button class="tab-pill active" onclick="switchMarksTab('mid1',this)">First Mid Term</button>
+        <button class="tab-pill" onclick="switchMarksTab('half',this)">Half Yearly</button>
+      </div>
+
+      <div class="panel" id="marksPanel">
+        <div class="panel-title"><span>📊</span> First Mid Term — Exam Code 3301</div>
+        <div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap" id="marksSummary"></div>
+        <div style="overflow-x:auto">
+          <table class="data-table"><thead><tr><th>Subject</th><th>Max</th><th>Scored</th><th>%</th><th>Progress</th><th>Status</th></tr></thead>
+          <tbody id="marksTableBody"></tbody></table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span>📈</span> Subject-wise Performance Trend</div>
+        <div id="subjectTrend" style="display:flex;flex-direction:column;gap:13px"></div>
+      </div>
+    </div>
+
+    <!-- ══ TIMETABLE ══ -->
+    <div class="dash-section" id="sec-timetable">
+      <div class="sec-head">
+        <div class="sec-tag">Daily Schedule</div>
+        <div class="sec-title">Timetable</div>
+        <div class="sec-sub">Your child's daily class schedule and upcoming exam timetable.</div>
+      </div>
+      <div class="child-select-bar" id="ttChildBar"></div>
+      <div class="tab-bar">
+        <button class="tab-pill active" onclick="switchTTTab('class',this)">📘 Class Timetable</button>
+        <button class="tab-pill" onclick="switchTTTab('exam',this)">📆 Exam Schedule</button>
+      </div>
+      <div class="panel" id="ttClassPanel">
+        <div class="panel-title"><span>⏰</span> Daily Class Schedule</div>
+        <div id="ttClassList"></div>
+      </div>
+      <div id="ttExamPanel" style="display:none">
+        <div class="panel">
+          <div class="panel-title"><span>📆</span> Upcoming Exam Schedule</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:14px;padding:15px 18px;background:var(--cream);border-radius:12px;border:1px solid var(--border)">
+              <div style="background:var(--deep);color:var(--gold);font-family:'Playfair Display',serif;font-weight:900;font-size:14px;padding:8px 14px;border-radius:8px;min-width:70px;text-align:center">5012</div>
+              <div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:var(--deep)">Half Yearly Examination</div><div style="font-size:12.5px;color:var(--muted);margin-top:2px">📅 Aug 10 – Aug 22, 2026 · All Subjects</div></div>
+              <span style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(29,78,216,.1);color:var(--blue)">Upcoming</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;padding:15px 18px;background:var(--cream);border-radius:12px;border:1px solid var(--border)">
+              <div style="background:var(--deep);color:var(--gold);font-family:'Playfair Display',serif;font-weight:900;font-size:14px;padding:8px 14px;border-radius:8px;min-width:70px;text-align:center">1024</div>
+              <div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:var(--deep)">Second Mid Term</div><div style="font-size:12.5px;color:var(--muted);margin-top:2px">📅 Jun 15 – Jun 20, 2026 · All Subjects</div></div>
+              <span style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(29,78,216,.1);color:var(--blue)">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ HOMEWORK ══ -->
+    <div class="dash-section" id="sec-homework">
+      <div class="sec-head">
+        <div class="sec-tag">Assignments</div>
+        <div class="sec-title">Homework</div>
+        <div class="sec-sub">Pending and completed homework assignments for your child.</div>
+      </div>
+      <div class="child-select-bar" id="hwChildBar"></div>
+      <div class="panel">
+        <div class="panel-title"><span>📋</span> Current Assignments</div>
+        <div id="hwList">
+          <div class="hw-item"><div class="hw-dot" style="background:var(--red)"></div><div style="flex:1"><div class="hw-subj">Mathematics</div><div class="hw-task">Exercise 5 — Q.1 to Q.10 (Differentiation)</div><div class="hw-meta">Assigned by Mr. [Teacher Name]</div></div><span class="hw-due due-tomorrow">Due Tomorrow</span></div>
+          <div class="hw-item"><div class="hw-dot" style="background:var(--saffron)"></div><div style="flex:1"><div class="hw-subj">Biology</div><div class="hw-task">Draw and label plant cell and animal cell (full page, hand-drawn)</div><div class="hw-meta">Assigned by Mrs. [Teacher Name]</div></div><span class="hw-due due-tomorrow">Due Tomorrow</span></div>
+          <div class="hw-item"><div class="hw-dot" style="background:var(--blue)"></div><div style="flex:1"><div class="hw-subj">English</div><div class="hw-task">Write a paragraph on "My School" (150 words)</div><div class="hw-meta">Assigned by Mr. [Teacher Name]</div></div><span class="hw-due due-soon">Due in 3 Days</span></div>
+          <div class="hw-item"><div class="hw-dot" style="background:var(--green)"></div><div style="flex:1"><div class="hw-subj">Tamil</div><div class="hw-task">Learn poem — Thirukkural verses 1–10</div><div class="hw-meta">Assigned by Mrs. [Teacher Name]</div></div><span class="hw-due due-ok">Due in 5 Days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PROFILE ══ -->
+    <div class="dash-section" id="sec-profile">
+      <div class="sec-head">
+        <div class="sec-tag">My Account</div>
+        <div class="sec-title">Parent Profile</div>
+        <div class="sec-sub">Your personal details and linked children information.</div>
+      </div>
+      <div class="panel">
+        <div class="profile-layout">
+          <div style="text-align:center">
+            <div class="profile-avatar">👨‍👩‍👧</div>
+            <div id="profileNameDisplay" style="font-family:'Playfair Display',serif;font-size:16px;font-weight:900;color:var(--deep);margin-bottom:6px">Parent Name</div>
+            <div style="font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;background:rgba(190,24,93,.1);color:var(--rose);display:inline-block;border:1px solid rgba(190,24,93,.2)">✅ Verified Parent</div>
+          </div>
+          <div class="profile-info-grid">
+            <div class="pi-item"><div class="pi-key">Full Name</div><div class="pi-val" id="piName">—</div></div>
+            <div class="pi-item"><div class="pi-key">User ID</div><div class="pi-val" id="piId">—</div></div>
+            <div class="pi-item"><div class="pi-key">Children Linked</div><div class="pi-val" id="piChildren">2</div></div>
+            <div class="pi-item"><div class="pi-key">Portal</div><div class="pi-val">Parent Dashboard</div></div>
+            <div class="pi-item"><div class="pi-key">School</div><div class="pi-val" style="grid-column:1/-1">S.S. Higher Secondary School, Arani</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linked children summary -->
+      <div class="panel">
+        <div class="panel-title"><span>👨‍👩‍👧</span> Linked Children</div>
+        <div id="profileChildList"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()">☰</button>
+
+<!-- ════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════ -->
+<script>
+/* ══════════════════════════════════════════════════════════
+   PARENT & CHILDREN DATA
+   ─────────────────────────────────────────────────────────
+   HOW TO ADD A CHILD:
+   Copy one object in the CHILDREN array, change the values.
+
+   HOW TO CHANGE PARENT NAME:
+   Change name/id in PARENT object.
+
+   PHASE 3: Replace with real API fetch('/api/parent/data')
+══════════════════════════════════════════════════════════ */
+const stored = sessionStorage.getItem('loggedInUser');
+const baseUser = stored ? JSON.parse(stored) : {name:'Parent Name', id:'PAR001'};
+
+const PARENT = {
+  name: baseUser.name || 'Parent Name',
+  id:   baseUser.id   || 'PAR001',
+};
+
+const CHILDREN = [
+  {
+    id:'STU001', name:'Child One', cls:'12 – Bio Maths', section:'A',
+    roll:23, emoji:'🎒', color:'linear-gradient(135deg,var(--blue),#60a5fa)',
+    attendance:{total:120, present:110, absent:10, pct:91.6},
+    avgMarks: 78,
+    pendingHw: 3,
+    marks:[
+      {subj:'Mathematics', max:100, scored:78},
+      {subj:'Physics',     max:100, scored:80},
+      {subj:'Chemistry',   max:100, scored:72},
+      {subj:'Biology',     max:100, scored:55},
+      {subj:'Tamil',       max:100, scored:88},
+      {subj:'English',     max:100, scored:82},
+    ],
+  },
+  {
+    id:'STU002', name:'Child Two', cls:'9 – Science', section:'B',
+    roll:14, emoji:'📚', color:'linear-gradient(135deg,var(--green),#4ade80)',
+    attendance:{total:120, present:115, absent:5, pct:95.8},
+    avgMarks: 85,
+    pendingHw: 2,
+    marks:[
+      {subj:'Mathematics', max:100, scored:90},
+      {subj:'Science',     max:100, scored:85},
+      {subj:'Social',      max:100, scored:82},
+      {subj:'Tamil',       max:100, scored:88},
+      {subj:'English',     max:100, scored:80},
+    ],
+  },
+];
+
+/* State */
+let activeChildIdx = 0;
+
+/* ── Fill parent info everywhere ── */
+document.getElementById('sbParentName').textContent = PARENT.name;
+document.getElementById('navParentName').textContent = PARENT.name;
+document.getElementById('mobNavName').textContent = PARENT.name;
+document.getElementById('homeGreet').textContent = PARENT.name.split(' ')[0];
+document.getElementById('profileNameDisplay').textContent = PARENT.name;
+document.getElementById('piName').textContent = PARENT.name;
+document.getElementById('piId').textContent = PARENT.id;
+document.getElementById('piChildren').textContent = CHILDREN.length;
+document.getElementById('sbChildCount').textContent = CHILDREN.length + ' Children Linked';
+document.getElementById('homeDateDisplay').textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+/* ── Build sidebar child pills ── */
+function buildSbChildPills(){
+  const wrap = document.getElementById('sbChildPills');
+  wrap.innerHTML = CHILDREN.map((c,i)=>`
+    <div class="child-pill ${i===activeChildIdx?'active':''}" onclick="selectChild(${i})" id="sbpill-${i}">
+      <div class="child-pill-avatar" style="background:${c.color}">${c.emoji}</div>
+      <div><div class="child-pill-name">${c.name}</div><div class="child-pill-class">${c.cls}</div></div>
+    </div>`).join('');
+}
+
+/* ── Build child selector bars (top of each section) ── */
+function buildChildBar(elId, activeIdx){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  el.innerHTML = `<div class="csb-label">Child:</div>` +
+    CHILDREN.map((c,i)=>`
+      <div class="child-tab ${i===activeIdx?'active':''}" onclick="selectChild(${i})">
+        <span class="child-tab-avatar">${c.emoji}</span>${c.name}
+      </div>`).join('') +
+    `<button class="csb-all" onclick="switchSection('children')">+ Manage Children</button>`;
+}
+
+function buildAllChildBars(){
+  ['homeChildBar','attChildBar','marksChildBar','ttChildBar','hwChildBar'].forEach(id=>buildChildBar(id,activeChildIdx));
+}
+
+/* ── Select child ── */
+function selectChild(idx){
+  activeChildIdx = idx;
+  buildSbChildPills();
+  buildAllChildBars();
+  buildHomeStats();
+  buildAttSection();
+  buildMarksSection();
+  buildTimetable();
+  buildChildProfileCard();
+  showToast('Viewing: '+CHILDREN[idx].name);
+}
+
+/* ── HOME STATS ── */
+function buildHomeStats(){
+  const c = CHILDREN[activeChildIdx];
+  document.getElementById('homeStats').innerHTML=`
+    <div class="stat-card rose"><div class="stat-icon">👨‍👩‍👧</div><div class="stat-num">${CHILDREN.length}</div><div class="stat-label">Children Linked</div></div>
+    <div class="stat-card green"><div class="stat-icon">📅</div><div class="stat-num">${c.attendance.pct}%</div><div class="stat-label">Attendance (${c.name.split(' ')[0]})</div></div>
+    <div class="stat-card blue"><div class="stat-icon">📊</div><div class="stat-num">${c.avgMarks}%</div><div class="stat-label">Average Marks</div></div>
+    <div class="stat-card saffron"><div class="stat-icon">📚</div><div class="stat-num">${c.pendingHw}</div><div class="stat-label">Pending Homework</div></div>
+    <div class="stat-card purple"><div class="stat-icon">📢</div><div class="stat-num">3</div><div class="stat-label">New Notices</div></div>`;
+}
+
+/* ── TODAY'S TIMETABLE ── */
+const TT = [
+  {time:'9:00–9:45',  subj:'Mathematics', teacher:'Mr. [Teacher]', color:'rgba(29,78,216,.1)',  tc:'var(--blue)'},
+  {time:'9:45–10:30', subj:'Physics',     teacher:'Mrs. [Teacher]',color:'rgba(22,163,74,.1)',  tc:'var(--green)'},
+  {time:'10:45–11:30',subj:'Chemistry',   teacher:'Mr. [Teacher]', color:'rgba(124,58,237,.1)',tc:'var(--purple)'},
+  {time:'11:30–12:15',subj:'Tamil',       teacher:'Mrs. [Teacher]',color:'rgba(232,133,10,.1)',tc:'var(--saffron)'},
+  {time:'1:00–1:45',  subj:'Biology',     teacher:'Mrs. [Teacher]',color:'rgba(22,163,74,.1)',  tc:'var(--green)'},
+];
+function buildTimetable(){
+  const c = CHILDREN[activeChildIdx];
+  const html = TT.map(t=>`
+    <div class="tt-row">
+      <div class="tt-time">${t.time}</div>
+      <div><div class="tt-subj">${t.subj}</div><div class="tt-teacher">${t.teacher}</div></div>
+      <span class="tt-badge" style="background:${t.color};color:${t.tc}">Theory</span>
+    </div>`).join('');
+  const ttClassList = document.getElementById('ttClassList');
+  if(ttClassList){
+    document.querySelector('#ttClassPanel .panel-title').innerHTML = `<span>⏰</span> Daily Schedule — ${c.name} (${c.cls})`;
+    ttClassList.innerHTML = html;
+  }
+  document.getElementById('homeTT').innerHTML = html;
+}
+
+/* ── CHILDREN CARDS ── */
+function buildChildrenGrid(){
+  document.getElementById('childrenGrid').innerHTML = CHILDREN.map((c,i)=>`
+    <div class="child-card">
+      <div class="child-card-top">
+        <div class="child-card-avatar" style="background:${c.color}">${c.emoji}</div>
+        <div>
+          <div class="child-card-name">${c.name}</div>
+          <div class="child-card-class">${c.cls} · Section ${c.section} · Roll ${c.roll}</div>
+        </div>
+        ${i===activeChildIdx?'<span class="active-chip">Viewing</span>':''}
+      </div>
+      <div class="child-stats-row">
+        <div class="cs-stat"><div class="cs-num" style="color:var(--green)">${c.attendance.pct}%</div><div class="cs-lbl">Attendance</div></div>
+        <div class="cs-stat"><div class="cs-num" style="color:var(--blue)">${c.avgMarks}%</div><div class="cs-lbl">Avg Marks</div></div>
+        <div class="cs-stat"><div class="cs-num" style="color:var(--saffron)">${c.pendingHw}</div><div class="cs-lbl">Pending HW</div></div>
+      </div>
+      <div class="child-card-actions">
+        <div class="cc-btn" onclick="selectChild(${i});switchSection('attendance')">📅 Attendance</div>
+        <div class="cc-btn" onclick="selectChild(${i});switchSection('marks')">📊 Marks</div>
+        <div class="cc-btn primary" onclick="selectChild(${i});switchSection('home')">View →</div>
+      </div>
+    </div>`).join('');
+
+  /* Profile child list */
+  document.getElementById('profileChildList').innerHTML = CHILDREN.map((c,i)=>`
+    <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:${i<CHILDREN.length-1?'1px solid #f3f4f6':'none'}">
+      <div style="width:44px;height:44px;border-radius:50%;background:${c.color};display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${c.emoji}</div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--deep)">${c.name}</div><div style="font-size:12.5px;color:var(--muted)">${c.cls} · Section ${c.section} · ID: ${c.id}</div></div>
+      <button onclick="selectChild(${i});switchSection('home')" style="padding:7px 16px;border-radius:8px;background:var(--cream);border:1.5px solid var(--border);font-size:13px;font-weight:700;color:var(--text);cursor:pointer">View</button>
+    </div>`).join('');
+}
+
+/* ── ATTENDANCE SECTION ── */
+function buildAttSection(){
+  const c = CHILDREN[activeChildIdx];
+  const a = c.attendance;
+  document.getElementById('attSummaryPanel').innerHTML=`
+    <div class="panel-title"><span>📅</span> Attendance Summary — ${c.name}</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px">
+      <div style="background:var(--cream);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--muted)">${a.total}</div><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Total Days</div></div>
+      <div style="background:rgba(22,163,74,.08);border-radius:12px;padding:16px;text-align:center;border:1px solid rgba(22,163,74,.2)"><div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--green)">${a.present}</div><div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Present</div></div>
+      <div style="background:rgba(220,38,38,.08);border-radius:12px;padding:16px;text-align:center;border:1px solid rgba(220,38,38,.2)"><div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--red)">${a.absent}</div><div style="font-size:11px;color:var(--red);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Absent</div></div>
+      <div style="background:rgba(29,78,216,.08);border-radius:12px;padding:16px;text-align:center;border:1px solid rgba(29,78,216,.2)"><div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--blue)">${a.pct}%</div><div style="font-size:11px;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Percentage</div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <span style="font-size:13px;font-weight:700;color:var(--deep)">Overall Attendance</span>
+      <span style="font-size:13px;font-weight:700;color:${a.pct>=75?'var(--green)':'var(--red)'}">${a.pct}% — ${a.pct>=75?'✅ Good':'⚠️ Low'}</span>
+    </div>
+    <div style="background:#e2e8f0;border-radius:20px;height:12px;overflow:hidden">
+      <div style="width:${a.pct}%;height:100%;border-radius:20px;background:${a.pct>=75?'linear-gradient(90deg,var(--green),#4ade80)':'linear-gradient(90deg,var(--red),#f87171)'}"></div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600">Minimum required: 75%</div>`;
+
+  /* Build calendar */
+  buildAttCalendar();
+
+  /* Subject table */
+  const subjAttData = [
+    {subj:'Mathematics',total:24,present:23,absent:1},
+    {subj:'Physics',    total:22,present:20,absent:2},
+    {subj:'Chemistry',  total:22,present:21,absent:1},
+    {subj:'Biology',    total:20,present:16,absent:4},
+    {subj:'Tamil',      total:18,present:17,absent:1},
+    {subj:'English',    total:14,present:13,absent:1},
+  ];
+  document.getElementById('attSubjTable').innerHTML=`
+    <thead><tr><th>Subject</th><th>Total</th><th>Present</th><th>Absent</th><th>%</th></tr></thead>
+    <tbody>${subjAttData.map(s=>{const pct=Math.round((s.present/s.total)*100);return`
+      <tr><td>${s.subj}</td><td>${s.total}</td><td>${s.present}</td><td>${s.absent}</td>
+      <td><span class="${pct>=75?'m-pass':'m-fail'}">${pct}%</span></td></tr>`}).join('')}
+    </tbody>`;
+}
+
+function buildAttCalendar(){
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const att={1:'present',2:'present',3:'holiday',5:'present',6:'present',7:'present',8:'present',9:'present',10:'holiday',12:'present',13:'present',14:'present',15:'present',16:'present',17:'holiday',19:'present',20:'absent',21:'absent',22:'present',23:'present'};
+  const firstDay=4; /* May 2026 starts Thursday */
+  let html=days.map(d=>`<div class="att-day-header">${d}</div>`).join('');
+  for(let i=0;i<firstDay;i++) html+=`<div class="att-day att-empty"></div>`;
+  for(let d=1;d<=31;d++){
+    const type=att[d]||'';
+    const isToday=d===23;
+    html+=`<div class="att-day ${type?'att-'+type:''} ${isToday?'att-today':''}" title="May ${d}">${d}</div>`;
+  }
+  document.getElementById('attCalGrid').innerHTML=html;
+}
+
+/* ── MARKS SECTION ── */
+function buildChildProfileCard(){
+  const c = CHILDREN[activeChildIdx];
+  const el = document.getElementById('marksChildCard');
+  if(!el) return;
+  el.innerHTML=`
+    <div class="cpc-avatar" style="background:${c.color}">${c.emoji}</div>
+    <div>
+      <div class="cpc-name">${c.name}</div>
+      <div class="cpc-meta">${c.cls} · Section ${c.section} · Roll ${c.roll} · ID: ${c.id}</div>
+    </div>
+    <div class="cpc-badge">📊 Avg: ${c.avgMarks}%</div>`;
+}
+
+const MARKS_SETS = {
+  mid1:{title:'First Mid Term — Exam Code 3301', multi:1},
+  half:{title:'Half Yearly — Exam Code 5012', multi:0.9},
+};
+
+function buildMarksSection(key='mid1'){
+  const c = CHILDREN[activeChildIdx];
+  const ms = MARKS_SETS[key];
+  document.querySelector('#marksPanel .panel-title').innerHTML=`<span>📊</span> ${ms.title} — ${c.name}`;
+  const rows = c.marks;
+  const avg = Math.round(rows.reduce((s,r)=>s+(r.scored*ms.multi),0)/rows.length);
+  const passed = rows.filter(r=>(r.scored*ms.multi)/r.max*100>=35).length;
+  document.getElementById('marksSummary').innerHTML=`
+    <div style="background:rgba(22,163,74,.1);border-radius:10px;padding:12px 18px;text-align:center;min-width:100px"><div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--green)">${avg}%</div><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Average</div></div>
+    <div style="background:rgba(29,78,216,.1);border-radius:10px;padding:12px 18px;text-align:center;min-width:100px"><div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--blue)">${passed}/${rows.length}</div><div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Passed</div></div>`;
+  document.getElementById('marksTableBody').innerHTML=rows.map(r=>{
+    const sc=Math.round(r.scored*ms.multi);
+    const pct=Math.round(sc/r.max*100);
+    const pass=pct>=35;
+    const bc=pct>=75?'var(--green)':pct>=35?'var(--saffron)':'var(--red)';
+    return`<tr><td>${r.subj}</td><td>${r.max}</td><td><strong>${sc}</strong></td><td>${pct}%</td>
+      <td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%;background:${bc}"></div></div><span style="font-size:12px;font-weight:700;color:${bc};min-width:32px">${pct}%</span></div></td>
+      <td><span class="${pass?'m-pass':'m-fail'}">${pass?'✅ Pass':'❌ Fail'}</span></td></tr>`;
+  }).join('');
+
+  /* Trend */
+  document.getElementById('subjectTrend').innerHTML=rows.map(r=>{
+    const sc=Math.round(r.scored*ms.multi);
+    const pct=Math.round(sc/r.max*100);
+    const bc=pct>=75?'var(--green)':pct>=35?'var(--saffron)':'var(--red)';
+    return`<div style="display:flex;align-items:center;gap:14px">
+      <span style="min-width:120px;font-size:13.5px;font-weight:700">${r.subj}</span>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%;background:${bc}"></div></div>
+      <span style="font-size:13px;font-weight:700;color:${bc};min-width:36px">${pct}%</span>
+    </div>`;
+  }).join('');
+}
+
+function switchMarksTab(key,btn){
+  document.querySelectorAll('#sec-marks .tab-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  buildMarksSection(key);
+}
+
+/* ── NOTICE TABS ── */
+function switchNoticeTab(tab,btn){
+  document.querySelectorAll('#sec-notices .tab-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('noticeSchool').style.display=tab==='school'?'flex':'none';
+  document.getElementById('noticeClass').style.display=tab==='class'?'flex':'none';
+}
+
+/* ── TT TABS ── */
+function switchTTTab(tab,btn){
+  document.querySelectorAll('#sec-timetable .tab-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ttClassPanel').style.display=tab==='class'?'block':'none';
+  document.getElementById('ttExamPanel').style.display=tab==='exam'?'block':'none';
+}
+
+/* ── ADD CHILD ── */
+function toggleAddChild(){
+  const form=document.getElementById('addChildForm');
+  const toggle=document.getElementById('addChildToggle');
+  const show=!form.classList.contains('show');
+  form.classList.toggle('show',show);
+  toggle.style.display=show?'none':'block';
+}
+
+function addChild(){
+  const id=document.getElementById('newChildId').value.trim();
+  const name=document.getElementById('newChildName').value.trim();
+  if(!id||!name){showToast('Fill all fields','err');return}
+  showToast('✅ Child linked! (Backend connection in Phase 3)');
+  toggleAddChild();
+  document.getElementById('newChildId').value='';
+  document.getElementById('newChildName').value='';
+}
+
+/* ── SECTION SWITCH ── */
+function switchSection(id){
+  document.querySelectorAll('.dash-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  const labels={home:'Dashboard',children:'My Children',notices:'Notices',attendance:'Attendance',marks:'Marks',timetable:'Timetable',homework:'Homework',profile:'My Profile'};
+  document.querySelectorAll('.sb-nav-item').forEach(n=>{
+    if(n.textContent.includes(labels[id]||'__'))n.classList.add('active');
+  });
+  closeSidebar();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ── HAMBURGER ── */
+const hb=document.getElementById('hamburger'),mm=document.getElementById('mobileMenu');
+hb.addEventListener('click',()=>{hb.classList.toggle('open');mm.classList.toggle('open')});
+document.querySelectorAll('.mobile-nav-links a').forEach(a=>a.addEventListener('click',()=>{hb.classList.remove('open');mm.classList.remove('open')}));
+
+/* ── MOBILE SIDEBAR ── */
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sbBackdrop').classList.toggle('open')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbBackdrop').classList.remove('open')}
+
+/* ── TOAST ── */
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+(type==='err'?'err':'');
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* ── INIT ── */
+buildSbChildPills();
+buildAllChildBars();
+buildHomeStats();
+buildChildrenGrid();
+buildAttSection();
+buildMarksSection();
+buildTimetable();
+buildChildProfileCard();
+</script>
+</body>
+</html>
